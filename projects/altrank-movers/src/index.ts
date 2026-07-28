@@ -15,6 +15,7 @@ interface CliArgs {
   top: number;
   minInteractions: number;
   count: number;
+  altRankCap: number;
   outDir: string;
 }
 
@@ -25,6 +26,7 @@ function parseArgs(argv: string[]): CliArgs {
     top: DEFAULT_OPTIONS.topN,
     minInteractions: DEFAULT_OPTIONS.minInteractions,
     count: DEFAULT_OPTIONS.count,
+    altRankCap: DEFAULT_OPTIONS.altRankCap,
     outDir: "out",
   };
   for (let i = 0; i < argv.length; i++) {
@@ -34,6 +36,7 @@ function parseArgs(argv: string[]): CliArgs {
     else if (a === "--top") args.top = Number(argv[++i]);
     else if (a === "--min-interactions") args.minInteractions = Number(argv[++i]);
     else if (a === "--count") args.count = Number(argv[++i]);
+    else if (a === "--altrank-cap") args.altRankCap = Number(argv[++i]);
     else if (a === "--out") args.outDir = argv[++i];
     else {
       console.error(`Unknown argument: ${a}`);
@@ -69,6 +72,7 @@ async function main(): Promise<void> {
     topN: args.top,
     minInteractions: args.minInteractions,
     count: args.count,
+    altRankCap: args.altRankCap,
     previousRanks,
   });
 

@@ -13,7 +13,7 @@ function fmtDelta(delta: number): string {
 }
 
 function fmtLine(m: Mover, i: number): string {
-  return `${i + 1}. $${m.symbol} ${fmtDelta(m.delta)} (now #${m.altRank})`;
+  return `${i + 1}. $${m.symbol} ${fmtDelta(m.delta)} (#${m.altRankPrevious} to #${m.altRank})`;
 }
 
 export function renderPost(report: MoversReport, linkUrl?: string): string {

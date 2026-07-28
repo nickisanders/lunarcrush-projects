@@ -14,7 +14,7 @@ GET https://lunarcrush.com/api4/public/coins/list/v2?sort=market_cap_rank&limit=
 
 The response includes each coin's current `alt_rank` and its `alt_rank_previous` from 24 hours ago, so a single request is enough to compute movers. The bot also saves a daily snapshot to `data/` as a fallback source of yesterday's ranks and raw material for longer-horizon charts.
 
-Junk filtering: only coins inside the top 500 by market cap with at least 5,000 social interactions in the last 24h are considered.
+Junk filtering: only coins inside the top 500 by market cap with at least 5,000 social interactions in the last 24h are considered. On top of that, a relevance cap (default 200) keeps the tail out: climbers must currently sit inside the AltRank top 200, and fallers must have been inside it yesterday. Without this, the leaderboard is pure noise, since coins ranked #3000 routinely swing by thousands of places on negligible social volume. The story worth posting is "what arrived into relevance and what dropped out," not "what bounced around the tail."
 
 ## Setup
 
@@ -36,7 +36,7 @@ npm run daily
 npm run daily -- --send
 
 # Options
-npm run daily -- --top 300 --min-interactions 10000 --count 5
+npm run daily -- --top 300 --min-interactions 10000 --count 5 --altrank-cap 150
 ```
 
 ## Automate it
@@ -55,12 +55,12 @@ Without Telegram secrets the workflow still runs and uploads the post text and c
 🌙 AltRank movers, Jul 28
 
 📈 Climbers
-1. $INJ +214 (now #37)
-2. $SEI +180 (now #52)
+1. $ZIL +1044 (#1081 to #37)
+2. $UMA +1345 (#1454 to #109)
 ...
 
 📉 Fallers
-1. $APT -190 (now #310)
+1. $XVG -3060 (#53 to #3113)
 ...
 ```
 

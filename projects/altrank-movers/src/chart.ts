@@ -20,7 +20,7 @@ function esc(s: string): string {
 }
 
 function bar(m: Mover, y: number, maxAbsDelta: number, isClimber: boolean): string {
-  const maxBarWidth = WIDTH - PAD * 2 - 330;
+  const maxBarWidth = WIDTH - PAD * 2 - 440;
   const w = Math.max(8, Math.round((Math.abs(m.delta) / maxAbsDelta) * maxBarWidth));
   const color = isClimber ? COLORS.climber : COLORS.faller;
   const deltaLabel = m.delta > 0 ? `+${m.delta}` : `${m.delta}`;
@@ -29,7 +29,7 @@ function bar(m: Mover, y: number, maxAbsDelta: number, isClimber: boolean): stri
     <rect x="${PAD + 160}" y="${y + 12}" width="${maxBarWidth}" height="28" rx="6" fill="${COLORS.track}"/>
     <rect x="${PAD + 160}" y="${y + 12}" width="${w}" height="28" rx="6" fill="${color}"/>
     <text x="${PAD + 170 + maxBarWidth}" y="${y + 34}" font-size="24" font-weight="600" fill="${color}">${deltaLabel}</text>
-    <text x="${PAD + 250 + maxBarWidth}" y="${y + 34}" font-size="22" fill="${COLORS.subtext}">#${m.altRank}</text>`;
+    <text x="${PAD + 250 + maxBarWidth}" y="${y + 34}" font-size="22" fill="${COLORS.subtext}">#${m.altRankPrevious} → #${m.altRank}</text>`;
 }
 
 export function renderChartSvg(report: MoversReport): string {

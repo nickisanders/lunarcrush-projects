@@ -7,6 +7,12 @@ export interface MoversOptions {
   minInteractions: number;
   /** How many climbers/fallers to report. */
   count: number;
+  /**
+   * Relevance cap: climbers must currently be inside this AltRank, fallers must
+   * have been inside it yesterday. Filters out meaningless rank swings deep in
+   * the tail, where AltRank moves by thousands of places on tiny social volume.
+   */
+  altRankCap: number;
   /** Fallback map of symbol to yesterday's alt_rank, used when the API omits alt_rank_previous. */
   previousRanks?: Map<string, number>;
 }
@@ -15,6 +21,7 @@ export const DEFAULT_OPTIONS: MoversOptions = {
   topN: 500,
   minInteractions: 5000,
   count: 5,
+  altRankCap: 200,
 };
 
 export function computeMovers(rows: CoinRow[], opts: MoversOptions = DEFAULT_OPTIONS): MoversReport {
@@ -44,12 +51,12 @@ export function computeMovers(rows: CoinRow[], opts: MoversOptions = DEFAULT_OPT
   }
 
   const climbers = movers
-    .filter((m) => m.delta > 0)
+    .filter((m) => m.delta > 0 && m.altRank <= opts.altRankCap)
     .sort((a, b) => b.delta - a.delta || a.altRank - b.altRank)
     .slice(0, opts.count);
 
   const fallers = movers
-    .filter((m) => m.delta < 0)
+    .filter((m) => m.delta < 0 && m.altRankPrevious <= opts.altRankCap)
     .sort((a, b) => a.delta - b.delta || a.altRank - b.altRank)
     .slice(0, opts.count);
 
