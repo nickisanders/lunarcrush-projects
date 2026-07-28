@@ -1,0 +1,39 @@
+name: altrank-movers daily
+
+on:
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/altrank-movers
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: projects/altrank-movers/package-lock.json
+      - run: npm ci
+      - name: Run bot
+        env:
+          LUNARCRUSH_API_KEY: ${{ secrets.LUNARCRUSH_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          POST_LINK_URL: ${{ secrets.POST_LINK_URL }}
+        run: |
+          if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
+            npm run daily -- --send
+          else
+            npm run daily
+          fi
+      - name: Upload output
+        uses: actions/upload-artifact@v4
+        with:
+          name: altrank-movers-output
+          path: projects/altrank-movers/out/
+          retention-days: 14
