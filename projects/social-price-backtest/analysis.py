@@ -40,7 +40,7 @@ def load_coin(path: Path) -> pd.DataFrame | None:
     need = {"time", "close", "interactions", "market_cap"}
     if not need.issubset(df.columns):
         return None
-    for col in ["time", "close", "interactions", "market_cap", "spam", "posts_created"]:
+    for col in ["time", "close", "interactions", "market_cap", "spam", "posts_created", "volume_24h"]:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
     df = df.dropna(subset=["time", "close", "interactions"])
@@ -72,6 +72,7 @@ def main() -> None:
     ap.add_argument("--flat", type=float, default=0.02)
     ap.add_argument("--mcap", type=float, default=50e6)
     ap.add_argument("--spam-max", type=float, default=0.5)
+    ap.add_argument("--min-volume", type=float, default=1e6)
     args = ap.parse_args()
 
     frames = []
@@ -95,11 +96,18 @@ def main() -> None:
 
     eligible = all_days[
         (all_days["market_cap"] >= args.mcap)
+        & (all_days.get("volume_24h", 0) >= args.min_volume)
         & (all_days["med_interactions"] >= FLOOR)
         & all_days["z"].notna()
         & all_days["fwd_7d"].notna()
         & (all_days["symbol"] != "BTC")
     ]
+    # Winsorize forward returns at the 1st/99th percentile of the eligible set.
+    # Raw crypto price data contains redenominations and near-zero-price
+    # glitches that produce fake 10,000%+ "returns" and destroy means.
+    for h in HORIZONS:
+        lo, hi = eligible[f"fwd_{h}d"].quantile([0.01, 0.99])
+        eligible = eligible.assign(**{f"fwd_{h}d": eligible[f"fwd_{h}d"].clip(lo, hi)})
     spike = (eligible["z"] >= args.z) & (eligible["ret_1d"].abs() <= args.flat)
     if args.spam_max < 1:
         spike &= eligible["spam_ratio"].fillna(0) <= args.spam_max
