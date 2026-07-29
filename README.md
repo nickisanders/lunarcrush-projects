@@ -9,6 +9,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | # | Project | What it does |
 |---|---------|--------------|
 | 01 | [altrank-movers](projects/altrank-movers/) | Daily bot that posts the biggest AltRank climbers and fallers with a chart |
+| 02 | [social-price-backtest](projects/social-price-backtest/) | Backtest of whether social interaction spikes lead price, on 6+ years of daily data |
 
 ## Getting an API key
 
