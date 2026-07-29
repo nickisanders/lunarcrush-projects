@@ -16,7 +16,12 @@ function fmtLine(m: Mover, i: number): string {
   return `${i + 1}. $${m.symbol} ${fmtDelta(m.delta)} (#${m.altRankPrevious} to #${m.altRank})`;
 }
 
-export function renderPost(report: MoversReport, linkUrl?: string): string {
+export interface PostFooterOptions {
+  linkUrl?: string;
+  promoCode?: string;
+}
+
+export function renderPost(report: MoversReport, footer: PostFooterOptions = {}): string {
   const lines: string[] = [];
   lines.push(`🌙 AltRank movers, ${fmtDate(report.generatedAt)}`);
   lines.push("");
@@ -31,8 +36,9 @@ export function renderPost(report: MoversReport, linkUrl?: string): string {
     lines.push("");
   }
   lines.push(`Tracked across the top ${report.universeSize} coins by social activity.`);
-  if (linkUrl) {
-    lines.push(`Data: LunarCrush ${linkUrl}`);
+  lines.push(`Data: LunarCrush${footer.linkUrl ? ` ${footer.linkUrl}` : ""}`);
+  if (footer.promoCode) {
+    lines.push(`Affiliate code ${footer.promoCode} gets 15% off at checkout`);
   }
   return lines.join("\n");
 }

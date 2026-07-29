@@ -43,9 +43,9 @@ npm run daily -- --top 300 --min-interactions 10000 --count 5 --altrank-cap 150
 
 The repo ships a GitHub Actions workflow (`.github/workflows/altrank-movers.yml`) that runs the bot daily at 13:00 UTC. Add these repository secrets to enable it:
 
-- `LUNARCRUSH_API_KEY` (required)
-- `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (optional, enables auto-posting)
-- `POST_LINK_URL` (optional, link appended to each post)
+- `LUNARCRUSH_API_KEY` (required, repository secret)
+- `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (optional secrets, enable auto-posting)
+- `POST_LINK_URL`, `POST_PROMO_CODE` (optional repository variables, add a link and an affiliate discount line to each post)
 
 Without Telegram secrets the workflow still runs and uploads the post text and chart as a build artifact.
 

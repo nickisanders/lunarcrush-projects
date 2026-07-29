@@ -86,7 +86,10 @@ async function main(): Promise<void> {
     return;
   }
 
-  const post = renderPost(report, process.env.POST_LINK_URL);
+  const post = renderPost(report, {
+    linkUrl: process.env.POST_LINK_URL,
+    promoCode: process.env.POST_PROMO_CODE,
+  });
   const svg = renderChartSvg(report);
 
   await mkdir(args.outDir, { recursive: true });

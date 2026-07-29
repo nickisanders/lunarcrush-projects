@@ -24,7 +24,8 @@ jobs:
           LUNARCRUSH_API_KEY: ${{ secrets.LUNARCRUSH_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          POST_LINK_URL: ${{ secrets.POST_LINK_URL }}
+          POST_LINK_URL: ${{ vars.POST_LINK_URL }}
+          POST_PROMO_CODE: ${{ vars.POST_PROMO_CODE }}
         run: |
           if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
             npm run daily -- --send
