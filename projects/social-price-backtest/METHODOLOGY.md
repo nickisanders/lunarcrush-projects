@@ -17,9 +17,9 @@ A coin-day is an event when all of the following hold:
 
 1. Social spike: z-score of log(1 + interactions) versus the trailing 30 days (excluding the current day) is at least 3.
 2. Price flat: absolute close-to-close return that day is at most 2%. This isolates "social moved first" from "everyone is talking about the pump."
-3. Eligible: market cap at least $50M on that day, trailing median interactions at least 2,000, spam share of created posts at most 50%.
+3. Eligible: market cap at least $50M on that day, $1M+ daily volume, trailing median interactions at least 2,000.
 
-The baseline is every eligible coin-day that is not an event.
+Spike days are split by the spam share of created posts: organic (spam <= 50%) versus spam-heavy (spam > 50%). The baseline is every eligible coin-day without a spike. Forward returns are winsorized at the 1st/99th percentile of the eligible set, since raw crypto price data contains redenomination and near-zero-price glitches that otherwise destroy means.
 
 ## Outcome measures
 
@@ -28,6 +28,10 @@ Close-to-close forward returns at +1d, +3d, +7d:
 - Raw.
 - BTC-adjusted (minus BTC's return over the same window), since crypto returns share a large market factor and event clustering in bull weeks would otherwise flatter the signal.
 - Hit rate: share of events with positive BTC-adjusted return.
+
+## Significance
+
+Group-vs-baseline differences (mean BTC-adjusted return and hit rate, per horizon) are tested with a cluster bootstrap on calendar-month blocks: months are resampled with replacement and the difference recomputed 2,000 times. Month-level clustering respects both the overlap of multi-day forward windows and the cross-sectional correlation of coins within the same market regime, which naive per-observation tests ignore. Reported p-values are two-sided; with 12 comparisons, a Bonferroni-adjusted threshold is roughly p < 0.004.
 
 ## Known limitations
 

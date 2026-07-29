@@ -4,7 +4,9 @@ Does social attention lead price? This project tests the core claim behind socia
 
 ## Method in one paragraph
 
-For the top 1,000 coins by market cap, pull full daily history from the LunarCrush time-series API (social interactions, contributors, sentiment, spam counts, and OHLC in the same rows, back to 2020). Define an event as: interactions z-score >= 3 versus the trailing 30 days, on a day when price stayed flat (abs 24h return <= 2%). Then measure forward returns at +1, +3, and +7 days against a baseline of all comparable coin-days without a spike, both raw and BTC-adjusted. Events are filtered to coins with at least $50M market cap at event time and a meaningful social baseline, with a spam-share cap.
+For the top 1,000 coins by market cap, pull full daily history from the LunarCrush time-series API (social interactions, contributors, sentiment, spam counts, and OHLC in the same rows, back to 2020). Define a spike as: interactions z-score >= 3 versus the trailing 30 days, on a day when price stayed flat (abs 24h return <= 2%), for coins with $50M+ market cap and $1M+ volume at the time. Split spikes into organic versus spam-heavy using the API's per-day spam counts, then measure BTC-adjusted forward returns at +1, +3, and +7 days against all comparable non-spike coin-days, with a calendar-month cluster bootstrap for significance.
+
+Headline result: about 85% of social spikes are spam-heavy, and those carry no positive signal (directionally negative). The organic minority improves the odds of beating BTC over the next 3 days from 41.9% to 49.0% (p = 0.003, the only comparison that survives multiple-testing correction). See [DRAFT.md](DRAFT.md) for the full write-up.
 
 See [METHODOLOGY.md](METHODOLOGY.md) for the full design, including known biases and what this backtest cannot claim.
 
@@ -21,7 +23,7 @@ python3 pull.py --top 1000
 
 # Sensitivity checks
 .venv/bin/python analysis.py --z 2.5 --flat 0.03
-.venv/bin/python analysis.py --spam-max 1.0   # include spammy events
+.venv/bin/python analysis.py --spam-split 0.3 --bootstrap 0   # stricter spam cut, skip bootstrap
 ```
 
 Requires a LunarCrush API key in `.env` (or reuses `../altrank-movers/.env`). The pull needs a plan tier that includes the time-series endpoint.
