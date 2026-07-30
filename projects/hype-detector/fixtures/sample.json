@@ -1,0 +1,2702 @@
+{
+ "coins": [
+  {
+   "id": 1,
+   "symbol": "PUMPME",
+   "name": "PumpMe",
+   "topic": "pumpme",
+   "market_cap": 707892279,
+   "market_cap_rank": 37,
+   "volume_24h": 351467786,
+   "interactions_24h": 6000000,
+   "alt_rank": 60,
+   "alt_rank_previous": 750,
+   "sentiment": 92
+  },
+  {
+   "id": 2,
+   "symbol": "BOTCOIN",
+   "name": "BotCoin",
+   "topic": "botcoin",
+   "market_cap": 843156687,
+   "market_cap_rank": 74,
+   "volume_24h": 153360407,
+   "interactions_24h": 4400000,
+   "alt_rank": 70,
+   "alt_rank_previous": 800,
+   "sentiment": 88
+  },
+  {
+   "id": 3,
+   "symbol": "MIDCO",
+   "name": "MidCo",
+   "topic": "midco",
+   "market_cap": 2790921541,
+   "market_cap_rank": 111,
+   "volume_24h": 48573472,
+   "interactions_24h": 2400000,
+   "alt_rank": 80,
+   "alt_rank_previous": 850,
+   "sentiment": 78
+  },
+  {
+   "id": 4,
+   "symbol": "REALDEAL",
+   "name": "RealDeal",
+   "topic": "realdeal",
+   "market_cap": 1631754093,
+   "market_cap_rank": 148,
+   "volume_24h": 183451460,
+   "interactions_24h": 3000000,
+   "alt_rank": 90,
+   "alt_rank_previous": 900,
+   "sentiment": 68
+  },
+  {
+   "id": 5,
+   "symbol": "NEWS",
+   "name": "NewsCoin",
+   "topic": "newscoin",
+   "market_cap": 81262379,
+   "market_cap_rank": 185,
+   "volume_24h": 143824480,
+   "interactions_24h": 2000000,
+   "alt_rank": 100,
+   "alt_rank_previous": 950,
+   "sentiment": 60
+  },
+  {
+   "id": 6,
+   "symbol": "SLEEPY",
+   "name": "Sleepy",
+   "topic": "sleepy",
+   "market_cap": 1752562946,
+   "market_cap_rank": 222,
+   "volume_24h": 87397518,
+   "interactions_24h": 220000,
+   "alt_rank": 110,
+   "alt_rank_previous": 1000,
+   "sentiment": 55
+  }
+ ],
+ "series": {
+  "1": [
+   {
+    "time": 1782503182,
+    "interactions": 145794,
+    "posts_created": 291,
+    "spam": 98,
+    "sentiment": 72,
+    "close": 9.5036
+   },
+   {
+    "time": 1782589582,
+    "interactions": 209934,
+    "posts_created": 419,
+    "spam": 142,
+    "sentiment": 71,
+    "close": 21.5483
+   },
+   {
+    "time": 1782675982,
+    "interactions": 150313,
+    "posts_created": 300,
+    "spam": 102,
+    "sentiment": 68,
+    "close": 7.0786
+   },
+   {
+    "time": 1782762382,
+    "interactions": 150885,
+    "posts_created": 301,
+    "spam": 102,
+    "sentiment": 68,
+    "close": 6.0051
+   },
+   {
+    "time": 1782848782,
+    "interactions": 207854,
+    "posts_created": 415,
+    "spam": 141,
+    "sentiment": 62,
+    "close": 63.0995
+   },
+   {
+    "time": 1782935182,
+    "interactions": 209959,
+    "posts_created": 419,
+    "spam": 142,
+    "sentiment": 56,
+    "close": 57.7526
+   },
+   {
+    "time": 1783021582,
+    "interactions": 187601,
+    "posts_created": 375,
+    "spam": 127,
+    "sentiment": 62,
+    "close": 4.7536
+   },
+   {
+    "time": 1783107982,
+    "interactions": 243016,
+    "posts_created": 486,
+    "spam": 165,
+    "sentiment": 64,
+    "close": 41.972
+   },
+   {
+    "time": 1783194382,
+    "interactions": 204882,
+    "posts_created": 409,
+    "spam": 139,
+    "sentiment": 73,
+    "close": 30.9173
+   },
+   {
+    "time": 1783280782,
+    "interactions": 237935,
+    "posts_created": 475,
+    "spam": 161,
+    "sentiment": 60,
+    "close": 10.3953
+   },
+   {
+    "time": 1783367182,
+    "interactions": 208544,
+    "posts_created": 417,
+    "spam": 141,
+    "sentiment": 61,
+    "close": 37.3025
+   },
+   {
+    "time": 1783453582,
+    "interactions": 205729,
+    "posts_created": 411,
+    "spam": 139,
+    "sentiment": 57,
+    "close": 56.4804
+   },
+   {
+    "time": 1783539982,
+    "interactions": 214281,
+    "posts_created": 428,
+    "spam": 145,
+    "sentiment": 70,
+    "close": 68.072
+   },
+   {
+    "time": 1783626382,
+    "interactions": 191311,
+    "posts_created": 382,
+    "spam": 129,
+    "sentiment": 65,
+    "close": 46.6136
+   },
+   {
+    "time": 1783712782,
+    "interactions": 250812,
+    "posts_created": 501,
+    "spam": 170,
+    "sentiment": 66,
+    "close": 30.0467
+   },
+   {
+    "time": 1783799182,
+    "interactions": 235325,
+    "posts_created": 470,
+    "spam": 159,
+    "sentiment": 77,
+    "close": 78.005
+   },
+   {
+    "time": 1783885582,
+    "interactions": 149822,
+    "posts_created": 299,
+    "spam": 101,
+    "sentiment": 64,
+    "close": 52.5671
+   },
+   {
+    "time": 1783971982,
+    "interactions": 245016,
+    "posts_created": 490,
+    "spam": 166,
+    "sentiment": 78,
+    "close": 44.9385
+   },
+   {
+    "time": 1784058382,
+    "interactions": 213075,
+    "posts_created": 426,
+    "spam": 144,
+    "sentiment": 57,
+    "close": 11.8948
+   },
+   {
+    "time": 1784144782,
+    "interactions": 190174,
+    "posts_created": 380,
+    "spam": 129,
+    "sentiment": 79,
+    "close": 34.2714
+   },
+   {
+    "time": 1784231182,
+    "interactions": 251992,
+    "posts_created": 503,
+    "spam": 171,
+    "sentiment": 68,
+    "close": 4.0168
+   },
+   {
+    "time": 1784317582,
+    "interactions": 220185,
+    "posts_created": 440,
+    "spam": 149,
+    "sentiment": 79,
+    "close": 55.8518
+   },
+   {
+    "time": 1784403982,
+    "interactions": 234691,
+    "posts_created": 469,
+    "spam": 159,
+    "sentiment": 65,
+    "close": 34.0782
+   },
+   {
+    "time": 1784490382,
+    "interactions": 182021,
+    "posts_created": 364,
+    "spam": 123,
+    "sentiment": 70,
+    "close": 58.0315
+   },
+   {
+    "time": 1784576782,
+    "interactions": 194744,
+    "posts_created": 389,
+    "spam": 132,
+    "sentiment": 57,
+    "close": 94.4736
+   },
+   {
+    "time": 1784663182,
+    "interactions": 196891,
+    "posts_created": 393,
+    "spam": 133,
+    "sentiment": 76,
+    "close": 6.5935
+   },
+   {
+    "time": 1784749582,
+    "interactions": 227739,
+    "posts_created": 455,
+    "spam": 154,
+    "sentiment": 64,
+    "close": 64.7482
+   },
+   {
+    "time": 1784835982,
+    "interactions": 259171,
+    "posts_created": 518,
+    "spam": 176,
+    "sentiment": 69,
+    "close": 28.5311
+   },
+   {
+    "time": 1784922382,
+    "interactions": 186294,
+    "posts_created": 372,
+    "spam": 126,
+    "sentiment": 76,
+    "close": 34.7658
+   },
+   {
+    "time": 1785008782,
+    "interactions": 252877,
+    "posts_created": 505,
+    "spam": 171,
+    "sentiment": 66,
+    "close": 16.888
+   },
+   {
+    "time": 1785095182,
+    "interactions": 154051,
+    "posts_created": 308,
+    "spam": 104,
+    "sentiment": 56,
+    "close": 21.899
+   },
+   {
+    "time": 1785181582,
+    "interactions": 174491,
+    "posts_created": 348,
+    "spam": 118,
+    "sentiment": 78,
+    "close": 24.8367
+   },
+   {
+    "time": 1785267982,
+    "interactions": 186913,
+    "posts_created": 373,
+    "spam": 126,
+    "sentiment": 70,
+    "close": 8.1501
+   },
+   {
+    "time": 1785354382,
+    "interactions": 193902,
+    "posts_created": 387,
+    "spam": 131,
+    "sentiment": 72,
+    "close": 27.8561
+   },
+   {
+    "time": 1785440782,
+    "interactions": 6000000,
+    "posts_created": 15000,
+    "spam": 12750,
+    "sentiment": 68,
+    "close": 86.412
+   }
+  ],
+  "2": [
+   {
+    "time": 1782503182,
+    "interactions": 140491,
+    "posts_created": 280,
+    "spam": 78,
+    "sentiment": 68,
+    "close": 53.5056
+   },
+   {
+    "time": 1782589582,
+    "interactions": 213177,
+    "posts_created": 426,
+    "spam": 119,
+    "sentiment": 65,
+    "close": 95.3145
+   },
+   {
+    "time": 1782675982,
+    "interactions": 222859,
+    "posts_created": 445,
+    "spam": 124,
+    "sentiment": 71,
+    "close": 95.0274
+   },
+   {
+    "time": 1782762382,
+    "interactions": 218595,
+    "posts_created": 437,
+    "spam": 122,
+    "sentiment": 78,
+    "close": 5.4939
+   },
+   {
+    "time": 1782848782,
+    "interactions": 247943,
+    "posts_created": 495,
+    "spam": 138,
+    "sentiment": 79,
+    "close": 95.1934
+   },
+   {
+    "time": 1782935182,
+    "interactions": 221669,
+    "posts_created": 443,
+    "spam": 124,
+    "sentiment": 72,
+    "close": 39.2987
+   },
+   {
+    "time": 1783021582,
+    "interactions": 187877,
+    "posts_created": 375,
+    "spam": 104,
+    "sentiment": 58,
+    "close": 48.2041
+   },
+   {
+    "time": 1783107982,
+    "interactions": 188053,
+    "posts_created": 376,
+    "spam": 105,
+    "sentiment": 61,
+    "close": 6.828
+   },
+   {
+    "time": 1783194382,
+    "interactions": 165051,
+    "posts_created": 330,
+    "spam": 92,
+    "sentiment": 60,
+    "close": 11.0818
+   },
+   {
+    "time": 1783280782,
+    "interactions": 212087,
+    "posts_created": 424,
+    "spam": 118,
+    "sentiment": 58,
+    "close": 0.1233
+   },
+   {
+    "time": 1783367182,
+    "interactions": 158151,
+    "posts_created": 316,
+    "spam": 88,
+    "sentiment": 58,
+    "close": 94.9
+   },
+   {
+    "time": 1783453582,
+    "interactions": 213648,
+    "posts_created": 427,
+    "spam": 119,
+    "sentiment": 57,
+    "close": 87.4458
+   },
+   {
+    "time": 1783539982,
+    "interactions": 213688,
+    "posts_created": 427,
+    "spam": 119,
+    "sentiment": 59,
+    "close": 63.4775
+   },
+   {
+    "time": 1783626382,
+    "interactions": 254656,
+    "posts_created": 509,
+    "spam": 142,
+    "sentiment": 74,
+    "close": 36.4799
+   },
+   {
+    "time": 1783712782,
+    "interactions": 154741,
+    "posts_created": 309,
+    "spam": 86,
+    "sentiment": 70,
+    "close": 99.311
+   },
+   {
+    "time": 1783799182,
+    "interactions": 195918,
+    "posts_created": 391,
+    "spam": 109,
+    "sentiment": 70,
+    "close": 31.254
+   },
+   {
+    "time": 1783885582,
+    "interactions": 157294,
+    "posts_created": 314,
+    "spam": 87,
+    "sentiment": 78,
+    "close": 34.3293
+   },
+   {
+    "time": 1783971982,
+    "interactions": 171770,
+    "posts_created": 343,
+    "spam": 96,
+    "sentiment": 77,
+    "close": 16.2277
+   },
+   {
+    "time": 1784058382,
+    "interactions": 142771,
+    "posts_created": 285,
+    "spam": 79,
+    "sentiment": 71,
+    "close": 36.2391
+   },
+   {
+    "time": 1784144782,
+    "interactions": 222808,
+    "posts_created": 445,
+    "spam": 124,
+    "sentiment": 55,
+    "close": 75.8385
+   },
+   {
+    "time": 1784231182,
+    "interactions": 175770,
+    "posts_created": 351,
+    "spam": 98,
+    "sentiment": 75,
+    "close": 86.3462
+   },
+   {
+    "time": 1784317582,
+    "interactions": 223543,
+    "posts_created": 447,
+    "spam": 125,
+    "sentiment": 63,
+    "close": 51.8878
+   },
+   {
+    "time": 1784403982,
+    "interactions": 248991,
+    "posts_created": 497,
+    "spam": 139,
+    "sentiment": 66,
+    "close": 77.2166
+   },
+   {
+    "time": 1784490382,
+    "interactions": 203911,
+    "posts_created": 407,
+    "spam": 113,
+    "sentiment": 79,
+    "close": 50.3194
+   },
+   {
+    "time": 1784576782,
+    "interactions": 216373,
+    "posts_created": 432,
+    "spam": 120,
+    "sentiment": 74,
+    "close": 81.17
+   },
+   {
+    "time": 1784663182,
+    "interactions": 258191,
+    "posts_created": 516,
+    "spam": 144,
+    "sentiment": 61,
+    "close": 80.6273
+   },
+   {
+    "time": 1784749582,
+    "interactions": 238199,
+    "posts_created": 476,
+    "spam": 133,
+    "sentiment": 78,
+    "close": 80.3523
+   },
+   {
+    "time": 1784835982,
+    "interactions": 163990,
+    "posts_created": 327,
+    "spam": 91,
+    "sentiment": 70,
+    "close": 35.6207
+   },
+   {
+    "time": 1784922382,
+    "interactions": 143477,
+    "posts_created": 286,
+    "spam": 80,
+    "sentiment": 55,
+    "close": 79.0324
+   },
+   {
+    "time": 1785008782,
+    "interactions": 196668,
+    "posts_created": 393,
+    "spam": 110,
+    "sentiment": 61,
+    "close": 69.2829
+   },
+   {
+    "time": 1785095182,
+    "interactions": 254781,
+    "posts_created": 509,
+    "spam": 142,
+    "sentiment": 69,
+    "close": 80.8757
+   },
+   {
+    "time": 1785181582,
+    "interactions": 226775,
+    "posts_created": 453,
+    "spam": 126,
+    "sentiment": 66,
+    "close": 95.5046
+   },
+   {
+    "time": 1785267982,
+    "interactions": 183756,
+    "posts_created": 367,
+    "spam": 102,
+    "sentiment": 62,
+    "close": 10.3055
+   },
+   {
+    "time": 1785354382,
+    "interactions": 196409,
+    "posts_created": 392,
+    "spam": 109,
+    "sentiment": 65,
+    "close": 20.5169
+   },
+   {
+    "time": 1785440782,
+    "interactions": 4400000,
+    "posts_created": 11000,
+    "spam": 7699,
+    "sentiment": 74,
+    "close": 84.0595
+   }
+  ],
+  "3": [
+   {
+    "time": 1782503182,
+    "interactions": 236098,
+    "posts_created": 472,
+    "spam": 84,
+    "sentiment": 78,
+    "close": 39.6443
+   },
+   {
+    "time": 1782589582,
+    "interactions": 188166,
+    "posts_created": 376,
+    "spam": 67,
+    "sentiment": 57,
+    "close": 72.5074
+   },
+   {
+    "time": 1782675982,
+    "interactions": 160400,
+    "posts_created": 320,
+    "spam": 57,
+    "sentiment": 59,
+    "close": 2.8521
+   },
+   {
+    "time": 1782762382,
+    "interactions": 210897,
+    "posts_created": 421,
+    "spam": 75,
+    "sentiment": 69,
+    "close": 80.6695
+   },
+   {
+    "time": 1782848782,
+    "interactions": 157540,
+    "posts_created": 315,
+    "spam": 56,
+    "sentiment": 74,
+    "close": 98.0326
+   },
+   {
+    "time": 1782935182,
+    "interactions": 218872,
+    "posts_created": 437,
+    "spam": 78,
+    "sentiment": 66,
+    "close": 15.6757
+   },
+   {
+    "time": 1783021582,
+    "interactions": 205794,
+    "posts_created": 411,
+    "spam": 73,
+    "sentiment": 55,
+    "close": 1.5229
+   },
+   {
+    "time": 1783107982,
+    "interactions": 256506,
+    "posts_created": 513,
+    "spam": 92,
+    "sentiment": 75,
+    "close": 10.3669
+   },
+   {
+    "time": 1783194382,
+    "interactions": 229939,
+    "posts_created": 459,
+    "spam": 82,
+    "sentiment": 59,
+    "close": 43.4376
+   },
+   {
+    "time": 1783280782,
+    "interactions": 244609,
+    "posts_created": 489,
+    "spam": 88,
+    "sentiment": 61,
+    "close": 2.8966
+   },
+   {
+    "time": 1783367182,
+    "interactions": 165533,
+    "posts_created": 331,
+    "spam": 59,
+    "sentiment": 71,
+    "close": 24.1299
+   },
+   {
+    "time": 1783453582,
+    "interactions": 210372,
+    "posts_created": 420,
+    "spam": 75,
+    "sentiment": 63,
+    "close": 54.4808
+   },
+   {
+    "time": 1783539982,
+    "interactions": 240103,
+    "posts_created": 480,
+    "spam": 86,
+    "sentiment": 56,
+    "close": 91.0107
+   },
+   {
+    "time": 1783626382,
+    "interactions": 182454,
+    "posts_created": 364,
+    "spam": 65,
+    "sentiment": 69,
+    "close": 66.2812
+   },
+   {
+    "time": 1783712782,
+    "interactions": 237805,
+    "posts_created": 475,
+    "spam": 85,
+    "sentiment": 71,
+    "close": 42.1208
+   },
+   {
+    "time": 1783799182,
+    "interactions": 250126,
+    "posts_created": 500,
+    "spam": 90,
+    "sentiment": 71,
+    "close": 13.1632
+   },
+   {
+    "time": 1783885582,
+    "interactions": 158220,
+    "posts_created": 316,
+    "spam": 56,
+    "sentiment": 71,
+    "close": 1.9686
+   },
+   {
+    "time": 1783971982,
+    "interactions": 192814,
+    "posts_created": 385,
+    "spam": 69,
+    "sentiment": 60,
+    "close": 60.8946
+   },
+   {
+    "time": 1784058382,
+    "interactions": 233124,
+    "posts_created": 466,
+    "spam": 83,
+    "sentiment": 59,
+    "close": 17.3174
+   },
+   {
+    "time": 1784144782,
+    "interactions": 196819,
+    "posts_created": 393,
+    "spam": 70,
+    "sentiment": 78,
+    "close": 12.1216
+   },
+   {
+    "time": 1784231182,
+    "interactions": 147410,
+    "posts_created": 294,
+    "spam": 52,
+    "sentiment": 76,
+    "close": 51.883
+   },
+   {
+    "time": 1784317582,
+    "interactions": 206653,
+    "posts_created": 413,
+    "spam": 74,
+    "sentiment": 80,
+    "close": 77.6714
+   },
+   {
+    "time": 1784403982,
+    "interactions": 245987,
+    "posts_created": 491,
+    "spam": 88,
+    "sentiment": 56,
+    "close": 24.9246
+   },
+   {
+    "time": 1784490382,
+    "interactions": 173230,
+    "posts_created": 346,
+    "spam": 62,
+    "sentiment": 79,
+    "close": 9.8648
+   },
+   {
+    "time": 1784576782,
+    "interactions": 194261,
+    "posts_created": 388,
+    "spam": 69,
+    "sentiment": 55,
+    "close": 76.0233
+   },
+   {
+    "time": 1784663182,
+    "interactions": 249498,
+    "posts_created": 498,
+    "spam": 89,
+    "sentiment": 69,
+    "close": 32.6288
+   },
+   {
+    "time": 1784749582,
+    "interactions": 256803,
+    "posts_created": 513,
+    "spam": 92,
+    "sentiment": 74,
+    "close": 51.2649
+   },
+   {
+    "time": 1784835982,
+    "interactions": 223127,
+    "posts_created": 446,
+    "spam": 80,
+    "sentiment": 69,
+    "close": 50.8648
+   },
+   {
+    "time": 1784922382,
+    "interactions": 236883,
+    "posts_created": 473,
+    "spam": 85,
+    "sentiment": 71,
+    "close": 94.156
+   },
+   {
+    "time": 1785008782,
+    "interactions": 223906,
+    "posts_created": 447,
+    "spam": 80,
+    "sentiment": 63,
+    "close": 92.2861
+   },
+   {
+    "time": 1785095182,
+    "interactions": 247130,
+    "posts_created": 494,
+    "spam": 88,
+    "sentiment": 61,
+    "close": 84.016
+   },
+   {
+    "time": 1785181582,
+    "interactions": 156456,
+    "posts_created": 312,
+    "spam": 56,
+    "sentiment": 58,
+    "close": 39.2972
+   },
+   {
+    "time": 1785267982,
+    "interactions": 177917,
+    "posts_created": 355,
+    "spam": 63,
+    "sentiment": 76,
+    "close": 24.1398
+   },
+   {
+    "time": 1785354382,
+    "interactions": 148774,
+    "posts_created": 297,
+    "spam": 53,
+    "sentiment": 76,
+    "close": 30.3477
+   },
+   {
+    "time": 1785440782,
+    "interactions": 2400000,
+    "posts_created": 6000,
+    "spam": 2700,
+    "sentiment": 79,
+    "close": 15.5292
+   }
+  ],
+  "4": [
+   {
+    "time": 1782503182,
+    "interactions": 206486,
+    "posts_created": 412,
+    "spam": 16,
+    "sentiment": 69,
+    "close": 70.3448
+   },
+   {
+    "time": 1782589582,
+    "interactions": 186121,
+    "posts_created": 372,
+    "spam": 14,
+    "sentiment": 71,
+    "close": 62.4303
+   },
+   {
+    "time": 1782675982,
+    "interactions": 201471,
+    "posts_created": 402,
+    "spam": 16,
+    "sentiment": 57,
+    "close": 11.3737
+   },
+   {
+    "time": 1782762382,
+    "interactions": 250225,
+    "posts_created": 500,
+    "spam": 20,
+    "sentiment": 62,
+    "close": 97.1724
+   },
+   {
+    "time": 1782848782,
+    "interactions": 152573,
+    "posts_created": 305,
+    "spam": 12,
+    "sentiment": 63,
+    "close": 27.2649
+   },
+   {
+    "time": 1782935182,
+    "interactions": 248707,
+    "posts_created": 497,
+    "spam": 19,
+    "sentiment": 60,
+    "close": 27.1176
+   },
+   {
+    "time": 1783021582,
+    "interactions": 155546,
+    "posts_created": 311,
+    "spam": 12,
+    "sentiment": 68,
+    "close": 84.9738
+   },
+   {
+    "time": 1783107982,
+    "interactions": 221116,
+    "posts_created": 442,
+    "spam": 17,
+    "sentiment": 63,
+    "close": 40.6542
+   },
+   {
+    "time": 1783194382,
+    "interactions": 204391,
+    "posts_created": 408,
+    "spam": 16,
+    "sentiment": 71,
+    "close": 57.1024
+   },
+   {
+    "time": 1783280782,
+    "interactions": 224050,
+    "posts_created": 448,
+    "spam": 17,
+    "sentiment": 57,
+    "close": 27.9783
+   },
+   {
+    "time": 1783367182,
+    "interactions": 235950,
+    "posts_created": 471,
+    "spam": 18,
+    "sentiment": 60,
+    "close": 42.5892
+   },
+   {
+    "time": 1783453582,
+    "interactions": 148689,
+    "posts_created": 297,
+    "spam": 11,
+    "sentiment": 55,
+    "close": 63.4805
+   },
+   {
+    "time": 1783539982,
+    "interactions": 236195,
+    "posts_created": 472,
+    "spam": 18,
+    "sentiment": 57,
+    "close": 60.8569
+   },
+   {
+    "time": 1783626382,
+    "interactions": 166688,
+    "posts_created": 333,
+    "spam": 13,
+    "sentiment": 63,
+    "close": 86.2912
+   },
+   {
+    "time": 1783712782,
+    "interactions": 194452,
+    "posts_created": 388,
+    "spam": 15,
+    "sentiment": 65,
+    "close": 99.4312
+   },
+   {
+    "time": 1783799182,
+    "interactions": 190131,
+    "posts_created": 380,
+    "spam": 15,
+    "sentiment": 63,
+    "close": 62.2082
+   },
+   {
+    "time": 1783885582,
+    "interactions": 145184,
+    "posts_created": 290,
+    "spam": 11,
+    "sentiment": 77,
+    "close": 23.9198
+   },
+   {
+    "time": 1783971982,
+    "interactions": 153134,
+    "posts_created": 306,
+    "spam": 12,
+    "sentiment": 60,
+    "close": 26.2633
+   },
+   {
+    "time": 1784058382,
+    "interactions": 161737,
+    "posts_created": 323,
+    "spam": 12,
+    "sentiment": 64,
+    "close": 62.9042
+   },
+   {
+    "time": 1784144782,
+    "interactions": 203730,
+    "posts_created": 407,
+    "spam": 16,
+    "sentiment": 61,
+    "close": 29.0671
+   },
+   {
+    "time": 1784231182,
+    "interactions": 200010,
+    "posts_created": 400,
+    "spam": 16,
+    "sentiment": 60,
+    "close": 27.1252
+   },
+   {
+    "time": 1784317582,
+    "interactions": 236441,
+    "posts_created": 472,
+    "spam": 18,
+    "sentiment": 63,
+    "close": 3.7912
+   },
+   {
+    "time": 1784403982,
+    "interactions": 142212,
+    "posts_created": 284,
+    "spam": 11,
+    "sentiment": 71,
+    "close": 55.1498
+   },
+   {
+    "time": 1784490382,
+    "interactions": 162734,
+    "posts_created": 325,
+    "spam": 13,
+    "sentiment": 70,
+    "close": 24.6434
+   },
+   {
+    "time": 1784576782,
+    "interactions": 193646,
+    "posts_created": 387,
+    "spam": 15,
+    "sentiment": 76,
+    "close": 81.9101
+   },
+   {
+    "time": 1784663182,
+    "interactions": 191861,
+    "posts_created": 383,
+    "spam": 15,
+    "sentiment": 70,
+    "close": 54.636
+   },
+   {
+    "time": 1784749582,
+    "interactions": 246647,
+    "posts_created": 493,
+    "spam": 19,
+    "sentiment": 71,
+    "close": 30.8475
+   },
+   {
+    "time": 1784835982,
+    "interactions": 165821,
+    "posts_created": 331,
+    "spam": 13,
+    "sentiment": 62,
+    "close": 34.3362
+   },
+   {
+    "time": 1784922382,
+    "interactions": 239874,
+    "posts_created": 479,
+    "spam": 19,
+    "sentiment": 77,
+    "close": 72.9115
+   },
+   {
+    "time": 1785008782,
+    "interactions": 156766,
+    "posts_created": 313,
+    "spam": 12,
+    "sentiment": 66,
+    "close": 98.19
+   },
+   {
+    "time": 1785095182,
+    "interactions": 240438,
+    "posts_created": 480,
+    "spam": 19,
+    "sentiment": 55,
+    "close": 7.1652
+   },
+   {
+    "time": 1785181582,
+    "interactions": 228906,
+    "posts_created": 457,
+    "spam": 18,
+    "sentiment": 63,
+    "close": 43.131
+   },
+   {
+    "time": 1785267982,
+    "interactions": 146648,
+    "posts_created": 293,
+    "spam": 11,
+    "sentiment": 76,
+    "close": 84.1428
+   },
+   {
+    "time": 1785354382,
+    "interactions": 244464,
+    "posts_created": 488,
+    "spam": 19,
+    "sentiment": 76,
+    "close": 97.0959
+   },
+   {
+    "time": 1785440782,
+    "interactions": 3000000,
+    "posts_created": 7500,
+    "spam": 750,
+    "sentiment": 77,
+    "close": 29.3765
+   }
+  ],
+  "5": [
+   {
+    "time": 1782503182,
+    "interactions": 238045,
+    "posts_created": 476,
+    "spam": 28,
+    "sentiment": 59,
+    "close": 40.0112
+   },
+   {
+    "time": 1782589582,
+    "interactions": 145000,
+    "posts_created": 290,
+    "spam": 17,
+    "sentiment": 55,
+    "close": 30.0346
+   },
+   {
+    "time": 1782675982,
+    "interactions": 215560,
+    "posts_created": 431,
+    "spam": 25,
+    "sentiment": 57,
+    "close": 58.5998
+   },
+   {
+    "time": 1782762382,
+    "interactions": 203502,
+    "posts_created": 407,
+    "spam": 24,
+    "sentiment": 79,
+    "close": 15.6097
+   },
+   {
+    "time": 1782848782,
+    "interactions": 247136,
+    "posts_created": 494,
+    "spam": 29,
+    "sentiment": 80,
+    "close": 87.9212
+   },
+   {
+    "time": 1782935182,
+    "interactions": 186741,
+    "posts_created": 373,
+    "spam": 22,
+    "sentiment": 65,
+    "close": 72.0957
+   },
+   {
+    "time": 1783021582,
+    "interactions": 199302,
+    "posts_created": 398,
+    "spam": 23,
+    "sentiment": 64,
+    "close": 72.4432
+   },
+   {
+    "time": 1783107982,
+    "interactions": 217186,
+    "posts_created": 434,
+    "spam": 26,
+    "sentiment": 56,
+    "close": 82.5032
+   },
+   {
+    "time": 1783194382,
+    "interactions": 225801,
+    "posts_created": 451,
+    "spam": 27,
+    "sentiment": 71,
+    "close": 62.7705
+   },
+   {
+    "time": 1783280782,
+    "interactions": 228062,
+    "posts_created": 456,
+    "spam": 27,
+    "sentiment": 80,
+    "close": 50.6035
+   },
+   {
+    "time": 1783367182,
+    "interactions": 249186,
+    "posts_created": 498,
+    "spam": 29,
+    "sentiment": 79,
+    "close": 50.4867
+   },
+   {
+    "time": 1783453582,
+    "interactions": 240192,
+    "posts_created": 480,
+    "spam": 28,
+    "sentiment": 80,
+    "close": 1.7064
+   },
+   {
+    "time": 1783539982,
+    "interactions": 222376,
+    "posts_created": 444,
+    "spam": 26,
+    "sentiment": 80,
+    "close": 89.2937
+   },
+   {
+    "time": 1783626382,
+    "interactions": 221947,
+    "posts_created": 443,
+    "spam": 26,
+    "sentiment": 77,
+    "close": 64.3247
+   },
+   {
+    "time": 1783712782,
+    "interactions": 150211,
+    "posts_created": 300,
+    "spam": 18,
+    "sentiment": 56,
+    "close": 13.396
+   },
+   {
+    "time": 1783799182,
+    "interactions": 183284,
+    "posts_created": 366,
+    "spam": 21,
+    "sentiment": 58,
+    "close": 37.7242
+   },
+   {
+    "time": 1783885582,
+    "interactions": 194166,
+    "posts_created": 388,
+    "spam": 23,
+    "sentiment": 56,
+    "close": 62.8139
+   },
+   {
+    "time": 1783971982,
+    "interactions": 215147,
+    "posts_created": 430,
+    "spam": 25,
+    "sentiment": 76,
+    "close": 24.5315
+   },
+   {
+    "time": 1784058382,
+    "interactions": 171655,
+    "posts_created": 343,
+    "spam": 20,
+    "sentiment": 69,
+    "close": 79.79
+   },
+   {
+    "time": 1784144782,
+    "interactions": 229791,
+    "posts_created": 459,
+    "spam": 27,
+    "sentiment": 71,
+    "close": 89.796
+   },
+   {
+    "time": 1784231182,
+    "interactions": 151033,
+    "posts_created": 302,
+    "spam": 18,
+    "sentiment": 71,
+    "close": 6.6984
+   },
+   {
+    "time": 1784317582,
+    "interactions": 228414,
+    "posts_created": 456,
+    "spam": 27,
+    "sentiment": 63,
+    "close": 80.941
+   },
+   {
+    "time": 1784403982,
+    "interactions": 241536,
+    "posts_created": 483,
+    "spam": 28,
+    "sentiment": 62,
+    "close": 72.9606
+   },
+   {
+    "time": 1784490382,
+    "interactions": 164626,
+    "posts_created": 329,
+    "spam": 19,
+    "sentiment": 78,
+    "close": 65.0282
+   },
+   {
+    "time": 1784576782,
+    "interactions": 195240,
+    "posts_created": 390,
+    "spam": 23,
+    "sentiment": 67,
+    "close": 7.7663
+   },
+   {
+    "time": 1784663182,
+    "interactions": 249255,
+    "posts_created": 498,
+    "spam": 29,
+    "sentiment": 64,
+    "close": 76.7203
+   },
+   {
+    "time": 1784749582,
+    "interactions": 214036,
+    "posts_created": 428,
+    "spam": 25,
+    "sentiment": 75,
+    "close": 19.9092
+   },
+   {
+    "time": 1784835982,
+    "interactions": 211964,
+    "posts_created": 423,
+    "spam": 25,
+    "sentiment": 65,
+    "close": 25.4686
+   },
+   {
+    "time": 1784922382,
+    "interactions": 229186,
+    "posts_created": 458,
+    "spam": 27,
+    "sentiment": 64,
+    "close": 62.153
+   },
+   {
+    "time": 1785008782,
+    "interactions": 156012,
+    "posts_created": 312,
+    "spam": 18,
+    "sentiment": 70,
+    "close": 6.16
+   },
+   {
+    "time": 1785095182,
+    "interactions": 172252,
+    "posts_created": 344,
+    "spam": 20,
+    "sentiment": 76,
+    "close": 10.042
+   },
+   {
+    "time": 1785181582,
+    "interactions": 166123,
+    "posts_created": 332,
+    "spam": 19,
+    "sentiment": 70,
+    "close": 29.1566
+   },
+   {
+    "time": 1785267982,
+    "interactions": 201984,
+    "posts_created": 403,
+    "spam": 24,
+    "sentiment": 69,
+    "close": 46.6432
+   },
+   {
+    "time": 1785354382,
+    "interactions": 232060,
+    "posts_created": 464,
+    "spam": 27,
+    "sentiment": 72,
+    "close": 20.0051
+   },
+   {
+    "time": 1785440782,
+    "interactions": 2000000,
+    "posts_created": 5000,
+    "spam": 750,
+    "sentiment": 70,
+    "close": 1.8487
+   }
+  ],
+  "6": [
+   {
+    "time": 1782503182,
+    "interactions": 140430,
+    "posts_created": 280,
+    "spam": 22,
+    "sentiment": 70,
+    "close": 68.1907
+   },
+   {
+    "time": 1782589582,
+    "interactions": 188650,
+    "posts_created": 377,
+    "spam": 30,
+    "sentiment": 78,
+    "close": 14.1567
+   },
+   {
+    "time": 1782675982,
+    "interactions": 181275,
+    "posts_created": 362,
+    "spam": 28,
+    "sentiment": 65,
+    "close": 12.1788
+   },
+   {
+    "time": 1782762382,
+    "interactions": 179758,
+    "posts_created": 359,
+    "spam": 28,
+    "sentiment": 65,
+    "close": 75.0983
+   },
+   {
+    "time": 1782848782,
+    "interactions": 240693,
+    "posts_created": 481,
+    "spam": 38,
+    "sentiment": 58,
+    "close": 93.9941
+   },
+   {
+    "time": 1782935182,
+    "interactions": 163488,
+    "posts_created": 326,
+    "spam": 26,
+    "sentiment": 55,
+    "close": 90.1665
+   },
+   {
+    "time": 1783021582,
+    "interactions": 174779,
+    "posts_created": 349,
+    "spam": 27,
+    "sentiment": 66,
+    "close": 6.5912
+   },
+   {
+    "time": 1783107982,
+    "interactions": 186819,
+    "posts_created": 373,
+    "spam": 29,
+    "sentiment": 73,
+    "close": 7.7324
+   },
+   {
+    "time": 1783194382,
+    "interactions": 251049,
+    "posts_created": 502,
+    "spam": 40,
+    "sentiment": 79,
+    "close": 27.588
+   },
+   {
+    "time": 1783280782,
+    "interactions": 145792,
+    "posts_created": 291,
+    "spam": 23,
+    "sentiment": 58,
+    "close": 5.2566
+   },
+   {
+    "time": 1783367182,
+    "interactions": 219437,
+    "posts_created": 438,
+    "spam": 35,
+    "sentiment": 75,
+    "close": 93.5654
+   },
+   {
+    "time": 1783453582,
+    "interactions": 169918,
+    "posts_created": 339,
+    "spam": 27,
+    "sentiment": 63,
+    "close": 43.6805
+   },
+   {
+    "time": 1783539982,
+    "interactions": 177872,
+    "posts_created": 355,
+    "spam": 28,
+    "sentiment": 79,
+    "close": 37.3976
+   },
+   {
+    "time": 1783626382,
+    "interactions": 254739,
+    "posts_created": 509,
+    "spam": 40,
+    "sentiment": 55,
+    "close": 81.215
+   },
+   {
+    "time": 1783712782,
+    "interactions": 215707,
+    "posts_created": 431,
+    "spam": 34,
+    "sentiment": 72,
+    "close": 54.9679
+   },
+   {
+    "time": 1783799182,
+    "interactions": 226348,
+    "posts_created": 452,
+    "spam": 36,
+    "sentiment": 56,
+    "close": 93.3532
+   },
+   {
+    "time": 1783885582,
+    "interactions": 189306,
+    "posts_created": 378,
+    "spam": 30,
+    "sentiment": 74,
+    "close": 75.2915
+   },
+   {
+    "time": 1783971982,
+    "interactions": 217338,
+    "posts_created": 434,
+    "spam": 34,
+    "sentiment": 64,
+    "close": 48.609
+   },
+   {
+    "time": 1784058382,
+    "interactions": 249428,
+    "posts_created": 498,
+    "spam": 39,
+    "sentiment": 72,
+    "close": 12.8184
+   },
+   {
+    "time": 1784144782,
+    "interactions": 196662,
+    "posts_created": 393,
+    "spam": 31,
+    "sentiment": 65,
+    "close": 28.2464
+   },
+   {
+    "time": 1784231182,
+    "interactions": 170689,
+    "posts_created": 341,
+    "spam": 27,
+    "sentiment": 78,
+    "close": 97.632
+   },
+   {
+    "time": 1784317582,
+    "interactions": 171220,
+    "posts_created": 342,
+    "spam": 27,
+    "sentiment": 75,
+    "close": 23.9426
+   },
+   {
+    "time": 1784403982,
+    "interactions": 197981,
+    "posts_created": 395,
+    "spam": 31,
+    "sentiment": 76,
+    "close": 39.4973
+   },
+   {
+    "time": 1784490382,
+    "interactions": 160079,
+    "posts_created": 320,
+    "spam": 25,
+    "sentiment": 60,
+    "close": 7.6095
+   },
+   {
+    "time": 1784576782,
+    "interactions": 200072,
+    "posts_created": 400,
+    "spam": 32,
+    "sentiment": 80,
+    "close": 49.7579
+   },
+   {
+    "time": 1784663182,
+    "interactions": 166403,
+    "posts_created": 332,
+    "spam": 26,
+    "sentiment": 65,
+    "close": 99.6479
+   },
+   {
+    "time": 1784749582,
+    "interactions": 193995,
+    "posts_created": 387,
+    "spam": 30,
+    "sentiment": 59,
+    "close": 54.8238
+   },
+   {
+    "time": 1784835982,
+    "interactions": 169290,
+    "posts_created": 338,
+    "spam": 27,
+    "sentiment": 60,
+    "close": 34.2613
+   },
+   {
+    "time": 1784922382,
+    "interactions": 150931,
+    "posts_created": 301,
+    "spam": 24,
+    "sentiment": 62,
+    "close": 36.8937
+   },
+   {
+    "time": 1785008782,
+    "interactions": 237123,
+    "posts_created": 474,
+    "spam": 37,
+    "sentiment": 61,
+    "close": 88.7364
+   },
+   {
+    "time": 1785095182,
+    "interactions": 229958,
+    "posts_created": 459,
+    "spam": 36,
+    "sentiment": 68,
+    "close": 38.3455
+   },
+   {
+    "time": 1785181582,
+    "interactions": 229500,
+    "posts_created": 459,
+    "spam": 36,
+    "sentiment": 61,
+    "close": 37.7489
+   },
+   {
+    "time": 1785267982,
+    "interactions": 180584,
+    "posts_created": 361,
+    "spam": 28,
+    "sentiment": 56,
+    "close": 49.8648
+   },
+   {
+    "time": 1785354382,
+    "interactions": 208913,
+    "posts_created": 417,
+    "spam": 33,
+    "sentiment": 66,
+    "close": 12.6748
+   },
+   {
+    "time": 1785440782,
+    "interactions": 220000,
+    "posts_created": 550,
+    "spam": 110,
+    "sentiment": 75,
+    "close": 79.0522
+   }
+  ]
+ },
+ "creators": {
+  "1": [
+   {
+    "creator_id": "acct0",
+    "creator_name": "user_0",
+    "creator_followers": 292445,
+    "interactions_24h": 55000
+   },
+   {
+    "creator_id": "acct1",
+    "creator_name": "user_1",
+    "creator_followers": 741210,
+    "interactions_24h": 20000
+   },
+   {
+    "creator_id": "acct2",
+    "creator_name": "user_2",
+    "creator_followers": 435969,
+    "interactions_24h": 10000
+   },
+   {
+    "creator_id": "acct3",
+    "creator_name": "user_3",
+    "creator_followers": 376698,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct4",
+    "creator_name": "user_4",
+    "creator_followers": 716387,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct5",
+    "creator_name": "user_5",
+    "creator_followers": 399421,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct6",
+    "creator_name": "user_6",
+    "creator_followers": 242460,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct7",
+    "creator_name": "user_7",
+    "creator_followers": 158752,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct8",
+    "creator_name": "user_8",
+    "creator_followers": 87515,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct9",
+    "creator_name": "user_9",
+    "creator_followers": 185277,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct10",
+    "creator_name": "user_10",
+    "creator_followers": 159147,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct11",
+    "creator_name": "user_11",
+    "creator_followers": 243724,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct12",
+    "creator_name": "user_12",
+    "creator_followers": 691004,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct13",
+    "creator_name": "user_13",
+    "creator_followers": 245170,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct14",
+    "creator_name": "user_14",
+    "creator_followers": 13149,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct15",
+    "creator_name": "user_15",
+    "creator_followers": 509020,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct16",
+    "creator_name": "user_16",
+    "creator_followers": 871964,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct17",
+    "creator_name": "user_17",
+    "creator_followers": 618240,
+    "interactions_24h": 1000
+   }
+  ],
+  "2": [
+   {
+    "creator_id": "acct0",
+    "creator_name": "user_0",
+    "creator_followers": 503264,
+    "interactions_24h": 55000
+   },
+   {
+    "creator_id": "acct1",
+    "creator_name": "user_1",
+    "creator_followers": 685197,
+    "interactions_24h": 20000
+   },
+   {
+    "creator_id": "acct2",
+    "creator_name": "user_2",
+    "creator_followers": 361217,
+    "interactions_24h": 10000
+   },
+   {
+    "creator_id": "acct3",
+    "creator_name": "user_3",
+    "creator_followers": 838987,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct4",
+    "creator_name": "user_4",
+    "creator_followers": 674873,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct5",
+    "creator_name": "user_5",
+    "creator_followers": 89396,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct6",
+    "creator_name": "user_6",
+    "creator_followers": 875692,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct7",
+    "creator_name": "user_7",
+    "creator_followers": 693174,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct8",
+    "creator_name": "user_8",
+    "creator_followers": 126228,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct9",
+    "creator_name": "user_9",
+    "creator_followers": 407909,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct10",
+    "creator_name": "user_10",
+    "creator_followers": 820804,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct11",
+    "creator_name": "user_11",
+    "creator_followers": 746554,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct12",
+    "creator_name": "user_12",
+    "creator_followers": 787079,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct13",
+    "creator_name": "user_13",
+    "creator_followers": 209501,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct14",
+    "creator_name": "user_14",
+    "creator_followers": 501753,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct15",
+    "creator_name": "user_15",
+    "creator_followers": 187693,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct16",
+    "creator_name": "user_16",
+    "creator_followers": 455503,
+    "interactions_24h": 1000
+   },
+   {
+    "creator_id": "acct17",
+    "creator_name": "user_17",
+    "creator_followers": 827968,
+    "interactions_24h": 1000
+   }
+  ],
+  "3": [
+   {
+    "creator_id": "acct0",
+    "creator_name": "user_0",
+    "creator_followers": 751406,
+    "interactions_24h": 8000
+   },
+   {
+    "creator_id": "acct1",
+    "creator_name": "user_1",
+    "creator_followers": 675214,
+    "interactions_24h": 7000
+   },
+   {
+    "creator_id": "acct2",
+    "creator_name": "user_2",
+    "creator_followers": 692829,
+    "interactions_24h": 6000
+   },
+   {
+    "creator_id": "acct3",
+    "creator_name": "user_3",
+    "creator_followers": 384471,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct4",
+    "creator_name": "user_4",
+    "creator_followers": 150424,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct5",
+    "creator_name": "user_5",
+    "creator_followers": 265902,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct6",
+    "creator_name": "user_6",
+    "creator_followers": 144421,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct7",
+    "creator_name": "user_7",
+    "creator_followers": 490956,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct8",
+    "creator_name": "user_8",
+    "creator_followers": 230754,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct9",
+    "creator_name": "user_9",
+    "creator_followers": 783452,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct10",
+    "creator_name": "user_10",
+    "creator_followers": 99197,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct11",
+    "creator_name": "user_11",
+    "creator_followers": 418102,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct12",
+    "creator_name": "user_12",
+    "creator_followers": 511429,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct13",
+    "creator_name": "user_13",
+    "creator_followers": 171203,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct14",
+    "creator_name": "user_14",
+    "creator_followers": 700773,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct15",
+    "creator_name": "user_15",
+    "creator_followers": 873381,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct16",
+    "creator_name": "user_16",
+    "creator_followers": 235079,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct17",
+    "creator_name": "user_17",
+    "creator_followers": 169809,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct18",
+    "creator_name": "user_18",
+    "creator_followers": 741133,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct19",
+    "creator_name": "user_19",
+    "creator_followers": 452983,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct20",
+    "creator_name": "user_20",
+    "creator_followers": 541151,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct21",
+    "creator_name": "user_21",
+    "creator_followers": 423925,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct22",
+    "creator_name": "user_22",
+    "creator_followers": 356089,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct23",
+    "creator_name": "user_23",
+    "creator_followers": 442240,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct24",
+    "creator_name": "user_24",
+    "creator_followers": 205753,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct25",
+    "creator_name": "user_25",
+    "creator_followers": 374437,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct26",
+    "creator_name": "user_26",
+    "creator_followers": 334498,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct27",
+    "creator_name": "user_27",
+    "creator_followers": 97172,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct28",
+    "creator_name": "user_28",
+    "creator_followers": 757730,
+    "interactions_24h": 3000
+   }
+  ],
+  "4": [
+   {
+    "creator_id": "acct0",
+    "creator_name": "user_0",
+    "creator_followers": 482271,
+    "interactions_24h": 8000
+   },
+   {
+    "creator_id": "acct1",
+    "creator_name": "user_1",
+    "creator_followers": 194855,
+    "interactions_24h": 7000
+   },
+   {
+    "creator_id": "acct2",
+    "creator_name": "user_2",
+    "creator_followers": 165685,
+    "interactions_24h": 6000
+   },
+   {
+    "creator_id": "acct3",
+    "creator_name": "user_3",
+    "creator_followers": 282605,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct4",
+    "creator_name": "user_4",
+    "creator_followers": 467980,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct5",
+    "creator_name": "user_5",
+    "creator_followers": 4298,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct6",
+    "creator_name": "user_6",
+    "creator_followers": 276530,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct7",
+    "creator_name": "user_7",
+    "creator_followers": 382329,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct8",
+    "creator_name": "user_8",
+    "creator_followers": 345404,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct9",
+    "creator_name": "user_9",
+    "creator_followers": 574148,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct10",
+    "creator_name": "user_10",
+    "creator_followers": 339749,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct11",
+    "creator_name": "user_11",
+    "creator_followers": 256820,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct12",
+    "creator_name": "user_12",
+    "creator_followers": 36620,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct13",
+    "creator_name": "user_13",
+    "creator_followers": 325084,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct14",
+    "creator_name": "user_14",
+    "creator_followers": 228948,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct15",
+    "creator_name": "user_15",
+    "creator_followers": 374405,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct16",
+    "creator_name": "user_16",
+    "creator_followers": 192345,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct17",
+    "creator_name": "user_17",
+    "creator_followers": 1620,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct18",
+    "creator_name": "user_18",
+    "creator_followers": 352121,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct19",
+    "creator_name": "user_19",
+    "creator_followers": 400664,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct20",
+    "creator_name": "user_20",
+    "creator_followers": 88465,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct21",
+    "creator_name": "user_21",
+    "creator_followers": 498199,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct22",
+    "creator_name": "user_22",
+    "creator_followers": 292978,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct23",
+    "creator_name": "user_23",
+    "creator_followers": 527686,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct24",
+    "creator_name": "user_24",
+    "creator_followers": 688384,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct25",
+    "creator_name": "user_25",
+    "creator_followers": 211242,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct26",
+    "creator_name": "user_26",
+    "creator_followers": 260734,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct27",
+    "creator_name": "user_27",
+    "creator_followers": 529753,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct28",
+    "creator_name": "user_28",
+    "creator_followers": 814444,
+    "interactions_24h": 3000
+   }
+  ],
+  "5": [
+   {
+    "creator_id": "acct0",
+    "creator_name": "user_0",
+    "creator_followers": 481765,
+    "interactions_24h": 8000
+   },
+   {
+    "creator_id": "acct1",
+    "creator_name": "user_1",
+    "creator_followers": 80678,
+    "interactions_24h": 7000
+   },
+   {
+    "creator_id": "acct2",
+    "creator_name": "user_2",
+    "creator_followers": 860225,
+    "interactions_24h": 6000
+   },
+   {
+    "creator_id": "acct3",
+    "creator_name": "user_3",
+    "creator_followers": 531728,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct4",
+    "creator_name": "user_4",
+    "creator_followers": 471783,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct5",
+    "creator_name": "user_5",
+    "creator_followers": 282207,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct6",
+    "creator_name": "user_6",
+    "creator_followers": 406139,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct7",
+    "creator_name": "user_7",
+    "creator_followers": 220530,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct8",
+    "creator_name": "user_8",
+    "creator_followers": 221444,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct9",
+    "creator_name": "user_9",
+    "creator_followers": 78737,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct10",
+    "creator_name": "user_10",
+    "creator_followers": 610217,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct11",
+    "creator_name": "user_11",
+    "creator_followers": 95189,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct12",
+    "creator_name": "user_12",
+    "creator_followers": 149125,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct13",
+    "creator_name": "user_13",
+    "creator_followers": 784296,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct14",
+    "creator_name": "user_14",
+    "creator_followers": 550022,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct15",
+    "creator_name": "user_15",
+    "creator_followers": 275026,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct16",
+    "creator_name": "user_16",
+    "creator_followers": 377519,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct17",
+    "creator_name": "user_17",
+    "creator_followers": 139546,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct18",
+    "creator_name": "user_18",
+    "creator_followers": 633174,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct19",
+    "creator_name": "user_19",
+    "creator_followers": 860559,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct20",
+    "creator_name": "user_20",
+    "creator_followers": 662852,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct21",
+    "creator_name": "user_21",
+    "creator_followers": 533957,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct22",
+    "creator_name": "user_22",
+    "creator_followers": 293648,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct23",
+    "creator_name": "user_23",
+    "creator_followers": 118650,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct24",
+    "creator_name": "user_24",
+    "creator_followers": 738002,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct25",
+    "creator_name": "user_25",
+    "creator_followers": 383427,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct26",
+    "creator_name": "user_26",
+    "creator_followers": 243123,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct27",
+    "creator_name": "user_27",
+    "creator_followers": 522573,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct28",
+    "creator_name": "user_28",
+    "creator_followers": 510255,
+    "interactions_24h": 3000
+   }
+  ],
+  "6": [
+   {
+    "creator_id": "acct0",
+    "creator_name": "user_0",
+    "creator_followers": 890355,
+    "interactions_24h": 8000
+   },
+   {
+    "creator_id": "acct1",
+    "creator_name": "user_1",
+    "creator_followers": 226953,
+    "interactions_24h": 7000
+   },
+   {
+    "creator_id": "acct2",
+    "creator_name": "user_2",
+    "creator_followers": 97596,
+    "interactions_24h": 6000
+   },
+   {
+    "creator_id": "acct3",
+    "creator_name": "user_3",
+    "creator_followers": 284685,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct4",
+    "creator_name": "user_4",
+    "creator_followers": 261022,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct5",
+    "creator_name": "user_5",
+    "creator_followers": 403741,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct6",
+    "creator_name": "user_6",
+    "creator_followers": 419675,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct7",
+    "creator_name": "user_7",
+    "creator_followers": 677661,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct8",
+    "creator_name": "user_8",
+    "creator_followers": 468016,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct9",
+    "creator_name": "user_9",
+    "creator_followers": 453313,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct10",
+    "creator_name": "user_10",
+    "creator_followers": 327672,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct11",
+    "creator_name": "user_11",
+    "creator_followers": 890409,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct12",
+    "creator_name": "user_12",
+    "creator_followers": 854396,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct13",
+    "creator_name": "user_13",
+    "creator_followers": 23369,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct14",
+    "creator_name": "user_14",
+    "creator_followers": 133928,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct15",
+    "creator_name": "user_15",
+    "creator_followers": 34309,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct16",
+    "creator_name": "user_16",
+    "creator_followers": 446354,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct17",
+    "creator_name": "user_17",
+    "creator_followers": 744477,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct18",
+    "creator_name": "user_18",
+    "creator_followers": 801287,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct19",
+    "creator_name": "user_19",
+    "creator_followers": 843816,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct20",
+    "creator_name": "user_20",
+    "creator_followers": 496757,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct21",
+    "creator_name": "user_21",
+    "creator_followers": 616199,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct22",
+    "creator_name": "user_22",
+    "creator_followers": 514118,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct23",
+    "creator_name": "user_23",
+    "creator_followers": 687,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct24",
+    "creator_name": "user_24",
+    "creator_followers": 77190,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct25",
+    "creator_name": "user_25",
+    "creator_followers": 411039,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct26",
+    "creator_name": "user_26",
+    "creator_followers": 866193,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct27",
+    "creator_name": "user_27",
+    "creator_followers": 554002,
+    "interactions_24h": 3000
+   },
+   {
+    "creator_id": "acct28",
+    "creator_name": "user_28",
+    "creator_followers": 897517,
+    "interactions_24h": 3000
+   }
+  ]
+ }
+}

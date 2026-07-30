@@ -1,0 +1,32 @@
+name: hype-detector daily
+
+on:
+  schedule:
+    - cron: "30 13 * * *"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/hype-detector
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: projects/hype-detector/package-lock.json
+      - run: npm ci
+      - name: Run detector
+        env:
+          LUNARCRUSH_API_KEY: ${{ secrets.LUNARCRUSH_API_KEY }}
+          POST_PROMO_CODE: ${{ vars.POST_PROMO_CODE }}
+        run: npm run daily
+      - name: Upload output
+        uses: actions/upload-artifact@v4
+        with:
+          name: hype-detector-output
+          path: projects/hype-detector/out/
+          retention-days: 14
