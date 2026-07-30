@@ -61,6 +61,50 @@ export function renderChartSvg(report: DetectorReport): string {
 </svg>`;
 }
 
+/** 1080x1920 Instagram Story variant, content inside IG-safe zones. */
+export function renderStorySvg(report: DetectorReport): string {
+  const W = 1080;
+  const H = 1920;
+  const M = 80;
+  const rowH = 118;
+  const shown = report.verdicts.slice(0, 9);
+  const date = new Date(report.generatedAt).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+  const barMax = W - M * 2 - 130;
+
+  let body = "";
+  let y = 500;
+  for (const v of shown) {
+    const w = Math.max(10, Math.round((v.score / 100) * barMax));
+    const color = COLORS[v.verdict];
+    const spam = Math.round(v.evidence.spamRatio * 100);
+    const conc = Math.round(v.evidence.top3CreatorShare * 100);
+    body += `
+    <text x="${M}" y="${y + 40}" font-size="34" font-weight="600" fill="${COLORS.text}">$${esc(v.symbol)}</text>
+    <text x="${W - M}" y="${y + 40}" font-size="25" fill="${COLORS.subtext}" text-anchor="end">${spam}% spam · top3 ${conc}%</text>
+    <rect x="${M}" y="${y + 56}" width="${barMax}" height="28" rx="8" fill="${COLORS.track}"/>
+    <rect x="${M}" y="${y + 56}" width="${w}" height="28" rx="8" fill="${color}"/>
+    <text x="${M + barMax + 18}" y="${y + 80}" font-size="30" font-weight="700" fill="${color}">${v.score}</text>`;
+    y += rowH;
+  }
+  if (shown.length === 0) {
+    body = `<text x="${M}" y="560" font-size="34" fill="${COLORS.subtext}">No genuine social spikes today.</text>
+    <text x="${M}" y="615" font-size="34" fill="${COLORS.subtext}">Quiet markets are allowed.</text>`;
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <rect width="${W}" height="${H}" fill="${COLORS.bg}"/>
+  <text x="${M}" y="330" font-size="60" font-weight="700" fill="${COLORS.text}">Hype Check</text>
+  <text x="${M}" y="380" font-size="30" fill="${COLORS.subtext}">${date} · 0 organic to 100 manufactured</text>
+  <text x="${M}" y="422" font-size="26" fill="${COLORS.subtext}">spam share + creator concentration + sentiment uniformity</text>
+  ${body}
+  <text x="${M}" y="${H - 290}" font-size="26" fill="${COLORS.subtext}">Data: LunarCrush · methodology in the repo</text>
+</svg>`;
+}
+
 export async function svgToPng(svg: string): Promise<Buffer> {
   const { default: sharp } = await import("sharp");
   return sharp(Buffer.from(svg), { density: 144 }).png().toBuffer();

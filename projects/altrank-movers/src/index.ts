@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { renderChartSvg, svgToPng } from "./chart.js";
+import { renderChartSvg, renderStorySvg, svgToPng } from "./chart.js";
 import { loadEnv } from "./env.js";
 import { fetchCoinsList } from "./lunarcrush.js";
 import { DEFAULT_OPTIONS, computeMovers } from "./movers.js";
@@ -96,16 +96,20 @@ async function main(): Promise<void> {
   await writeFile(join(args.outDir, "post.txt"), post);
   await writeFile(join(args.outDir, "chart.svg"), svg);
 
+  const storySvg = renderStorySvg(report);
+  await writeFile(join(args.outDir, "story.svg"), storySvg);
+
   let png: Buffer | undefined;
   try {
     png = await svgToPng(svg);
     await writeFile(join(args.outDir, "chart.png"), png);
+    await writeFile(join(args.outDir, "story.png"), await svgToPng(storySvg));
   } catch (err) {
     console.warn(`PNG render failed (${(err as Error).message}); SVG still written.`);
   }
 
   console.log(`\n${post}\n`);
-  console.log(`Wrote ${args.outDir}/post.txt, chart.svg${png ? ", chart.png" : ""}`);
+  console.log(`Wrote ${args.outDir}/post.txt, chart.svg, story.svg${png ? ", chart.png, story.png" : ""}`);
 
   if (args.send) {
     const botToken = process.env.TELEGRAM_BOT_TOKEN;

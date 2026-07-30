@@ -10,7 +10,7 @@ import {
   top3CreatorShare,
   verdictFor,
 } from "./classify.js";
-import { renderChartSvg, svgToPng } from "./chart.js";
+import { renderChartSvg, renderStorySvg, svgToPng } from "./chart.js";
 import { loadEnv } from "./env.js";
 import { fetchCoinsList, fetchDailySeries, fetchTopicCreators } from "./lunarcrush.js";
 import { renderPost } from "./render.js";
@@ -23,14 +23,16 @@ const FIXTURES = join(HERE, "..", "fixtures", "sample.json");
 interface CliArgs {
   mock: boolean;
   maxCandidates: number;
+  fromReport: boolean;
 }
 
 function parseArgs(argv: string[]): CliArgs {
-  const args: CliArgs = { mock: false, maxCandidates: 40 };
+  const args: CliArgs = { mock: false, maxCandidates: 40, fromReport: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--mock") args.mock = true;
     else if (a === "--max-candidates") args.maxCandidates = Number(argv[++i]);
+    else if (a === "--from-report") args.fromReport = true;
   }
   return args;
 }
@@ -41,9 +43,33 @@ interface MockData {
   creators: Record<string, Creator[]>;
 }
 
+function writeOutputs(report: DetectorReport): Promise<void> {
+  mkdirSync(OUT_DIR, { recursive: true });
+  writeFileSync(join(OUT_DIR, "report.json"), JSON.stringify(report, null, 1));
+  const post = renderPost(report, process.env.POST_PROMO_CODE);
+  writeFileSync(join(OUT_DIR, "post.txt"), post);
+  const svg = renderChartSvg(report);
+  writeFileSync(join(OUT_DIR, "chart.svg"), svg);
+  const storySvg = renderStorySvg(report);
+  writeFileSync(join(OUT_DIR, "story.svg"), storySvg);
+  return Promise.all([
+    svgToPng(svg).then((png) => writeFileSync(join(OUT_DIR, "chart.png"), png)),
+    svgToPng(storySvg).then((png) => writeFileSync(join(OUT_DIR, "story.png"), png)),
+  ]).then(() => {
+    console.log("\n" + post + "\n");
+    console.log("Wrote out/report.json, post.txt, chart.svg, chart.png, story.svg, story.png");
+  });
+}
+
 async function main(): Promise<void> {
   loadEnv();
   const args = parseArgs(process.argv.slice(2));
+
+  if (args.fromReport) {
+    const report = JSON.parse(readFileSync(join(OUT_DIR, "report.json"), "utf8")) as DetectorReport;
+    await writeOutputs(report);
+    return;
+  }
 
   let coins: CoinRow[];
   let getSeries: (c: CoinRow) => Promise<SeriesRow[]>;
@@ -116,16 +142,7 @@ async function main(): Promise<void> {
     verdicts,
   };
 
-  mkdirSync(OUT_DIR, { recursive: true });
-  writeFileSync(join(OUT_DIR, "report.json"), JSON.stringify(report, null, 1));
-  const post = renderPost(report, process.env.POST_PROMO_CODE);
-  writeFileSync(join(OUT_DIR, "post.txt"), post);
-  const svg = renderChartSvg(report);
-  writeFileSync(join(OUT_DIR, "chart.svg"), svg);
-  writeFileSync(join(OUT_DIR, "chart.png"), await svgToPng(svg));
-
-  console.log("\n" + post + "\n");
-  console.log("Wrote out/report.json, post.txt, chart.svg, chart.png");
+  await writeOutputs(report);
 }
 
 main().catch((e) => {
