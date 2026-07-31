@@ -11,6 +11,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 01 | [altrank-movers](projects/altrank-movers/) | Daily bot that posts the biggest AltRank climbers and fallers with a chart |
 | 02 | [social-price-backtest](projects/social-price-backtest/) | Backtest of whether social interaction spikes lead price, on 6+ years of daily data |
 | 03 | [hype-detector](projects/hype-detector/) | Daily scanner classifying social spikes as organic or manufactured, with evidence |
+| 04 | [narrative-rotation](projects/narrative-rotation/) | Weekly report on which crypto narratives gained or lost social attention share |
 
 ## Getting an API key
 
