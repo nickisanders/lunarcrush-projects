@@ -1,10 +1,10 @@
 # Attention Half-Life
 
-How fast do crypto social spikes decay, and does authenticity matter? This study tests a claim I made in public: "real attention decays, rented attention stops." It measures the post-spike trajectory of every clean spike in the [backtest](../social-price-backtest/) dataset: 5,255 spikes across 997 coins, 2020 to 2026.
+How fast do crypto social spikes decay, and does authenticity matter? This study measures the post-spike trajectory of every clean spike in the [backtest](../social-price-backtest/) dataset: 5,255 spikes across 997 coins, 2020 to 2026.
 
-## Result: the claim is wrong
+## Result so far: at daily resolution, decay does not distinguish organic from spam-heavy spikes
 
-Crypto attention has a one-day half-life regardless of who's talking.
+Crypto attention has a one-day half-life regardless of who's talking. Whether decay differences exist at hourly resolution (bots stopping within hours vs real interest tapering across a day would be invisible in daily buckets) is the open question; an hourly follow-up is in progress.
 
 - Median spike loses about two thirds of its height in one day (organic and spam-heavy alike)
 - 83% of spikes are below half strength by day two
@@ -12,7 +12,7 @@ Crypto attention has a one-day half-life regardless of who's talking.
 - Spikes leave a residue: the post-spike attention floor settles ~30% above the pre-spike baseline, identically for both groups
 - No comparison (retention at 1/3/7 days, half-life, baseline residue) is statistically distinguishable between organic and spam-heavy spikes, by month-cluster bootstrap, including with sharper group cuts (spam <= 20% vs >= 80%)
 
-What distinguishes manufactured hype is not how it dies. Everything dies in a day. The distinguishing signals remain composition (who is talking: spam share, creator concentration) and price response (the backtest: organic spikes shift the odds of beating BTC, spam spikes don't).
+At this resolution, what distinguishes manufactured hype is not how it dies. Everything dies in about a day. The distinguishing signals remain composition (who is talking: spam share, creator concentration) and price response (the backtest: organic spikes shift the odds of beating BTC, spam spikes don't).
 
 ## Method
 
