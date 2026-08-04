@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  burstShare24h,
   interactionZScore,
   isMegaphone,
   manufacturedScore,
@@ -11,6 +12,7 @@ import {
   top3CreatorShare,
   verdictFor,
 } from "../src/classify.js";
+import { measureDecay, pickDecayWatch } from "../src/decaywatch.js";
 import type { CoinRow, SeriesRow } from "../src/types.js";
 
 function flatSeries(days: number, base: number, todayMult = 1): SeriesRow[] {
@@ -106,6 +108,59 @@ test("megaphone: near-total concentration with low spam", () => {
   const botnet = { ...megaphone, spamRatio: 0.8, spamRatioRaw: 2.0 };
   assert.equal(isMegaphone(megaphone), true);
   assert.equal(isMegaphone(botnet), false);
+});
+
+test("burst share: bursty crowd vs scheduled campaign, over complete hours", () => {
+  const hour = (interactions: number, i: number) => ({ time: i, interactions });
+  // 25 rows: last is the partial hour and must be ignored
+  const bursty = [
+    ...Array.from({ length: 21 }, (_, i) => hour(100, i)),
+    hour(5000, 21),
+    hour(4000, 22),
+    hour(3000, 23),
+    hour(99999, 24), // partial hour, ignored
+  ];
+  const flat = Array.from({ length: 25 }, (_, i) => hour(1000, i));
+  assert.ok(burstShare24h(bursty)! > 0.8);
+  assert.ok(burstShare24h(flat)! < 0.15);
+  assert.equal(burstShare24h(flat.slice(0, 10)), null); // too little history
+});
+
+test("decay-watch picks 3-5 day old high scorers, once", () => {
+  const mk = (date: string, symbol: string, score: number) =>
+    JSON.stringify({
+      generatedAt: `${date}T13:30:00.000Z`,
+      scanned: 1000,
+      spiking: 1,
+      verdicts: [{ symbol, score, verdict: "manufactured", evidence: {}, megaphone: false }],
+    });
+  const history = [
+    mk("2026-08-01", "OLDIE", 95), // 6 days old at "now": outside window
+    mk("2026-08-03", "TARGET", 88), // 4 days old: in window
+    mk("2026-08-03", "LOWSCORE", 60), // in window but below threshold
+    mk("2026-08-06", "FRESH", 99), // 1 day old: too soon
+  ];
+  const now = new Date("2026-08-07T14:00:00Z");
+  const picked = pickDecayWatch(history, now, () => false);
+  assert.deepEqual(picked.map((t) => t.symbol), ["TARGET"]);
+  const skipped = pickDecayWatch(history, now, () => true); // chart already exists
+  assert.deepEqual(skipped, []);
+});
+
+test("measureDecay anchors on the spike day and drops the partial tail", () => {
+  const day = 86400;
+  const t0 = Date.UTC(2026, 7, 3) / 1000; // Aug 3
+  const series = Array.from({ length: 10 }, (_, i) => ({
+    time: t0 + (i - 6) * day,
+    interactions: i === 6 ? 2_000_000 : 100_000,
+  }));
+  const result = measureDecay({ symbol: "X", score: 90, spikeDate: "2026-08-03" }, series);
+  assert.ok(result);
+  assert.equal(result!.bars[4].isSpike, true);
+  assert.equal(result!.bars[4].interactions, 2_000_000);
+  // 4 pre-spike + spike + 2 post (the partial trailing row is dropped)
+  assert.equal(result!.bars.length, 7);
+  assert.equal(result!.retainedPct, 5);
 });
 
 test("candidate picker enforces eligibility floors", () => {

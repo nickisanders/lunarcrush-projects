@@ -114,6 +114,20 @@ export function verdictFor(score: number): Verdict {
   return "organic";
 }
 
+/** Burst share over the last 24 complete hours: the top-3 hours' share of
+ * interactions. The half-life study found organic spikes are BURSTIER (real
+ * crowds pile in together; scheduled campaigns spread through the day).
+ * Display-only evidence until prospectively validated: NOT in the score. */
+export function burstShare24h(hourly: SeriesRow[]): number | null {
+  const complete = hourly.slice(0, -1); // trailing hour is partial
+  const window = complete.slice(-24).map((r) => r.interactions ?? 0);
+  if (window.length < 24) return null;
+  const total = window.reduce((a, b) => a + b, 0);
+  if (total <= 0) return null;
+  const top3 = [...window].sort((a, b) => b - a).slice(0, 3).reduce((a, b) => a + b, 0);
+  return top3 / total;
+}
+
 /** Burn-in showed a recurring pattern the score alone muddles: near-total
  * concentration with LOW spam, i.e. one account is the entire conversation
  * (a project announcement, an exchange, a big KOL). That's a megaphone, not

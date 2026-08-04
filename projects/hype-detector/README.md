@@ -16,6 +16,11 @@ The manufactured score (0-100), calibrated on a burn-in week of live verdicts pl
 - **Creator concentration (30%)**: share of interactions from the top 3 accounts.
 - **Sentiment uniformity (10%)**: re-centered at 90, because a majority of crypto spike days run 85+ sentiment; only near-unanimity discriminates.
 
+Two v2 additions ride along as evidence without touching the score:
+
+- **Burst share (display-only)**: the top-3 hours' share of the last 24h of interactions, from one hourly call per verdict coin. The half-life study found organic crowds are burstier than scheduled campaigns (p=0.02, a lead rather than a finding); it stays out of the score until a prospective validation window says otherwise.
+- **Decay-watch**: any specimen that scored 80+ gets an automatic "what happened next" chart 3-5 days later (`out/decay-SYMBOL-DATE.png`), built from the verdict history (`data/history.jsonl`, persisted across CI runs via actions/cache).
+
 Verdicts: 60+ manufactured, 30-59 mixed, under 30 organic. A separate **megaphone** label marks near-total concentration with low spam (top 3 >= 90%, spam < 40%): one account being the entire conversation is an announcement or KOL pattern, not a botnet, and the burn-in showed the score alone muddles the two. Every verdict ships with its evidence: this is a measurement of amplification, not an identification of who is behind it.
 
 ## Usage

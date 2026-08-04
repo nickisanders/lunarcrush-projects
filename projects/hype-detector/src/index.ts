@@ -1,8 +1,9 @@
-import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   SPIKE_Z_MIN,
+  burstShare24h,
   interactionZScore,
   isMegaphone,
   manufacturedScore,
@@ -13,9 +14,17 @@ import {
   top3CreatorShare,
   verdictFor,
 } from "./classify.js";
+import { measureDecay, pickDecayWatch, readHistoryLines } from "./decaywatch.js";
+import { renderDecayChartSvg } from "./chart.js";
 import { renderChartSvg, renderStorySvg, svgToPng } from "./chart.js";
 import { loadEnv } from "./env.js";
-import { fetchCoinsList, fetchDailySeries, fetchTopicCreators } from "./lunarcrush.js";
+import {
+  fetchCoinsList,
+  fetchDailySeries,
+  fetchDailySeriesBySymbol,
+  fetchHourlySeries,
+  fetchTopicCreators,
+} from "./lunarcrush.js";
 import { renderPost } from "./render.js";
 import type { CoinRow, CoinVerdict, Creator, DetectorReport, SeriesRow } from "./types.js";
 
@@ -77,6 +86,7 @@ async function main(): Promise<void> {
   let coins: CoinRow[];
   let getSeries: (c: CoinRow) => Promise<SeriesRow[]>;
   let getCreators: (c: CoinRow) => Promise<Creator[]>;
+  let getHourly: ((c: CoinRow) => Promise<SeriesRow[]>) | null = null;
 
   if (args.mock) {
     const mock = JSON.parse(readFileSync(FIXTURES, "utf8")) as MockData;
@@ -96,6 +106,7 @@ async function main(): Promise<void> {
     console.log(`Loaded ${coins.length} coins`);
     getSeries = (c) => fetchDailySeries(apiKey, c.id);
     getCreators = (c) => fetchTopicCreators(apiKey, c.topic);
+    getHourly = (c) => fetchHourlySeries(apiKey, c.id);
   }
 
   const candidates = pickCandidates(coins, args.maxCandidates);
@@ -115,7 +126,16 @@ async function main(): Promise<void> {
       if (z < SPIKE_Z_MIN) continue;
       console.log(`  ${c.symbol}: z=${z.toFixed(1)}`);
       const creators = await getCreators(c);
+      let burst: number | null = null;
+      if (getHourly) {
+        try {
+          burst = burstShare24h(await getHourly(c));
+        } catch {
+          burst = null;
+        }
+      }
       const evidence = {
+        burstShare24h: burst,
         zScore: z,
         spamRatio: spamRatio(series),
         spamRatioRaw: spamRatioRaw(series[series.length - 1]),
@@ -151,10 +171,34 @@ async function main(): Promise<void> {
   await writeOutputs(report);
 
   // Append to the local verdict history for future calibration passes.
-  // (CI runs start fresh; their reports live in the Actions artifacts.)
+  // (In CI the data/ dir persists via actions/cache.)
   const histDir = join(HERE, "..", "data");
   mkdirSync(histDir, { recursive: true });
-  appendFileSync(join(histDir, "history.jsonl"), JSON.stringify(report) + "\n");
+  const histPath = join(histDir, "history.jsonl");
+  appendFileSync(histPath, JSON.stringify(report) + "\n");
+
+  // Decay-watch: high-scoring specimens from 3-5 days ago get an automatic
+  // "what happened next" chart. Live runs only.
+  const apiKey = process.env.LUNARCRUSH_API_KEY;
+  if (args.mock || !apiKey) return;
+  const targets = pickDecayWatch(readHistoryLines(histPath), new Date(), (t) =>
+    existsSync(join(OUT_DIR, `decay-${t.symbol}-${t.spikeDate}.png`))
+  );
+  for (const t of targets) {
+    try {
+      const series = await fetchDailySeriesBySymbol(apiKey, t.symbol);
+      const result = measureDecay(t, series);
+      if (!result) continue;
+      const svg = renderDecayChartSvg(result);
+      writeFileSync(join(OUT_DIR, `decay-${t.symbol}-${t.spikeDate}.png`), await svgToPng(svg));
+      console.log(
+        `decay-watch: $${t.symbol} (flagged ${t.score}/100 on ${t.spikeDate}) now retains ` +
+          `${result.retainedPct.toFixed(0)}% of spike volume · wrote out/decay-${t.symbol}-${t.spikeDate}.png`
+      );
+    } catch (e) {
+      console.warn(`decay-watch: skipping ${t.symbol}: ${e}`);
+    }
+  }
 }
 
 main().catch((e) => {

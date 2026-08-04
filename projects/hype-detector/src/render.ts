@@ -17,8 +17,12 @@ const BADGE: Record<string, string> = {
 function fmtLine(v: CoinVerdict): string {
   const spam = Math.round(v.evidence.spamRatio * 100);
   const conc = Math.round(v.evidence.top3CreatorShare * 100);
+  const burst =
+    v.evidence.burstShare24h != null
+      ? `, burst ${Math.round(v.evidence.burstShare24h * 100)}%`
+      : "";
   const tag = v.megaphone ? " · single megaphone, not a botnet" : "";
-  return `${BADGE[v.verdict]} $${v.symbol} ${v.score}/100 (${spam}% spam, top 3 accounts drive ${conc}%${tag})`;
+  return `${BADGE[v.verdict]} $${v.symbol} ${v.score}/100 (${spam}% spam, top 3 accounts drive ${conc}%${burst}${tag})`;
 }
 
 export function renderPost(report: DetectorReport, promoCode?: string): string {

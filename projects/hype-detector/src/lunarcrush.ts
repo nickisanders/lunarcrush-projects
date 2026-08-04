@@ -31,3 +31,14 @@ export function fetchDailySeries(apiKey: string, coinId: number): Promise<Series
 export function fetchTopicCreators(apiKey: string, topic: string): Promise<Creator[]> {
   return get(`/public/topic/${encodeURIComponent(topic)}/creators/v1`, apiKey);
 }
+
+export function fetchHourlySeries(apiKey: string, coinId: number): Promise<SeriesRow[]> {
+  return get(`/public/coins/${coinId}/time-series/v2?bucket=hour&interval=1w`, apiKey);
+}
+
+export function fetchDailySeriesBySymbol(apiKey: string, symbol: string): Promise<SeriesRow[]> {
+  return get(
+    `/public/coins/${encodeURIComponent(symbol)}/time-series/v2?bucket=day&interval=1m`,
+    apiKey
+  );
+}

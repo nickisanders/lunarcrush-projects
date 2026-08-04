@@ -105,6 +105,48 @@ export function renderStorySvg(report: DetectorReport): string {
 </svg>`;
 }
 
+/** ZAMA-style "what happened next" bar chart for a decay-watch specimen. */
+export function renderDecayChartSvg(result: {
+  target: { symbol: string; score: number; spikeDate: string };
+  bars: Array<{ label: string; interactions: number; isSpike: boolean }>;
+  retainedPct: number;
+}): string {
+  const W = 1200;
+  const H = 700;
+  const PAD = 60;
+  const chartTop = 190;
+  const chartH = 360;
+  const { bars } = result;
+  const maxV = Math.max(...bars.map((b) => b.interactions), 1);
+  const bw = Math.min(120, (W - 2 * PAD) / bars.length - 24);
+  const gap = (W - 2 * PAD - bars.length * bw) / Math.max(1, bars.length - 1);
+
+  let body = "";
+  bars.forEach((b, i) => {
+    const x = PAD + i * (bw + gap);
+    const h = Math.max(6, (b.interactions / maxV) * chartH);
+    const y = chartTop + chartH - h;
+    const color = b.isSpike ? COLORS.manufactured : b.interactions / maxV < 0.12 ? COLORS.track : "#6e7681";
+    const val =
+      b.interactions >= 1e6
+        ? `${(b.interactions / 1e6).toFixed(1)}M`
+        : `${Math.round(b.interactions / 1e3)}k`;
+    body += `
+    <rect x="${x.toFixed(0)}" y="${y.toFixed(0)}" width="${bw.toFixed(0)}" height="${h.toFixed(0)}" rx="8" fill="${color}"/>
+    <text x="${(x + bw / 2).toFixed(0)}" y="${(y - 14).toFixed(0)}" font-size="24" font-weight="700" fill="${b.isSpike ? COLORS.manufactured : COLORS.text}" text-anchor="middle">${val}</text>
+    <text x="${(x + bw / 2).toFixed(0)}" y="${chartTop + chartH + 38}" font-size="20" fill="${COLORS.subtext}" text-anchor="middle">${esc(b.label)}</text>`;
+  });
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <rect width="${W}" height="${H}" fill="${COLORS.bg}"/>
+  <text x="${PAD}" y="56" font-size="36" font-weight="700" fill="${COLORS.text}">$${esc(result.target.symbol)}: what happened after the spike</text>
+  <text x="${PAD}" y="94" font-size="24" fill="${COLORS.subtext}">daily social interactions · flagged ${result.target.score}/100 on ${esc(result.target.spikeDate)}</text>
+  ${body}
+  <text x="${PAD}" y="${H - 62}" font-size="26" fill="${COLORS.text}">Latest day retains ${result.retainedPct.toFixed(0)}% of the spike's volume.</text>
+  <text x="${PAD}" y="${H - 28}" font-size="20" fill="${COLORS.subtext}">Data: LunarCrush · one-hour half-life is normal for ALL crypto attention · methodology in the repo</text>
+</svg>`;
+}
+
 export async function svgToPng(svg: string): Promise<Buffer> {
   const { default: sharp } = await import("sharp");
   return sharp(Buffer.from(svg), { density: 144 }).png().toBuffer();

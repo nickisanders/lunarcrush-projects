@@ -41,6 +41,9 @@ export interface Evidence {
   top3CreatorShare: number;
   /** 0-100 sentiment; near-unanimous positivity is a manufacturing tell */
   sentiment: number;
+  /** top-3 hours' share of the last 24h interactions; organic crowds are
+   * burstier (display-only lead, not scored, pending prospective validation) */
+  burstShare24h?: number | null;
 }
 
 export type Verdict = "manufactured" | "mixed" | "organic";
