@@ -2,8 +2,11 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   interactionZScore,
+  isMegaphone,
   manufacturedScore,
   pickCandidates,
+  spamBaseline,
+  spamLift,
   spamRatio,
   top3CreatorShare,
   verdictFor,
@@ -56,19 +59,53 @@ test("manufactured score separates the archetypes", () => {
   const manufactured = manufacturedScore({
     zScore: 5,
     spamRatio: 0.85,
+    spamRatioRaw: 2.2,
+    spamBaseline: 0.6,
     top3CreatorShare: 0.8,
-    sentiment: 92,
+    sentiment: 95,
   });
   const organic = manufacturedScore({
     zScore: 5,
     spamRatio: 0.1,
+    spamRatioRaw: 0.1,
+    spamBaseline: 0.12,
     top3CreatorShare: 0.15,
     sentiment: 65,
   });
   assert.ok(manufactured >= 60, `expected manufactured >= 60, got ${manufactured}`);
-  assert.ok(organic < 40, `expected organic < 40, got ${organic}`);
+  assert.ok(organic < 30, `expected organic < 30, got ${organic}`);
   assert.equal(verdictFor(manufactured), "manufactured");
   assert.equal(verdictFor(organic), "organic");
+});
+
+test("spam lift rewards fresh spam waves, not chronic baselines", () => {
+  // Chronically botted coin at its usual level: no lift
+  assert.equal(spamLift(1.0, 1.0), 0);
+  // Spam tripled vs baseline: full lift
+  assert.equal(spamLift(3.0, 1.0), 1);
+  // Clean coin with a sudden 2x wave: half lift
+  assert.equal(spamLift(0.4, 0.2), 0.5);
+});
+
+test("spam baseline is the trailing median of the raw ratio, excluding today", () => {
+  const rows = Array.from({ length: 35 }, (_, i) => ({
+    time: i,
+    interactions: 1000,
+    posts_created: 100,
+    spam: i === 34 ? 900 : 50, // today spikes to 9.0 raw, history at 0.5
+  }));
+  const base = spamBaseline(rows);
+  assert.ok(Math.abs(base - 0.5) < 1e-9, `expected 0.5, got ${base}`);
+});
+
+test("megaphone: near-total concentration with low spam", () => {
+  const megaphone = {
+    zScore: 3, spamRatio: 0.2, spamRatioRaw: 0.2, spamBaseline: 0.2,
+    top3CreatorShare: 0.97, sentiment: 90,
+  };
+  const botnet = { ...megaphone, spamRatio: 0.8, spamRatioRaw: 2.0 };
+  assert.equal(isMegaphone(megaphone), true);
+  assert.equal(isMegaphone(botnet), false);
 });
 
 test("candidate picker enforces eligibility floors", () => {

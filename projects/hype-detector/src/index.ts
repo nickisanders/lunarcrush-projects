@@ -1,12 +1,15 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   SPIKE_Z_MIN,
   interactionZScore,
+  isMegaphone,
   manufacturedScore,
   pickCandidates,
+  spamBaseline,
   spamRatio,
+  spamRatioRaw,
   top3CreatorShare,
   verdictFor,
 } from "./classify.js";
@@ -115,6 +118,8 @@ async function main(): Promise<void> {
       const evidence = {
         zScore: z,
         spamRatio: spamRatio(series),
+        spamRatioRaw: spamRatioRaw(series[series.length - 1]),
+        spamBaseline: spamBaseline(series),
         top3CreatorShare: top3CreatorShare(creators),
         sentiment: c.sentiment ?? 50,
       };
@@ -128,6 +133,7 @@ async function main(): Promise<void> {
         evidence,
         score,
         verdict: verdictFor(score),
+        megaphone: isMegaphone(evidence),
       });
     } catch (e) {
       console.error(`  skipping ${c.symbol}: ${e}`);
@@ -143,6 +149,12 @@ async function main(): Promise<void> {
   };
 
   await writeOutputs(report);
+
+  // Append to the local verdict history for future calibration passes.
+  // (CI runs start fresh; their reports live in the Actions artifacts.)
+  const histDir = join(HERE, "..", "data");
+  mkdirSync(histDir, { recursive: true });
+  appendFileSync(join(histDir, "history.jsonl"), JSON.stringify(report) + "\n");
 }
 
 main().catch((e) => {

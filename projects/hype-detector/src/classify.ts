@@ -1,4 +1,5 @@
 import type { CoinRow, Creator, Evidence, SeriesRow, Verdict } from "./types.js";
+export type { SeriesRow };
 
 export const ELIGIBILITY = {
   topN: 1000,
@@ -64,22 +65,61 @@ export function top3CreatorShare(creators: Creator[]): number {
   return top3 / total;
 }
 
-/** 0-100 manufactured score. Weights follow what the backtest validated:
- * spam share is the load-bearing signal, concentration and sentiment
- * uniformity are supporting tells. */
+/** Unclipped spam/posts ratio for one series row. Can exceed 1: the spam
+ * count covers a broader post universe than posts_created, and its scale has
+ * shifted across eras, which is why the score leans on the LIFT vs the
+ * coin's own baseline rather than the absolute level alone. */
+export function spamRatioRaw(row: SeriesRow | undefined): number {
+  if (!row || !row.posts_created) return 0;
+  return (row.spam ?? 0) / Math.max(1, row.posts_created);
+}
+
+/** Median unclipped spam ratio over the trailing complete days. */
+export function spamBaseline(series: SeriesRow[], trailing = 30): number {
+  const window = series.slice(-1 - trailing, -1).map(spamRatioRaw).sort((a, b) => a - b);
+  if (window.length === 0) return 0;
+  return window[Math.floor(window.length / 2)];
+}
+
+/** How elevated today's spam ratio is vs the coin's own norm, mapped to 0-1
+ * (2x baseline -> 0.5, 3x or more -> 1). Chronically botted coins aren't
+ * penalized twice for their baseline; fresh spam waves are. */
+export function spamLift(rawToday: number, baseline: number): number {
+  const lift = rawToday / Math.max(baseline, 0.05);
+  return Math.min(1, Math.max(0, (lift - 1) / 2));
+}
+
+/** 0-100 manufactured score, calibrated on the burn-in week + 6.5y of
+ * historical distributions:
+ * - spam lift vs own baseline (0.40): the era-robust spam signal
+ * - absolute spam share (0.20): chronic botting still counts
+ * - creator concentration (0.30)
+ * - sentiment uniformity (0.10): re-centered at 90 because crypto spike
+ *   sentiment is >=85 on a majority of spike days; only near-unanimity
+ *   discriminates */
 export function manufacturedScore(e: Evidence): number {
-  const spam = e.spamRatio; // 0-1
-  const concentration = e.top3CreatorShare; // 0-1
-  // Sentiment uniformity: 50 = balanced crowd, 100 = suspiciously unanimous.
-  // Only extreme positivity counts; organic fear is not manufacturing.
-  const uniformity = Math.max(0, (e.sentiment - 75) / 25); // 0-1 above 75
-  return Math.round(100 * (0.55 * spam + 0.3 * concentration + 0.15 * uniformity));
+  const uniformity = Math.max(0, (e.sentiment - 90) / 10);
+  return Math.round(
+    100 *
+      (0.4 * spamLift(e.spamRatioRaw, e.spamBaseline) +
+        0.2 * e.spamRatio +
+        0.3 * e.top3CreatorShare +
+        0.1 * uniformity)
+  );
 }
 
 export function verdictFor(score: number): Verdict {
   if (score >= 60) return "manufactured";
   if (score >= 30) return "mixed";
   return "organic";
+}
+
+/** Burn-in showed a recurring pattern the score alone muddles: near-total
+ * concentration with LOW spam, i.e. one account is the entire conversation
+ * (a project announcement, an exchange, a big KOL). That's a megaphone, not
+ * a botnet, and it gets labeled instead of misread as manufacturing. */
+export function isMegaphone(e: Evidence): boolean {
+  return e.top3CreatorShare >= 0.9 && e.spamRatio < 0.4;
 }
 
 /** Only coins genuinely spiking get a verdict at all. */

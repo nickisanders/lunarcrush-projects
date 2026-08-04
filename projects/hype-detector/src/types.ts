@@ -31,11 +31,15 @@ export interface Creator {
 export interface Evidence {
   /** z-score of log interactions vs trailing 30d */
   zScore: number;
-  /** share of created posts labeled spam today (0-1) */
+  /** share of created posts labeled spam today, clipped 0-1 */
   spamRatio: number;
+  /** unclipped spam/posts ratio today (can exceed 1) */
+  spamRatioRaw: number;
+  /** coin's own trailing 30d median unclipped spam ratio */
+  spamBaseline: number;
   /** share of creator interactions from the top 3 accounts (0-1) */
   top3CreatorShare: number;
-  /** 0-100 sentiment; extreme uniform positivity is a manufacturing tell */
+  /** 0-100 sentiment; near-unanimous positivity is a manufacturing tell */
   sentiment: number;
 }
 
@@ -51,6 +55,9 @@ export interface CoinVerdict {
   /** 0-100, higher = more manufactured */
   score: number;
   verdict: Verdict;
+  /** one account (or a tight few) IS the conversation: announcement/KOL
+   * pattern, distinct from botnet-style manufacturing */
+  megaphone: boolean;
 }
 
 export interface DetectorReport {

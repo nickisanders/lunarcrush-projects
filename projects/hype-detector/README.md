@@ -9,13 +9,14 @@ Two stages to stay cheap on API quota (~80 requests/day):
 1. One coins-list call. Candidates are coins inside the top 1000 with $50M+ market cap, $1M+ volume, and real social activity, ranked by a heat heuristic (AltRank jump plus outsized interactions for their size). Top ~40 move on.
 2. Per candidate: a daily time-series call (30-day interaction baseline, spam share) and a creators call (who is driving the conversation). Only coins with an interaction z-score >= 2 get a verdict.
 
-The manufactured score (0-100) weighs:
+The manufactured score (0-100), calibrated on a burn-in week of live verdicts plus 6.5 years of historical distributions, weighs:
 
-- **Spam share of created posts (55%)**: the load-bearing signal, validated by the backtest
-- **Creator concentration (30%)**: share of interactions from the top 3 accounts; botnets are concentrated, crowds are not
-- **Sentiment uniformity (15%)**: unanimous positivity above 75 is a tell; real crowds disagree
+- **Spam lift vs the coin's own baseline (40%)**: today's raw spam/posts ratio relative to the coin's trailing 30-day median. This is the era-robust signal: the absolute spam field's scale has shifted over the years and some coins run chronically high, so a fresh spam wave counts more than a chronic level.
+- **Absolute spam share (20%)**: chronic botting still matters, just not twice.
+- **Creator concentration (30%)**: share of interactions from the top 3 accounts.
+- **Sentiment uniformity (10%)**: re-centered at 90, because a majority of crypto spike days run 85+ sentiment; only near-unanimity discriminates.
 
-Verdicts: 60+ manufactured, 30-59 mixed, under 30 organic. Every verdict ships with its evidence: this is a measurement, not an accusation.
+Verdicts: 60+ manufactured, 30-59 mixed, under 30 organic. A separate **megaphone** label marks near-total concentration with low spam (top 3 >= 90%, spam < 40%): one account being the entire conversation is an announcement or KOL pattern, not a botnet, and the burn-in showed the score alone muddles the two. Every verdict ships with its evidence: this is a measurement of amplification, not an identification of who is behind it.
 
 ## Usage
 
