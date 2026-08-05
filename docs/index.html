@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proof of Crowd · evidence-based attention audits</title>
+<meta name="description" content="Is that token's community real? Evidence-based attention audits: spam analysis, creator concentration, decay signatures. Open methodology.">
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --track: #21262d;
+    --text: #e6edf3; --sub: #8b949e; --green: #3fb950; --red: #f85149; --yellow: #d29922;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.6; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 96px 0 64px; }
+  .kicker { color: var(--sub); font-size: 15px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 18px; }
+  h1 { font-size: clamp(34px, 6vw, 56px); line-height: 1.12; font-weight: 800; }
+  h1 .green { color: var(--green); }
+  .lede { color: var(--sub); font-size: 20px; margin-top: 22px; max-width: 620px; }
+  .cta { display: inline-block; margin-top: 34px; background: var(--green); color: #04140a; font-weight: 700; font-size: 17px; padding: 14px 26px; border-radius: 10px; text-decoration: none; }
+  .cta.secondary { background: transparent; color: var(--text); border: 1px solid var(--track); margin-left: 12px; }
+  section { padding: 56px 0; border-top: 1px solid var(--track); }
+  h2 { font-size: 26px; font-weight: 700; margin-bottom: 24px; }
+  p { margin-bottom: 14px; }
+  .sub { color: var(--sub); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 8px; }
+  .card { background: var(--panel); border: 1px solid var(--track); border-radius: 12px; padding: 22px; }
+  .card h3 { font-size: 18px; margin-bottom: 8px; }
+  .card p { color: var(--sub); font-size: 15px; margin-bottom: 0; }
+  .tier { display: flex; flex-direction: column; }
+  .tier .price { font-size: 30px; font-weight: 800; color: var(--green); margin: 6px 0 2px; }
+  .tier .per { color: var(--sub); font-size: 14px; margin-bottom: 12px; }
+  .tier ul { list-style: none; margin: 0 0 6px; }
+  .tier li { color: var(--sub); font-size: 15px; padding-left: 20px; position: relative; margin-bottom: 7px; }
+  .tier li::before { content: "•"; color: var(--green); position: absolute; left: 4px; }
+  .findings li { margin-bottom: 10px; }
+  ul.findings { list-style: none; }
+  ul.findings li { padding-left: 24px; position: relative; }
+  ul.findings li::before { content: "→"; color: var(--green); position: absolute; left: 0; }
+  a { color: var(--green); }
+  .integrity { background: var(--panel); border-left: 3px solid var(--yellow); border-radius: 0 10px 10px 0; padding: 20px 22px; margin-top: 10px; }
+  footer { padding: 44px 0 70px; border-top: 1px solid var(--track); color: var(--sub); font-size: 13.5px; }
+  footer p { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Proof of Crowd · by degen3rette</div>
+  <h1>Is that token's community <span class="green">real?</span></h1>
+  <p class="lede">Evidence-based attention audits for tokens: who is actually talking, how much of it is manufactured, and whether the crowd survives contact with a spreadsheet. Answer in 72 hours, methodology fully public.</p>
+  <a class="cta" href="#pricing">Request an audit</a>
+  <a class="cta secondary" href="https://github.com/nickisanders/lunarcrush-projects">Read the methodology</a>
+</header>
+
+<section>
+  <h2>Why this exists</h2>
+  <p>Most crypto social spikes are spam-heavy, and manufactured hype measurably underperforms. But absolute spam numbers mislead: some legitimate communities live in noisy neighborhoods, and some clean-looking spikes are three accounts wearing a crowd costume. Telling them apart takes baselines, composition analysis, and decay signatures, not vibes.</p>
+  <p>I build and publish that analysis daily. An audit is the professional-depth version, run on the token you care about, with every claim backed by evidence you can check.</p>
+</section>
+
+<section>
+  <h2>What the research behind it found</h2>
+  <ul class="findings">
+    <li>The large majority of crypto social spikes are spam-heavy, and those coins go on to underperform. Organic attention shifts the odds of beating BTC over the following days; manufactured attention doesn't. <span class="sub">(6.5 years, 997 coins, 1.1M coin-days, era-audited.)</span></li>
+    <li>Crypto attention has a one-hour half-life. What separates real from rented is never how fast it fades, but who carried it while it lived.</li>
+    <li>Chronic spam baselines and fresh spam waves are different phenomena. Auditing the change against a coin's own norm is the difference between a working detector and a broken one.</li>
+    <li>Genuine adoption leaves a residue: a durably higher attention floor. Campaigns leave a crater.</li>
+  </ul>
+  <p style="margin-top:16px"><a href="https://github.com/nickisanders/lunarcrush-projects">All of it is open source and reproducible →</a></p>
+</section>
+
+<section>
+  <h2>What an audit covers</h2>
+  <div class="grid">
+    <div class="card"><h3>Composition</h3><p>Spam share vs the token's own baseline, creator concentration, megaphone vs botnet vs broad-crowd patterns, contributor breadth.</p></div>
+    <div class="card"><h3>History</h3><p>Every attention spike in the token's history, classified. Decay and residue signatures: does attention compound or round-trip?</p></div>
+    <div class="card"><h3>Campaign forensics</h3><p>Fresh-wave timing, account concentration behind spikes, and cross-checks against known manufactured patterns.</p></div>
+    <div class="card"><h3>The verdict</h3><p>A written, evidence-first assessment: what the data supports, what it rules out, and what it can't determine. No adjectives without numbers.</p></div>
+  </div>
+</section>
+
+<section id="pricing">
+  <h2>Engagements</h2>
+  <div class="grid">
+    <div class="card tier">
+      <h3>Pulse Check</h3>
+      <div class="price">$500</div>
+      <div class="per">48-hour turnaround</div>
+      <ul>
+        <li>Single token, current state</li>
+        <li>Full evidence pack (composition, baselines, current verdict)</li>
+        <li>One-page written assessment</li>
+      </ul>
+    </div>
+    <div class="card tier">
+      <h3>Full Audit</h3>
+      <div class="price">$2,500</div>
+      <div class="per">One week</div>
+      <ul>
+        <li>Complete attention history, every spike classified</li>
+        <li>Creator and campaign forensics</li>
+        <li>10+ page report and a walkthrough call</li>
+        <li>Suitable for listing applications and diligence files</li>
+      </ul>
+    </div>
+    <div class="card tier">
+      <h3>Monitoring</h3>
+      <div class="price">$750</div>
+      <div class="per">per month</div>
+      <ul>
+        <li>Daily detector watch on your token</li>
+        <li>Alerts on fresh spam waves or concentration shifts</li>
+        <li>Monthly written report</li>
+      </ul>
+    </div>
+  </div>
+  <div class="integrity">
+    <strong>The fee buys the audit, not the answer.</strong> I publish the verdict the data supports, including for paying clients. I don't audit tokens I hold, and I disclose the tools I'm paid to promote. If you want a clean bill of health regardless of the data, I'm the wrong vendor.
+  </div>
+  <p style="margin-top:26px"><a class="cta" href="https://x.com/degen3rette">DM @degen3rette to start</a></p>
+</section>
+
+<section>
+  <h2>Who's behind this</h2>
+  <p>Nicki Sanders (degen3rette): engineering leader and blockchain investigator. I publish daily hype-detection verdicts, and the methodology behind this service in the open, including the audits of my own headline results. The track record is the pitch: <a href="https://github.com/nickisanders/lunarcrush-projects">read it</a>.</p>
+</section>
+
+<footer>
+  <p>Independent analysis. Not financial advice, and not an endorsement or condemnation of any token's technology or team. Verdicts describe measurable conversation patterns; they do not identify who is behind amplification.</p>
+  <p>Social data: LunarCrush (affiliate; code NICKI gets 15% off). Analysis and conclusions are my own.</p>
+  <p>© 2026 Proof of Crowd.</p>
+</footer>
+
+</div>
+</body>
+</html>
