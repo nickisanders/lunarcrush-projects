@@ -21,7 +21,11 @@ function fmtLine(v: CoinVerdict): string {
     v.evidence.burstShare24h != null
       ? `, burst ${Math.round(v.evidence.burstShare24h * 100)}%`
       : "";
-  const tag = v.megaphone ? " · single megaphone, not a botnet" : "";
+  const chronic =
+    v.verdict !== "manufactured" && v.evidence.spamRatio >= 0.6
+      ? " · chronic spam baseline, no fresh wave"
+      : "";
+  const tag = (v.megaphone ? " · single megaphone, not a botnet" : "") + chronic;
   return `${BADGE[v.verdict]} $${v.symbol} ${v.score}/100 (${spam}% spam, top 3 accounts drive ${conc}%${burst}${tag})`;
 }
 
