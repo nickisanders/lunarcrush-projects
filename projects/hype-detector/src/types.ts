@@ -61,6 +61,14 @@ export interface CoinVerdict {
   /** one account (or a tight few) IS the conversation: announcement/KOL
    * pattern, distinct from botnet-style manufacturing */
   megaphone: boolean;
+  /** top creators behind the spike, persisted so cross-spike patterns
+   * (repeat accounts across flagged coins) become measurable over time */
+  topCreators?: Array<{
+    id?: string;
+    name?: string;
+    followers?: number;
+    interactions?: number;
+  }>;
 }
 
 export interface DetectorReport {

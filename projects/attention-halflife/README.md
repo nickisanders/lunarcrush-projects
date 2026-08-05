@@ -44,6 +44,10 @@ Requires the backtest's cached data (`../social-price-backtest/data/raw`, ~1,000
 
 Writes `out/spikes.csv`, `out/summary.csv`, `out/curves.json`, and the decay-curve chart source.
 
+## Side question: does manufactured hype keep office hours?
+
+No. `office_hours.py` compares WHEN spikes peak (UTC hour of day, and weekday) for organic vs spam-heavy groups. Both distributions are statistically indistinguishable (permutation test on total variation distance, p = 0.16 hourly; weekday shares near-identical, ~22% weekend for both). Both groups peak mid-afternoon UTC. Campaigns schedule for when audiences are awake, same as real crowds, so clock time is not a forensic fingerprint. Composition (who is talking) remains the discriminator.
+
 ## Caveats
 
 Daily buckets hide intraday decay shape. The overlap exclusion removes sustained multi-spike attention waves, which is conservative for measuring single-spike decay but means "campaigns that keep spending" are underrepresented. Spam labels are LunarCrush's classification, reprocessed historically. And the one-day half-life is a crypto-social fact, not a universal one; other domains likely differ.

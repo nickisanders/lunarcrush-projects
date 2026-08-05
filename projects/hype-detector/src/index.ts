@@ -154,6 +154,15 @@ async function main(): Promise<void> {
         score,
         verdict: verdictFor(score),
         megaphone: isMegaphone(evidence),
+        topCreators: [...creators]
+          .sort((a, b) => (b.interactions_24h ?? 0) - (a.interactions_24h ?? 0))
+          .slice(0, 10)
+          .map((cr) => ({
+            id: cr.creator_id,
+            name: cr.creator_name,
+            followers: cr.creator_followers,
+            interactions: cr.interactions_24h,
+          })),
       });
     } catch (e) {
       console.error(`  skipping ${c.symbol}: ${e}`);
