@@ -39,6 +39,10 @@ export interface Evidence {
   spamBaseline: number;
   /** share of creator interactions from the top 3 accounts (0-1) */
   top3CreatorShare: number;
+  /** share held by the single largest account (0-1) */
+  top1CreatorShare?: number;
+  /** handle of that largest account, for source classification */
+  topCreatorName?: string;
   /** 0-100 sentiment; near-unanimous positivity is a manufacturing tell */
   sentiment: number;
   /** top-3 hours' share of the last 24h interactions; organic crowds are
@@ -61,6 +65,9 @@ export interface CoinVerdict {
   /** one account (or a tight few) IS the conversation: announcement/KOL
    * pattern, distinct from botnet-style manufacturing */
   megaphone: boolean;
+  /** an exchange or automated alert feed is the spike: marketing and transfer
+   * bots inflate interactions without anyone forming an opinion */
+  institutionalBroadcast?: boolean;
   /** top creators behind the spike, persisted so cross-spike patterns
    * (repeat accounts across flagged coins) become measurable over time */
   topCreators?: Array<{

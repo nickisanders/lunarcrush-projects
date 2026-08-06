@@ -69,6 +69,60 @@ export function top3CreatorShare(creators: Creator[]): number {
  * count covers a broader post universe than posts_created, and its scale has
  * shifted across eras, which is why the score leans on the LIFT vs the
  * coin's own baseline rather than the absolute level alone. */
+/** Share of creator interactions held by the single largest account. The
+ * top-3 share can't tell "one account is the whole conversation" apart from
+ * "three accounts split it", and those are different phenomena. */
+export function top1CreatorShare(creators: Creator[]): number {
+  const interactions = creators.map((c) => c.interactions_24h ?? 0).filter((n) => n > 0);
+  const total = interactions.reduce((a, b) => a + b, 0);
+  if (total === 0) return 0;
+  return Math.max(...interactions) / total;
+}
+
+export function topCreatorName(creators: Creator[]): string | undefined {
+  let best: Creator | undefined;
+  for (const c of creators) {
+    if ((c.interactions_24h ?? 0) > (best?.interactions_24h ?? 0)) best = c;
+  }
+  return best?.creator_name;
+}
+
+/** Accounts whose posting is institutional broadcast rather than opinion:
+ * exchange marketing accounts and automated alert/data feeds. Matched on the
+ * normalized handle, exact only — a substring match would catch unrelated
+ * accounts ("gate" in "stargate"), and a false institutional label is worse
+ * than falling back to the generic megaphone case. Extend as they turn up. */
+const INSTITUTIONAL_ACCOUNTS = new Set([
+  // exchanges
+  "binance", "binanceus", "coinbase", "coinbaseexchange", "kraken", "krakenfx",
+  "okx", "bybit", "bybitofficial", "mexc", "mexcid", "mexcglobal", "gate", "gateio",
+  "kucoin", "kucoincom", "htx", "htxofficial", "bitget", "bitgetglobal", "bingx",
+  "cryptocom", "upbit", "bitfinex", "gemini", "bitstamp", "bitmart", "lbank", "phemex",
+  // automated alert and data feeds
+  "whalealert", "arkham", "arkhamintel", "spotonchain", "dexscreener",
+  "coingecko", "coinmarketcap", "tokenunlocks", "defillama",
+]);
+
+function normalizeHandle(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+export function isInstitutionalAccount(name?: string): boolean {
+  return name ? INSTITUTIONAL_ACCOUNTS.has(normalizeHandle(name)) : false;
+}
+
+/** One account carrying most of the conversation is only interesting once you
+ * know what kind of account it is. */
+export const BROADCAST_MIN_TOP1 = 0.6;
+
+/** Institutional broadcast: an exchange or alert feed IS the spike. Not a
+ * botnet (nobody is hiding), not a crowd (nobody is talking). Giveaways and
+ * transfer alerts inflate interaction counts without anyone forming an
+ * opinion, so the score stays as measured and this label explains it. */
+export function isInstitutionalBroadcast(e: Evidence): boolean {
+  return (e.top1CreatorShare ?? 0) >= BROADCAST_MIN_TOP1 && isInstitutionalAccount(e.topCreatorName);
+}
+
 export function spamRatioRaw(row: SeriesRow | undefined): number {
   if (!row || !row.posts_created) return 0;
   return (row.spam ?? 0) / Math.max(1, row.posts_created);

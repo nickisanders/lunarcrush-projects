@@ -21,7 +21,12 @@ Two v2 additions ride along as evidence without touching the score:
 - **Burst share (display-only)**: the top-3 hours' share of the last 24h of interactions, from one hourly call per verdict coin. The half-life study found organic crowds are burstier than scheduled campaigns (p=0.02, a lead rather than a finding); it stays out of the score until a prospective validation window says otherwise.
 - **Decay-watch**: any specimen that scored 80+ gets an automatic "what happened next" chart 3-5 days later (`out/decay-SYMBOL-DATE.png`), built from the verdict history (`data/history.jsonl`, persisted across CI runs via actions/cache).
 
-Verdicts: 60+ manufactured, 30-59 mixed, under 30 organic. A separate **megaphone** label marks near-total concentration with low spam (top 3 >= 90%, spam < 40%): one account being the entire conversation is an announcement or KOL pattern, not a botnet, and the burn-in showed the score alone muddles the two. Every verdict ships with its evidence: this is a measurement of amplification, not an identification of who is behind it.
+Verdicts: 60+ manufactured, 30-59 mixed, under 30 organic. Two source labels sit alongside the score, because concentration on its own doesn't say what kind of concentration it is:
+
+- **Institutional broadcast**: the single largest account holds 60%+ of interactions and is a known exchange or automated alert feed. Giveaways and transfer bots inflate interaction counts enormously without anyone forming an opinion. Found via $USDT on 2026-08-06, where MEXC alone was 89% of an 11.6M-interaction "spike"; the score was technically right and completely uninformative without this label. Handles match exactly (a substring rule would flag "stargate" as "gate"), so unknown accounts fall back to the generic case rather than claiming an institution the data can't identify.
+- **Megaphone**: near-total concentration with low spam (top 3 >= 90%, spam < 40%), i.e. one account is the conversation but isn't a recognized institution: an announcement or a large KOL, not a botnet.
+
+Neither label changes the score. Exchange marketing genuinely does inflate apparent attention, so the measurement stands; the label tells you who caused it. Every verdict ships with its evidence: this is a measurement of amplification, not an identification of who is behind it.
 
 ## Usage
 

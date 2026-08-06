@@ -5,13 +5,16 @@ import {
   SPIKE_Z_MIN,
   burstShare24h,
   interactionZScore,
+  isInstitutionalBroadcast,
   isMegaphone,
   manufacturedScore,
   pickCandidates,
   spamBaseline,
   spamRatio,
   spamRatioRaw,
+  top1CreatorShare,
   top3CreatorShare,
+  topCreatorName,
   verdictFor,
 } from "./classify.js";
 import { measureDecay, pickDecayWatch, readHistoryLines } from "./decaywatch.js";
@@ -141,6 +144,8 @@ async function main(): Promise<void> {
         spamRatioRaw: spamRatioRaw(series[series.length - 1]),
         spamBaseline: spamBaseline(series),
         top3CreatorShare: top3CreatorShare(creators),
+        top1CreatorShare: top1CreatorShare(creators),
+        topCreatorName: topCreatorName(creators),
         sentiment: c.sentiment ?? 50,
       };
       const score = manufacturedScore(evidence);
@@ -154,6 +159,7 @@ async function main(): Promise<void> {
         score,
         verdict: verdictFor(score),
         megaphone: isMegaphone(evidence),
+        institutionalBroadcast: isInstitutionalBroadcast(evidence),
         topCreators: [...creators]
           .sort((a, b) => (b.interactions_24h ?? 0) - (a.interactions_24h ?? 0))
           .slice(0, 10)

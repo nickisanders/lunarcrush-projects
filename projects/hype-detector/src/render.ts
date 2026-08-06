@@ -25,7 +25,12 @@ function fmtLine(v: CoinVerdict): string {
     v.verdict !== "manufactured" && v.evidence.spamRatio >= 0.6
       ? " · chronic spam baseline, no fresh wave"
       : "";
-  const tag = (v.megaphone ? " · single megaphone, not a botnet" : "") + chronic;
+  const source = v.institutionalBroadcast
+    ? ` · institutional broadcast: ${v.evidence.topCreatorName ?? "one feed"} is ${Math.round((v.evidence.top1CreatorShare ?? 0) * 100)}% of it`
+    : v.megaphone
+      ? " · single megaphone, not a botnet"
+      : "";
+  const tag = source + chronic;
   return `${BADGE[v.verdict]} $${v.symbol} ${v.score}/100 (${spam}% spam, top 3 accounts drive ${conc}%${burst}${tag})`;
 }
 

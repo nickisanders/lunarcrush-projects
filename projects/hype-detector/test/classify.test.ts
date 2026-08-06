@@ -3,13 +3,17 @@ import { test } from "node:test";
 import {
   burstShare24h,
   interactionZScore,
+  isInstitutionalAccount,
+  isInstitutionalBroadcast,
   isMegaphone,
   manufacturedScore,
   pickCandidates,
   spamBaseline,
   spamLift,
   spamRatio,
+  top1CreatorShare,
   top3CreatorShare,
+  topCreatorName,
   verdictFor,
 } from "../src/classify.js";
 import { measureDecay, pickDecayWatch } from "../src/decaywatch.js";
@@ -98,6 +102,47 @@ test("spam baseline is the trailing median of the raw ratio, excluding today", (
   }));
   const base = spamBaseline(rows);
   assert.ok(Math.abs(base - 0.5) < 1e-9, `expected 0.5, got ${base}`);
+});
+
+test("institutional broadcast: an exchange or alert feed IS the spike", () => {
+  // The real $USDT case from Aug 6: MEXC alone was 89% of 11.6M interactions,
+  // spam 0.59 — too spammy for the megaphone rule, not a botnet either.
+  const usdt = {
+    zScore: 2.1, spamRatio: 0.59, spamRatioRaw: 0.59, spamBaseline: 0.46,
+    top3CreatorShare: 0.96, top1CreatorShare: 0.89, topCreatorName: "MEXC", sentiment: 70,
+  };
+  assert.equal(isInstitutionalBroadcast(usdt), true);
+  assert.equal(isMegaphone(usdt), false, "megaphone rule should still miss it; that was the gap");
+
+  // Same shape, but the dominant account is an unknown handle: fall back to
+  // the generic case rather than claiming an institution we can't identify.
+  assert.equal(isInstitutionalBroadcast({ ...usdt, topCreatorName: "some_random_kol" }), false);
+
+  // A known feed that isn't actually dominant is just one voice among many.
+  assert.equal(
+    isInstitutionalBroadcast({ ...usdt, top1CreatorShare: 0.2, topCreatorName: "whale_alert" }),
+    false
+  );
+});
+
+test("institutional handles match exactly, not by substring", () => {
+  assert.equal(isInstitutionalAccount("whale_alert"), true, "separators normalize away");
+  assert.equal(isInstitutionalAccount("MEXC_ID"), true);
+  assert.equal(isInstitutionalAccount("Gate"), true);
+  assert.equal(isInstitutionalAccount("stargate_finance"), false, "no substring false positives");
+  assert.equal(isInstitutionalAccount("binance_killer"), false);
+  assert.equal(isInstitutionalAccount(undefined), false);
+});
+
+test("top1 creator share separates one dominant account from three splitting it", () => {
+  const dominant = [{ interactions_24h: 900 }, { interactions_24h: 60 }, { interactions_24h: 40 }];
+  const split = [{ interactions_24h: 340 }, { interactions_24h: 330 }, { interactions_24h: 330 }];
+  assert.ok(top1CreatorShare(dominant) > 0.85);
+  assert.ok(top1CreatorShare(split) < 0.4);
+  // Both look identical to the top-3 metric, which is why top1 exists
+  assert.equal(top3CreatorShare(dominant), 1);
+  assert.equal(top3CreatorShare(split), 1);
+  assert.equal(topCreatorName([{ interactions_24h: 5, creator_name: "small" }, { interactions_24h: 50, creator_name: "big" }]), "big");
 });
 
 test("megaphone: near-total concentration with low spam", () => {
