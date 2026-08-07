@@ -13,6 +13,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 03 | [hype-detector](projects/hype-detector/) | Daily scanner classifying social spikes as organic or manufactured, with evidence |
 | 04 | [narrative-rotation](projects/narrative-rotation/) | Weekly report on which crypto narratives gained or lost social attention share |
 | 05 | [attention-halflife](projects/attention-halflife/) | Decay study: crypto attention has a one-day half-life, organic or not |
+| 06 | [attention-breadth](projects/attention-breadth/) | Attention Breadth Index: how many coins crypto is actually talking about |
 
 ## Getting an API key
 
