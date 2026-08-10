@@ -1,0 +1,38 @@
+name: organic-watchlist daily
+
+on:
+  schedule:
+    - cron: "15 13 * * *"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/organic-watchlist
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: projects/organic-watchlist/package-lock.json
+      # Verdict history persists across runs so decay-watch can look back
+      - uses: actions/cache@v4
+        with:
+          path: projects/organic-watchlist/data
+          key: organic-watchlist-history-${{ github.run_id }}
+          restore-keys: organic-watchlist-history-
+      - run: npm ci
+      - name: Run watchlist
+        env:
+          LUNARCRUSH_API_KEY: ${{ secrets.LUNARCRUSH_API_KEY }}
+          POST_PROMO_CODE: ${{ vars.POST_PROMO_CODE }}
+        run: npm run daily
+      - name: Upload output
+        uses: actions/upload-artifact@v4
+        with:
+          name: organic-watchlist-output
+          path: projects/organic-watchlist/out/
+          retention-days: 14

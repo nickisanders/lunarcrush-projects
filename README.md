@@ -14,6 +14,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 04 | [narrative-rotation](projects/narrative-rotation/) | Weekly report on which crypto narratives gained or lost social attention share |
 | 05 | [attention-halflife](projects/attention-halflife/) | Decay study: crypto attention has a one-day half-life, organic or not |
 | 06 | [attention-breadth](projects/attention-breadth/) | Attention Breadth Index: how many coins crypto is actually talking about |
+| 07 | [organic-watchlist](projects/organic-watchlist/) | Daily watchlist of genuine attention spikes where price hasn't moved yet |
 
 ## Getting an API key
 
