@@ -30,18 +30,29 @@ Requires a LunarCrush API key in `.env` (or reuses `../altrank-movers/.env`). Th
 
 ## Out-of-sample: it does not work on stocks
 
-The same setup, the same code, run against 385 equities over the same period (`pull_stocks.py`, `stocks_check.py`):
+The same setup and the same code, run against the full LunarCrush equities universe: 4,063 stocks, 2.6M stock-days, 9,073 organic events. That is 22 times the crypto event sample.
 
 | Group | n | Hit rate vs the average stock |
 |---|---|---|
-| Ordinary stock-day | 249,677 | 48.8% |
-| Organic attention spike | 1,455 | 48.7% |
-| Spam-heavy spike | 1,093 | 48.8% |
+| Ordinary stock-day | 1,719,925 | 48.7% |
+| Organic attention spike | 9,073 | 49.8% |
+| Spam-heavy spike | 6,146 | 49.6% |
 
-Difference between organic spikes and ordinary days: **-0.1 points, p = 0.998**, with a confidence interval of [-2.5, +2.2]. That rules out anything close to the +7.2 point effect measured in crypto. The spam split, which is what carries the crypto signal, does nothing at all here.
+Organic spikes beat ordinary stock-days by **+1.1 points, CI [-0.2, +2.3], p = 0.09**. The interval excludes crypto's +7.2 points several times over. And the spam split, which is the entire source of the crypto signal, does nothing here: organic 49.8% versus spam-heavy 49.6%.
 
-So the finding is about crypto specifically, not about attention in general. The plausible reason: equities have analysts, earnings calendars, institutional coverage and market makers, so by the time retail attention spikes the information is already priced. Crypto has none of that machinery, which leaves social attention closer to the leading edge of information.
+Broken out by size, in case the effect hid in the retail-driven corner of the market:
+
+| Market cap band | Events | Effect |
+|---|---|---|
+| Small (<$2B) | 623 | +1.0 pts |
+| Mid ($2-10B) | 3,015 | +1.1 pts |
+| Large ($10-100B) | 3,454 | +0.3 pts |
+| Mega (>$100B) | 1,313 | +1.8 pts |
+
+It does not. Small caps look like everything else, and the largest reading sits in mega caps, which is the opposite of what a retail-attention story would predict and is almost certainly noise across four bands.
+
+So the finding is specific to crypto, not a general property of attention. The plausible mechanism: equities have analysts, earnings calendars, institutional coverage and market makers, so by the time retail attention spikes the information is priced. Crypto has none of that machinery, which leaves social attention closer to the leading edge of information.
 
 Three adjustments were needed and each is in the code: weekend rows carry the Friday close and would pass a "price is flat" filter for free, so only trading days count; the stocks feed has no `posts_created`, so spam share uses `posts_active` as the denominator and is not strictly comparable to the crypto threshold; and with no BTC to measure against, excess return is against the equal-weighted mean of eligible stocks that day.
 
-One process note worth recording: at 69 stocks this test showed a *significant inversion* (-6.0 points, p = 0.033). It was noise, and it disappeared entirely at full sample. Partial data produced a publishable-looking result twice in this repo now.
+Two process notes worth recording. At 69 stocks this test showed a *significant inversion* (-6.0 points, p = 0.033); at 385 stocks it read -0.1; at 4,063 it reads +1.1. All three are consistent with a true effect of about zero, and only the first looked publishable. Partial data has now produced a convincing-looking artifact twice in this repo.

@@ -123,6 +123,26 @@ def main() -> None:
             continue
         print(f"{label:28} {len(g):>6} {(g['adj'] > 0).mean():>9.3f} {g['adj'].median():>+14.2%}")
 
+    # The interesting question the large-cap-only universe cannot answer: does
+    # the effect appear in the retail-driven corner of equities, where there is
+    # little analyst coverage and attention may actually lead price the way it
+    # does in crypto?
+    labelled = pd.concat([events.assign(grp="event"), baseline.assign(grp="base")])
+    labelled = labelled[labelled["market_cap"].notna() & (labelled["market_cap"] > 0)]
+    if len(labelled) > 1000:
+        bands = [(0, 2e9, "small (<$2B)"), (2e9, 10e9, "mid ($2-10B)"),
+                 (10e9, 100e9, "large ($10-100B)"), (100e9, np.inf, "mega (>$100B)")]
+        print(f"\n{'market cap band':22} {'events':>7} {'event hit':>10} {'base hit':>9} {'diff':>8}")
+        for lo_c, hi_c, name in bands:
+            sub = labelled[(labelled["market_cap"] >= lo_c) & (labelled["market_cap"] < hi_c)]
+            ev = sub[sub["grp"] == "event"]["adj"]
+            ba = sub[sub["grp"] == "base"]["adj"]
+            if len(ev) < 25 or len(ba) < 500:
+                print(f"{name:22} {len(ev):>7}  (too few)")
+                continue
+            e_hit, b_hit = (ev > 0).mean(), (ba > 0).mean()
+            print(f"{name:22} {len(ev):>7} {e_hit:>10.3f} {b_hit:>9.3f} {e_hit - b_hit:>+8.3f}")
+
     if len(events) < 20:
         print("\nToo few organic events to test. Try a lower --min-interactions.")
         return
