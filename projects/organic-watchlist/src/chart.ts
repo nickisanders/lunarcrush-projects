@@ -30,7 +30,9 @@ export function renderChartSvg(report: WatchlistReport): string {
   const HEADER = 190;
   const rowH = 76;
   const rows = report.entries.slice(0, 8);
-  const H = HEADER + Math.max(1, rows.length) * rowH + 110;
+  const H = rows.length === 0
+    ? HEADER + 200 + report.nearMisses.length * 44 + 110
+    : HEADER + rows.length * rowH + 110;
   const maxMult = Math.max(2, ...rows.map((e) => e.multiple));
   const barMax = W - PAD * 2 - 430;
 
@@ -50,8 +52,19 @@ export function renderChartSvg(report: WatchlistReport): string {
     y += rowH;
   }
   if (rows.length === 0) {
-    body = `<text x="${PAD}" y="${HEADER + 40}" font-size="30" fill="${COLORS.sub}">Nothing qualifies today.</text>
-    <text x="${PAD}" y="${HEADER + 82}" font-size="24" fill="${COLORS.dim}">This setup is rare. That is the point of waiting for it.</text>`;
+    body = `<text x="${PAD}" y="${HEADER + 40}" font-size="32" font-weight="600" fill="${COLORS.text}">Nothing qualifies today.</text>
+    <text x="${PAD}" y="${HEADER + 84}" font-size="24" fill="${COLORS.dim}">This setup shows up about one day in six. That is the point of waiting for it.</text>`;
+    let ny = HEADER + 150;
+    if (report.nearMisses.length > 0) {
+      body += `<text x="${PAD}" y="${ny}" font-size="22" fill="${COLORS.sub}">Closest, and why each missed:</text>`;
+      ny += 44;
+      for (const n of report.nearMisses) {
+        body += `
+    <text x="${PAD}" y="${ny}" font-size="27" font-weight="600" fill="${COLORS.text}">$${esc(n.symbol)}</text>
+    <text x="${PAD + 150}" y="${ny}" font-size="25" fill="${COLORS.dim}">${esc(n.failed)}</text>`;
+        ny += 44;
+      }
+    }
   }
 
   const hit = (BASELINE.organic * 100).toFixed(0);
