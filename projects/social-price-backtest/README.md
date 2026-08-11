@@ -27,3 +27,21 @@ python3 pull.py --top 1000
 ```
 
 Requires a LunarCrush API key in `.env` (or reuses `../altrank-movers/.env`). The pull needs a plan tier that includes the time-series endpoint.
+
+## Out-of-sample: it does not work on stocks
+
+The same setup, the same code, run against 385 equities over the same period (`pull_stocks.py`, `stocks_check.py`):
+
+| Group | n | Hit rate vs the average stock |
+|---|---|---|
+| Ordinary stock-day | 249,677 | 48.8% |
+| Organic attention spike | 1,455 | 48.7% |
+| Spam-heavy spike | 1,093 | 48.8% |
+
+Difference between organic spikes and ordinary days: **-0.1 points, p = 0.998**, with a confidence interval of [-2.5, +2.2]. That rules out anything close to the +7.2 point effect measured in crypto. The spam split, which is what carries the crypto signal, does nothing at all here.
+
+So the finding is about crypto specifically, not about attention in general. The plausible reason: equities have analysts, earnings calendars, institutional coverage and market makers, so by the time retail attention spikes the information is already priced. Crypto has none of that machinery, which leaves social attention closer to the leading edge of information.
+
+Three adjustments were needed and each is in the code: weekend rows carry the Friday close and would pass a "price is flat" filter for free, so only trading days count; the stocks feed has no `posts_created`, so spam share uses `posts_active` as the denominator and is not strictly comparable to the crypto threshold; and with no BTC to measure against, excess return is against the equal-weighted mean of eligible stocks that day.
+
+One process note worth recording: at 69 stocks this test showed a *significant inversion* (-6.0 points, p = 0.033). It was noise, and it disappeared entirely at full sample. Partial data produced a publishable-looking result twice in this repo now.
