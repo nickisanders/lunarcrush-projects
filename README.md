@@ -16,6 +16,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 06 | [attention-breadth](projects/attention-breadth/) | Attention Breadth Index: how many coins crypto is actually talking about |
 | 07 | [organic-watchlist](projects/organic-watchlist/) | Daily watchlist of genuine attention spikes where price hasn't moved yet |
 | 08 | [attention-cascade](projects/attention-cascade/) | Tests the BTC-to-alts attention cascade folklore. It does not exist |
+| 09 | [attention-death](projects/attention-death/) | Dying conversations predict nothing, and the altcoin base rate that fell out of it |
 
 ## Getting an API key
 
