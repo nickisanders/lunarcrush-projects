@@ -45,3 +45,24 @@ Needs the backtest's cached data (`../social-price-backtest/data/raw`):
 ```bash
 ../social-price-backtest/.venv/bin/python analysis.py
 ```
+
+## Does the cascade show up in price instead?
+
+Attention arriving simultaneously does not by itself rule out the tradeable version of the myth: maybe Bitcoin's conversation spiking today still precedes altcoins outperforming a few days later, even if alt *attention* did not lag. `price_effect.py` tests that directly, across 39 combinations of tier, target and horizon.
+
+Nothing. Every correlation falls between -0.035 and +0.035, every confidence interval spans zero, and none of the 39 tests clears the Bonferroni threshold (p < 0.0013).
+
+The most direct test is the one people actually care about, whether BTC attention predicts alts *beating* BTC, which is what "alt season" means:
+
+| Target tier | +1d | +3d | +7d |
+|---|---|---|---|
+| majors | +0.008 | +0.014 | +0.015 |
+| large alts | +0.021 | +0.019 | +0.003 |
+| mid alts | +0.002 | +0.004 | -0.007 |
+| small alts | +0.005 | +0.005 | +0.001 |
+
+Twelve readings, none distinguishable from zero, on 1,701 days.
+
+One pattern is worth mentioning without overselling it. In the test of BTC attention against lower tiers' raw returns, all twelve readings came out mildly negative (-0.011 to -0.035). A run of twelve same-signed results looks striking, but these tests are not independent (overlapping horizons, correlated tiers), so the intuitive "one in four thousand" reading is wrong. Individually none is significant and every interval includes zero. It is consistent with Bitcoin's conversation spiking during market stress rather than before rallies, which would be a reasonable hypothesis for someone to test properly. It is not a finding here.
+
+So the cascade fails twice: attention does not move down the tiers, and it does not move price down them either.
