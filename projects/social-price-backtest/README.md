@@ -8,6 +8,8 @@ For the top 1,000 coins by market cap, pull full daily history from the LunarCru
 
 Headline result: about 85% of social spikes are spam-heavy, and those carry no positive signal (directionally negative). The organic minority improves the odds of beating BTC over the next 3 days from 41.9% to 49.0% (p = 0.003, the only comparison that survives multiple-testing correction). See [DRAFT.md](DRAFT.md) for the full write-up.
 
+**The signal is relative, not directional.** That 49% is a hit rate against BTC. Scored on whether the price simply rose, the same 402 events give 47.8% against a 46.3% baseline: +1.5 points, CI [-3.4, +6.2], p = 0.54. So an organic spike makes a coin less likely to bleed against Bitcoin. It does not make the price more likely to go up. `uprate.py` runs both metrics over the same events and the same bootstrap draws, and exists so that distinction cannot quietly go missing from a summary.
+
 See [METHODOLOGY.md](METHODOLOGY.md) for the full design, including known biases and what this backtest cannot claim.
 
 ## Reproduce it
@@ -24,6 +26,9 @@ python3 pull.py --top 1000
 # Sensitivity checks
 .venv/bin/python analysis.py --z 2.5 --flat 0.03
 .venv/bin/python analysis.py --spam-split 0.3 --bootstrap 0   # stricter spam cut, skip bootstrap
+
+# Is the signal directional or only relative to BTC? (writes out/uprate*.csv)
+.venv/bin/python uprate.py
 ```
 
 Requires a LunarCrush API key in `.env` (or reuses `../altrank-movers/.env`). The pull needs a plan tier that includes the time-series endpoint.

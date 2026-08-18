@@ -28,6 +28,13 @@ Close-to-close forward returns at +1d, +3d, +7d:
 - Raw.
 - BTC-adjusted (minus BTC's return over the same window), since crypto returns share a large market factor and event clustering in bull weeks would otherwise flatter the signal.
 - Hit rate: share of events with positive BTC-adjusted return.
+- Up-rate: share of events with positive *raw* return. This is the directional
+  question and it is deliberately kept separate from the hit rate, because the
+  headline result is a hit rate and reads as a directional claim if you are not
+  careful. `uprate.py` runs both metrics over the same events and the same
+  bootstrap draws so the two gaps are directly comparable. They are not: the
+  +3d beats-BTC gap is +7.2pp (p = 0.003) and the +3d up-rate gap is +1.5pp
+  (p = 0.54). The signal is relative strength, not direction.
 
 ## Significance
 
@@ -43,4 +50,4 @@ Group-vs-baseline differences (mean BTC-adjusted return and hit rate, per horizo
 
 ## What this can and cannot claim
 
-If event forward returns beat baseline after BTC adjustment, that supports "social activity contains information not yet in price" at daily resolution, for large coins, in-sample. It does not prove a tradeable edge. If they do not beat baseline, that is evidence against the simplest version of the social-leads-price claim, within this design's limits.
+If event forward returns beat baseline after BTC adjustment, that supports "social activity contains information not yet in price" at daily resolution, for large coins, in-sample. It does not prove a tradeable edge, and it specifically does not support a directional claim: the same events show no significant lift in the raw up-rate, so the finding is about performance relative to BTC and must be stated that way. If they do not beat baseline, that is evidence against the simplest version of the social-leads-price claim, within this design's limits.
