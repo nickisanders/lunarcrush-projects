@@ -54,15 +54,20 @@ test("z-score fires on a genuine spike, not on ordinary variation", () => {
   assert.ok(interactionZScore(series(1000, 1)) < CRITERIA.zMin);
 });
 
-test("median and spam read the trailing window and the latest day", () => {
+test("median reads the trailing window", () => {
+  assert.equal(medianInteractions(series(2000, 10, 0.25)), 2040);
+});
+
+test("spam ratio ignores today's partial row and reads the last complete day", () => {
   const s = series(2000, 10, 0.25);
-  assert.equal(medianInteractions(s), 2040);
-  assert.equal(spamRatio(s), 0.25);
+  // Today's row is mid-accumulation and reads far higher than reality.
+  s[s.length - 1] = { time: 999, interactions: 5000, posts_created: 100, spam: 90 };
+  assert.equal(spamRatio(s), 0.25, "should use yesterday, not the 0.90 partial day");
 });
 
 test("spam ratio is clipped at 1, since the raw field can exceed it", () => {
   const s = series(1000, 5);
-  s[s.length - 1] = { time: 99, interactions: 5000, posts_created: 100, spam: 900 };
+  s[s.length - 2] = { time: 98, interactions: 5000, posts_created: 100, spam: 900 };
   assert.equal(spamRatio(s), 1);
 });
 

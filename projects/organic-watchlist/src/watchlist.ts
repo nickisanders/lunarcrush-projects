@@ -68,12 +68,26 @@ export function medianInteractions(series: SeriesRow[]): number {
   return window.length === 0 ? 0 : window[Math.floor(window.length / 2)];
 }
 
-/** Spam share of the latest day's created posts, clipped to 0-1 to match the
- * backtest (the raw field can exceed 1; it counts a broader post universe). */
+/** Spam share of created posts for the most recent COMPLETE day.
+ *
+ * Deliberately not today's row. `spam` and `posts_created` accumulate at
+ * different rates through a day, so the ratio on a partial day is unstable and
+ * biased high: on 2026-08-18 LINK read 0.32 at 13:33 UTC and 0.65 at 15:06,
+ * while its completed days that week ran 0.15 to 0.27. That inflation was
+ * rejecting qualifying coins for spam they did not have.
+ *
+ * The backtest measured complete days, so the published 49% only describes a
+ * complete-day ratio. Using yesterday's figure costs up to a day of freshness
+ * and keeps the threshold meaning what it meant when it was measured. There is
+ * no rolling 24h spam figure available to do better; the hourly series reports
+ * spam counts that routinely exceed its own posts_created, so it cannot
+ * substitute.
+ *
+ * Clipped to 0-1 to match the backtest, since the raw field can exceed 1. */
 export function spamRatio(series: SeriesRow[]): number {
-  const today = series[series.length - 1];
-  if (!today?.posts_created) return 0;
-  return Math.min(1, (today.spam ?? 0) / Math.max(1, today.posts_created));
+  const lastComplete = series[series.length - 2];
+  if (!lastComplete?.posts_created) return 0;
+  return Math.min(1, (lastComplete.spam ?? 0) / Math.max(1, lastComplete.posts_created));
 }
 
 export function qualifies(e: {
