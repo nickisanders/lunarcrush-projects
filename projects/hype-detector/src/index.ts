@@ -141,7 +141,7 @@ async function main(): Promise<void> {
         burstShare24h: burst,
         zScore: z,
         spamRatio: spamRatio(series),
-        spamRatioRaw: spamRatioRaw(series[series.length - 1]),
+        spamRatioRaw: spamRatioRaw(series),
         spamBaseline: spamBaseline(series),
         top3CreatorShare: top3CreatorShare(creators),
         top1CreatorShare: top1CreatorShare(creators),

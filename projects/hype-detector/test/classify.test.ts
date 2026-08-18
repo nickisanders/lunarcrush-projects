@@ -43,9 +43,12 @@ test("z-score returns 0 when history is too short", () => {
   assert.equal(interactionZScore(flatSeries(10, 1000, 50)), 0);
 });
 
-test("spam ratio reads the latest day", () => {
+test("spam ratio ignores today's partial row and reads the last complete day", () => {
   const s = flatSeries(35, 1000);
-  s[s.length - 1] = { time: 99, interactions: 5000, posts_created: 200, spam: 150 };
+  s[s.length - 2] = { time: 98, interactions: 5000, posts_created: 200, spam: 150 };
+  // Today mid-accumulation: spam and posts_created fill at different rates and
+  // the ratio reads far too high. It must not be used.
+  s[s.length - 1] = { time: 99, interactions: 900, posts_created: 10, spam: 95 };
   assert.equal(spamRatio(s), 0.75);
 });
 

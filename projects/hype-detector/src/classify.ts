@@ -48,10 +48,24 @@ export function interactionZScore(series: SeriesRow[], trailing = 30): number {
   return (today - mean) / sd;
 }
 
+/** Spam share of created posts for the most recent COMPLETE day.
+ *
+ * Never today's row. `spam` and `posts_created` accumulate at different rates
+ * through a day, so a partial-day ratio is unstable and biased high: LINK read
+ * 0.32 at 13:33 UTC on 2026-08-18 and 0.65 at 15:06 the same day, against
+ * completed days that week of 0.15 to 0.27. Reading the partial day inflates
+ * spam and makes clean conversations look manufactured. */
 export function spamRatio(series: SeriesRow[]): number {
-  const today = series[series.length - 1];
-  if (!today || !today.posts_created) return 0;
-  return Math.min(1, (today.spam ?? 0) / Math.max(1, today.posts_created));
+  const lastComplete = lastCompleteRow(series);
+  if (!lastComplete || !lastComplete.posts_created) return 0;
+  return Math.min(1, (lastComplete.spam ?? 0) / Math.max(1, lastComplete.posts_created));
+}
+
+/** The most recent row that represents a finished day. The final row of any
+ * time series is the day in progress and must not be used for ratios between
+ * two fields that fill at different rates. */
+export function lastCompleteRow(series: SeriesRow[]): SeriesRow | undefined {
+  return series.length >= 2 ? series[series.length - 2] : undefined;
 }
 
 export function top3CreatorShare(creators: Creator[]): number {
@@ -65,10 +79,6 @@ export function top3CreatorShare(creators: Creator[]): number {
   return top3 / total;
 }
 
-/** Unclipped spam/posts ratio for one series row. Can exceed 1: the spam
- * count covers a broader post universe than posts_created, and its scale has
- * shifted across eras, which is why the score leans on the LIFT vs the
- * coin's own baseline rather than the absolute level alone. */
 /** Share of creator interactions held by the single largest account. The
  * top-3 share can't tell "one account is the whole conversation" apart from
  * "three accounts split it", and those are different phenomena. */
@@ -123,14 +133,25 @@ export function isInstitutionalBroadcast(e: Evidence): boolean {
   return (e.top1CreatorShare ?? 0) >= BROADCAST_MIN_TOP1 && isInstitutionalAccount(e.topCreatorName);
 }
 
-export function spamRatioRaw(row: SeriesRow | undefined): number {
+/** Unclipped spam/posts ratio for a single row. Can exceed 1: the spam count
+ * covers a broader post universe than posts_created, and its scale has shifted
+ * across eras, which is why the score leans on the LIFT vs the coin's own
+ * baseline rather than the absolute level alone. */
+export function rowSpamRatio(row: SeriesRow | undefined): number {
   if (!row || !row.posts_created) return 0;
   return (row.spam ?? 0) / Math.max(1, row.posts_created);
 }
 
-/** Median unclipped spam ratio over the trailing complete days. */
+/** Unclipped spam ratio for the most recent COMPLETE day. */
+export function spamRatioRaw(series: SeriesRow[]): number {
+  return rowSpamRatio(lastCompleteRow(series));
+}
+
+/** Median unclipped spam ratio over the trailing complete days. The slice
+ * already stops before the final row, so the day in progress never enters the
+ * baseline either. */
 export function spamBaseline(series: SeriesRow[], trailing = 30): number {
-  const window = series.slice(-1 - trailing, -1).map(spamRatioRaw).sort((a, b) => a - b);
+  const window = series.slice(-1 - trailing, -1).map(rowSpamRatio).sort((a, b) => a - b);
   if (window.length === 0) return 0;
   return window[Math.floor(window.length / 2)];
 }
