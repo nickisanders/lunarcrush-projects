@@ -31,6 +31,68 @@ OUT_DIR = Path(__file__).resolve().parent / "out"
 QUANTILES = [0.1, 0.25, 0.5, 0.75, 0.9]
 
 
+# --- chart ---------------------------------------------------------------
+# Same visual grammar as out/crypto-vs-stocks.svg: effect sizes as 95%
+# confidence intervals against a dashed "no effect" line. The whole point of
+# the finding is that one interval clears zero and the other straddles it,
+# which is a thing you can see rather than a thing you have to be told.
+
+W, H = 1200, 700
+PLOT_X0, PLOT_X1 = 340, 1140
+DOMAIN = (-5.0, 12.5)
+BG, TEXT, SUB, GRID = "#0d1117", "#e6edf3", "#8b949e", "#30363d"
+GREEN, GREY = "#3fb950", "#6e7681"
+
+
+def _x(pts: float) -> float:
+    lo, hi = DOMAIN
+    return PLOT_X0 + (pts - lo) / (hi - lo) * (PLOT_X1 - PLOT_X0)
+
+
+def render_chart(boot: pd.DataFrame, n_organic: int, horizon: str = "+3d") -> str:
+    """Effect-size chart for the two competing readings of the same events."""
+    rows = []
+    for metric, label, note, color in [
+        ("beats_btc_rate", "Beats Bitcoin", "49.0% vs 41.8%", GREEN),
+        ("up_rate", "Price simply rose", "47.8% vs 46.3%", GREY),
+    ]:
+        r = boot[(boot["horizon"] == horizon) & (boot["metric"] == metric)].iloc[0]
+        rows.append((label, note, color, r["diff"] * 100, r["ci_lo"] * 100, r["ci_hi"] * 100, r["p_two_sided"]))
+
+    out = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
+        f"font-family=\"system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif\">",
+        f'<rect width="{W}" height="{H}" fill="{BG}"/>',
+        f'<text x="70" y="62" font-size="36" font-weight="700" fill="{TEXT}">The same {n_organic} events, scored two ways</text>',
+        f'<text x="70" y="102" font-size="24" fill="{SUB}">how much an organic attention spike shifts the odds over the next 3 days</text>',
+        f'<line x1="{_x(0):.0f}" y1="180" x2="{_x(0):.0f}" y2="520" stroke="{GRID}" stroke-width="2" stroke-dasharray="7 7"/>',
+        f'<text x="{_x(0):.0f}" y="168" font-size="20" fill="{SUB}" text-anchor="middle">no effect</text>',
+    ]
+    for i, (label, note, color, diff, lo, hi, p) in enumerate(rows):
+        y = 250 + i * 170
+        out += [
+            f'<text x="70" y="{y + 6}" font-size="32" font-weight="700" fill="{TEXT}">{label}</text>',
+            f'<text x="70" y="{y + 40}" font-size="20" fill="{SUB}">{note}</text>',
+            f'<line x1="{_x(lo):.0f}" y1="{y}" x2="{_x(hi):.0f}" y2="{y}" stroke="{color}" '
+            f'stroke-width="7" stroke-linecap="round" opacity="0.45"/>',
+            f'<circle cx="{_x(diff):.0f}" cy="{y}" r="15" fill="{color}"/>',
+            f'<text x="{_x(diff):.0f}" y="{y - 34}" font-size="30" font-weight="700" fill="{color}" '
+            f'text-anchor="middle">{diff:+.1f}</text>',
+            f'<text x="{_x(hi):.0f}" y="{y + 46}" font-size="20" fill="{SUB}" text-anchor="middle">p = {p:.3f}</text>',
+        ]
+    for tick in (-5, 0, 5, 10):
+        out.append(
+            f'<text x="{_x(tick):.0f}" y="560" font-size="20" fill="{SUB}" text-anchor="middle">{tick:+d} pts</text>'
+        )
+    out += [
+        f'<text x="70" y="616" font-size="23" fill="{TEXT}">An organic spike stops a coin bleeding against Bitcoin. It does not make the price rise.</text>',
+        f'<text x="70" y="650" font-size="21" fill="{SUB}">Bars are 95% confidence intervals from the same month-block bootstrap draws.</text>',
+        f'<text x="70" y="680" font-size="19" fill="{SUB}">Data: LunarCrush · 2020 to 2026 · method and code in the repo</text>',
+        "</svg>",
+    ]
+    return "\n".join(out)
+
+
 def block_bootstrap_rates(
     df: pd.DataFrame, target: str, baseline: str, cols: dict[str, str], iters: int, seed: int = 7
 ) -> dict[str, tuple[float, float, float, float]]:
@@ -200,8 +262,15 @@ def main() -> None:
 
     OUT_DIR.mkdir(exist_ok=True)
     table.to_csv(OUT_DIR / "uprate.csv", index=False)
-    pd.DataFrame(boot_rows).to_csv(OUT_DIR / "uprate-bootstrap.csv", index=False)
-    print("\nWrote out/uprate.csv and out/uprate-bootstrap.csv")
+    boot = pd.DataFrame(boot_rows)
+    boot.to_csv(OUT_DIR / "uprate-bootstrap.csv", index=False)
+    (OUT_DIR / "uprate-chart.svg").write_text(render_chart(boot, len(org)))
+    print("\nWrote out/uprate.csv, out/uprate-bootstrap.csv and out/uprate-chart.svg")
+    print(
+        "Rasterize with sharp:\n"
+        '  node -e "require(\'../hype-detector/node_modules/sharp\')'
+        "('out/uprate-chart.svg',{density:144}).png().toFile('out/uprate-chart.png')\""
+    )
 
 
 if __name__ == "__main__":
