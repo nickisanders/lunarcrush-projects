@@ -8,6 +8,8 @@ For the top 1,000 coins by market cap, pull full daily history from the LunarCru
 
 Headline result: about 85% of social spikes are spam-heavy, and those carry no positive signal (directionally negative). The organic minority improves the odds of beating BTC over the next 3 days from 41.9% to 49.0% (p = 0.003, the only comparison that survives multiple-testing correction). See [DRAFT.md](DRAFT.md) for the full write-up.
 
+**An early lead means nothing.** Among organic spikes, those ahead of BTC after day 1 beat BTC at day 3 72.8% of the time versus 28.9% for those behind. That 44 point spread is an artifact: day 1 sits inside day 3, so the measure and the outcome share a term. Scored on the non-overlapping remainder, days 2-3 alone, the two groups come in at 46.2% and 46.3% (gap -0.1pp, p = 0.99). `day1_check.py` runs it both ways.
+
 **The signal is relative, not directional.** That 49% is a hit rate against BTC. Scored on whether the price simply rose, the same 402 events give 47.8% against a 46.3% baseline: +1.5 points, CI [-3.4, +6.2], p = 0.54. So an organic spike makes a coin less likely to bleed against Bitcoin. It does not make the price more likely to go up. `uprate.py` runs both metrics over the same events and the same bootstrap draws, and exists so that distinction cannot quietly go missing from a summary.
 
 See [METHODOLOGY.md](METHODOLOGY.md) for the full design, including known biases and what this backtest cannot claim.
@@ -29,6 +31,9 @@ python3 pull.py --top 1000
 
 # Is the signal directional or only relative to BTC? (writes out/uprate*.csv)
 .venv/bin/python uprate.py
+
+# Does an early lead predict the rest of the move? (writes out/day1.csv)
+.venv/bin/python day1_check.py
 ```
 
 Requires a LunarCrush API key in `.env` (or reuses `../altrank-movers/.env`). The pull needs a plan tier that includes the time-series endpoint.

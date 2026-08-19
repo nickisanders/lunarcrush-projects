@@ -46,6 +46,16 @@ The one horizon where a directional reading looks tempting is +1d, where the up-
 
 So the correct statement of the result is: an organic spike makes a coin less likely to bleed against Bitcoin over the next three days. It does not make the price more likely to rise. Every published version of this number should carry that sentence.
 
+## Finding 5: an early lead is not a leading indicator
+
+Once a 3-day signal is live, the tempting question after day 1 is whether being green already means something. Scored naively it looks emphatic: organic spikes that were ahead of BTC after day 1 went on to beat BTC at day 3 72.8% of the time, against 28.9% for the ones behind. A 44 point spread, p < 0.001.
+
+It is an artifact. Day 1 sits inside day 3, so an early lead is already part of the 3-day return before you measure anything. The measure and the outcome share a term.
+
+The clean test is the non-overlapping remainder: does the day-1 lead predict days 2 and 3 by themselves? Ahead group 46.2%, behind group 46.3%, gap -0.1 points, p = 0.99. Correlation between the day-1 lead and the days 2-3 excess return is 0.06.
+
+So the early scoreboard carries no information about what is left. This is the third time in this repo a number has looked like a finding until I checked what it shared with itself: the leave-one-out demeaning in attention-cascade, the raw-level quintiles in attention-breadth, and now this one.
+
 ## What I take from this
 
 1. The social-leads-price claim is real but narrow: it lives in organic attention, at short horizons, as a *relative* odds-shift rather than a money printer. It is a statement about performance against BTC, not about direction.
