@@ -75,8 +75,8 @@ def render_chart(rows: list[dict], base_rate: float) -> str:
     p = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
          f"font-family=\"system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif\">",
          f'<rect width="{W}" height="{H}" fill="{BG}"/>',
-         f'<text x="60" y="72" font-size="36" font-weight="700" fill="{TEXT}">The spike only counts before the move</text>',
-         f'<text x="60" y="112" font-size="23" fill="{SUB}">1,218 genuine, low-spam attention spikes, split by what price did that same day</text>',
+         f'<text x="60" y="72" font-size="36" font-weight="700" fill="{TEXT}">Social volume only counts before the move</text>',
+         f'<text x="60" y="112" font-size="23" fill="{SUB}">1,218 genuine, low-spam spikes in SOCIAL VOLUME (how much people posted), split by what price did that same day</text>',
          f'<text x="60" y="146" font-size="23" fill="{SUB}">bars show how often the coin beat Bitcoin over the next 3 days. dashed line is an ordinary coin-day.</text>',
          f'<line x1="{X0 - 30}" y1="{y(base_rate):.0f}" x2="{W - 60}" y2="{y(base_rate):.0f}" '
          f'stroke="{GRID}" stroke-width="2" stroke-dasharray="7 7"/>',
@@ -97,7 +97,7 @@ def render_chart(rows: list[dict], base_rate: float) -> str:
 
     p += [f'<text x="60" y="{H - 108}" font-size="23" fill="{TEXT}">Same spike, same spam filter, same everything. The only difference is whether price had already moved.</text>',
           f'<text x="60" y="{H - 74}" font-size="21" fill="{SUB}">Only the flat-price bar is statistically distinguishable from an ordinary day (+7.2 points, p = 0.001). Grey bars are not.</text>',
-          f'<text x="60" y="{H - 44}" font-size="21" fill="{SUB}">Attention that arrives after the move is a reaction to it, not information about what comes next.</text>',
+          f'<text x="60" y="{H - 44}" font-size="21" fill="{SUB}">This measures posting volume, not price. Talk that arrives after a move is a reaction to it, not information about what comes next.</text>',
           f'<text x="60" y="{H - 16}" font-size="19" fill="{SUB}">Data: LunarCrush · 2020 to 2026 · method and code in the repo</text>',
           "</svg>"]
     return "\n".join(p)
