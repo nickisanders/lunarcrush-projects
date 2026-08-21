@@ -56,6 +56,26 @@ The clean test is the non-overlapping remainder: does the day-1 lead predict day
 
 So the early scoreboard carries no information about what is left. This is the third time in this repo a number has looked like a finding until I checked what it shared with itself: the leave-one-out demeaning in attention-cascade, the raw-level quintiles in attention-breadth, and now this one.
 
+## Finding 6: the flat-price condition is doing the work
+
+The event definition requires price to have stayed flat on the spike day, which reads like a tidy-up detail. It is the whole result.
+
+Splitting all 1,218 organic spikes by what price did that day:
+
+| Same-day price move | n | Beat BTC over 3 days | vs baseline | p |
+|---|---|---|---|---|
+| fell >5% | 153 | 45.1% | +3.3 | 0.48 |
+| fell 2-5% | 149 | 46.3% | +4.5 | 0.26 |
+| **flat (<2%)** | **402** | **49.0%** | **+7.2** | **0.001** |
+| rose 2-5% | 135 | 34.8% | -7.0 | 0.10 |
+| rose >5% | 379 | 41.7% | -0.2 | 0.85 |
+
+Same z-score threshold, same spam filter, same universe. Only the flat-price bucket is distinguishable from an ordinary coin-day. A spike of identical quality on a day the coin had already run 5%+ carries nothing at all.
+
+The rose 2-5% bucket reads worse than baseline, but at n=135 and p=0.10 I am not claiming an inversion; the honest summary is that everything except the flat bucket is indistinguishable from noise.
+
+The mechanism is not mysterious. Attention that arrives after a price move is a reaction to the move. Attention that arrives before one is the only kind that can contain information the price has not absorbed. Which inverts the instinct: the days when your feed is thick with coins trending are the days trending means least.
+
 ## What I take from this
 
 1. The social-leads-price claim is real but narrow: it lives in organic attention, at short horizons, as a *relative* odds-shift rather than a money printer. It is a statement about performance against BTC, not about direction.

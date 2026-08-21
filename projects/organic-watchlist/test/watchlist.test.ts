@@ -42,6 +42,19 @@ test("candidates require flat price and real size", () => {
   );
 });
 
+test("pegged assets are excluded, since they are flat by construction", () => {
+  const rows = [
+    coin({ id: 1, symbol: "REAL", percent_change_24h: 0.5 }),
+    coin({ id: 2, symbol: "USDE", percent_change_24h: 0.0 }),
+    coin({ id: 3, symbol: "WBTC", percent_change_24h: 0.5 }),
+  ];
+  assert.deepEqual(
+    eligibleCandidates(rows, 10).map((c) => c.row.symbol),
+    ["REAL"],
+    "a stablecoin passes the flat-price leg every day and means nothing by it"
+  );
+});
+
 test("price flatness boundary matches the backtest's 2%", () => {
   const inside = coin({ symbol: "IN", percent_change_24h: 1.99 });
   const outside = coin({ symbol: "OUT", percent_change_24h: 2.01 });

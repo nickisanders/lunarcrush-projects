@@ -24,9 +24,28 @@ const TRAILING = 30;
 
 /** Coins that could qualify, before the expensive per-coin history call.
  * Price flatness and size are knowable from the list; the spike is not. */
+/** Pegged assets, which pass the flat-price test every single day.
+ *
+ * The whole setup rests on "attention moved and price has not reacted YET",
+ * which presumes a price free to react. A stablecoin's is not: it sits inside
+ * the 2% band by design, so it satisfies the hardest-to-meet leg of the
+ * criteria for free and is structurally over-represented among candidates.
+ * $USDE surfaced this on 2026-08-21 at 23x its normal chatter and a 0.0% move,
+ * which reads like a perfect signal and means nothing.
+ *
+ * Wrapped and liquid-staking assets are excluded for the neighbouring reason:
+ * they track another asset's price, so their conversation and their chart
+ * belong to something else. */
+export const PEGGED = new Set([
+  "USDT", "USDC", "USDE", "DAI", "FDUSD", "USD1", "RLUSD", "PYUSD", "USDCE",
+  "BUSD", "TUSD", "USDS", "USDD", "BFUSD", "BSC-USD", "USDGO", "XAUT", "PAXG",
+  "WBTC", "WETH", "WBNB", "STETH", "WSTETH", "WEETH", "CBBTC", "RETH", "SOLVBTC", "LBTC",
+]);
+
 export function eligibleCandidates(rows: CoinRow[], max = 80): Candidate[] {
   const eligible = rows.filter(
     (r) =>
+      !PEGGED.has(r.symbol) &&
       r.market_cap >= CRITERIA.minMarketCap &&
       r.volume_24h >= CRITERIA.minVolume24h &&
       r.interactions_24h > 0 &&
