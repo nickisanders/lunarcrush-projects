@@ -9,6 +9,7 @@ import {
   rankEntries,
   spamRatio,
 } from "../src/watchlist.js";
+import { addDays, closeOn, collectPicks, summarize } from "../src/track.js";
 import type { CoinRow, SeriesRow, WatchEntry } from "../src/types.js";
 
 function coin(over: Partial<CoinRow>): CoinRow {
@@ -102,4 +103,45 @@ test("entries rank by spike strength, ties to the cleaner conversation", () => {
     rankEntries([e("B", 3.2, 0.1), e("A", 5.0, 0.4), e("C", 3.2, 0.05)]).map((x) => x.symbol),
     ["A", "C", "B"]
   );
+});
+
+test("picks are deduplicated per day and pegged assets never count", () => {
+  const line = (date: string, symbols: string[]) =>
+    JSON.stringify({
+      generatedAt: `${date}T13:00:00.000Z`,
+      entries: symbols.map((symbol) => ({ symbol, z: 3.2, spam: 0.2 })),
+    });
+  const picks = collectPicks([
+    line("2026-08-18", ["LINK"]),
+    line("2026-08-18", ["LINK"]), // bot run twice that day; still one pick
+    line("2026-08-21", ["USDE"]), // flat by construction, never a real pick
+    line("2026-08-19", []),
+    "",
+  ]);
+  assert.deepEqual(
+    picks.map((p) => `${p.date}:${p.symbol}`),
+    ["2026-08-18:LINK"]
+  );
+});
+
+test("closes are looked up by exact UTC day, and a missing day reads open", () => {
+  const day = (d: string, close: number) => ({ time: Date.parse(`${d}T00:00:00Z`) / 1000, close });
+  const series = [day("2026-08-18", 9.5351), day("2026-08-21", 11.9929)];
+  assert.equal(closeOn(series, "2026-08-18"), 9.5351);
+  assert.equal(closeOn(series, "2026-08-21"), 11.9929);
+  assert.equal(closeOn(series, "2026-08-20"), undefined, "an unresolved pick must not silently score");
+  assert.equal(addDays("2026-08-18", 3), "2026-08-21");
+  assert.equal(addDays("2026-08-30", 3), "2026-09-02", "month boundaries");
+});
+
+test("the track record scores against BTC, not against zero", () => {
+  const mk = (coinReturn: number, btcReturn: number) => ({
+    date: "2026-08-18", symbol: "T", z: 3, spam: 0.2, entry: 1, exit: 1 + coinReturn,
+    coinReturn, btcReturn, spread: coinReturn - btcReturn, beatBtc: coinReturn > btcReturn,
+  });
+  // A coin up 10% in a market up 20% is a loss, however green the candle looks.
+  const s = summarize([mk(0.258, 0.192), mk(0.1, 0.2)]);
+  assert.equal(s.n, 2);
+  assert.equal(s.wins, 1);
+  assert.ok(Math.abs(s.meanSpread - (0.066 + -0.1) / 2) < 1e-9);
 });

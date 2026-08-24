@@ -7,7 +7,8 @@
   "scripts": {
     "daily": "tsx src/index.ts",
     "test": "node --import tsx --test test/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "track": "tsx src/track.ts"
   },
   "dependencies": {
     "sharp": "^0.33.4"

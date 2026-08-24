@@ -46,3 +46,21 @@ Cost: one coins-list call plus one history call per candidate, about 80 requests
 Candidates are ranked by social volume and AltRank movement before the expensive history call, so a very small coin spiking from a low base could fall outside the top 80 and be missed. Raising `--max-candidates` widens the net at the cost of more requests.
 
 The backtest measured relative performance against BTC, not absolute returns, and ignores fees and slippage. Nothing here is financial advice.
+## Track record
+
+Every pick this bot has ever published, resolved against the claim it actually makes:
+
+```bash
+npm run track     # writes out/track.json and out/track-chart.png
+```
+
+The horizon is 3 days and the score is the coin's return minus Bitcoin's over the same window, because "beats BTC over 3 days" is the published claim. Absolute return is printed too, but on a week when the whole market runs it flatters every pick regardless of whether the signal did anything.
+
+| Date | Coin | Coin | BTC | Spread | Result |
+|---|---|---|---|---|---|
+| 2026-08-18 | $LINK | +25.8% | +19.2% | +6.6pp | beat BTC |
+
+One resolved pick. That is far too few to mean anything: at a measured 49% vs 42%, an early run of wins or losses is exactly what you would expect either way. The tracker exists so the record is public whichever way it goes, not as evidence.
+
+Picks are deduplicated per day, and pegged assets are excluded to match the live filter.
+
