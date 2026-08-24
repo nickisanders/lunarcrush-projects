@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
-"""Instagram carousel for the daily organic watchlist.
+"""Instagram carousel (1080x1350) for a resolved pick.
 
-Reads out/report.json so the slides always match the day's actual run.
-Writes out/instagram/slide-N.svg (1080x1350).
+Reads out/track.json, so the numbers always match the last `npm run track`.
+The attention-decay figures on the final slide are not in that file and are
+passed in.
+
+Writes out/instagram/slide-N.svg. Rasterize with sharp:
+    node -e "const s=require('sharp');[1,2,3,4,5].forEach(i=>s(`out/instagram/slide-${i}.svg`,{density:144}).png().toFile(`out/instagram/slide-${i}.png`))"
+
+Usage:
+    python3 make_carousel.py --spike-interactions 6773778 --now-interactions 1356976
 """
 
+import argparse
 import json
-from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "out" / "instagram"
 W, H, M = 1080, 1350, 90
-BG, TEXT, SUB = "#0d1117", "#e6edf3", "#8b949e"
-GREEN, RED, TRACK, DIM = "#3fb950", "#f85149", "#21262d", "#6e7681"
+BG, TEXT, SUB, TRACK = "#0d1117", "#e6edf3", "#8b949e", "#21262d"
+GREEN, GREY, ORANGE = "#3fb950", "#6e7681", "#f7931a"
 FONT = "system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
 TOTAL = 5
 
@@ -23,6 +30,8 @@ def esc(s: str) -> str:
 
 
 def heavy(text: str, size: int) -> str:
+    """librsvg drops word spaces at font-weight >= 700, so space words by hand.
+    The % glyph overhangs its advance width and needs a wider gap after it."""
     words = text.split(" ")
     parts = [esc(words[0])]
     for prev, w in zip(words, words[1:]):
@@ -51,102 +60,124 @@ def frame(n: int, body: str, footer: str = "") -> str:
 </svg>"""
 
 
-def slide1() -> str:
+def pct(v: float) -> str:
+    return f"{'+' if v >= 0 else ''}{v * 100:.1f}%"
+
+
+def stacked(r, top_y=520, ch=360) -> str:
+    """Bitcoin's bar beside the pick's, with the pick's split into the part the
+    market gave and the part the signal claims. The split is the whole point."""
+    bw, x_btc, x_coin = 170, 190, 520
+    top = max(r["coinReturn"], r["btcReturn"]) * 1.28
+
+    def y(v):
+        return top_y + ch - v / top * ch
+
+    market_h = ch - (y(r["btcReturn"]) - top_y)
+    spread_h = ch - (y(r["coinReturn"]) - top_y) - market_h
+    return "\n".join([
+        f'<line x1="{M}" y1="{top_y + ch}" x2="{W - M}" y2="{top_y + ch}" stroke="{TRACK}" stroke-width="2"/>',
+        f'<rect x="{x_btc}" y="{y(r["btcReturn"]):.0f}" width="{bw}" height="{market_h:.0f}" rx="8" fill="{GREY}"/>',
+        txt(x_btc + bw // 2, int(y(r["btcReturn"])) - 18, 34, GREY, pct(r["btcReturn"]), 700, "middle"),
+        txt(x_btc + bw // 2, top_y + ch + 44, 26, TEXT, "Bitcoin", 400, "middle"),
+        f'<rect x="{x_coin}" y="{y(r["btcReturn"]):.0f}" width="{bw}" height="{market_h:.0f}" rx="8" fill="{GREY}"/>',
+        f'<rect x="{x_coin}" y="{y(r["coinReturn"]):.0f}" width="{bw}" height="{spread_h:.0f}" rx="8" fill="{GREEN}"/>',
+        txt(x_coin + bw // 2, int(y(r["coinReturn"])) - 18, 34, GREEN, pct(r["coinReturn"]), 700, "middle"),
+        txt(x_coin + bw // 2, top_y + ch + 44, 26, TEXT, f'${r["symbol"]}', 400, "middle"),
+        txt(x_coin + bw + 24, int(y(r["coinReturn"]) + spread_h / 2) + 8, 26, GREEN, "the signal", 700),
+        txt(x_coin + bw + 24, int(y(r["btcReturn"]) + market_h / 2) + 8, 26, GREY, "the market", 700),
+    ])
+
+
+def slide1(r) -> str:
     return frame(1, f"""
-{txt(M, 400, 82, TEXT, "Every alpha", 800)}
-{txt(M, 494, 82, TEXT, "account has a", 800)}
-{txt(M, 588, 82, TEXT, "pick for you", 800)}
-{txt(M, 682, 82, TEXT, "every day.", 800)}
-{txt(M, 810, 52, RED, "That's your first clue.", 700)}
+{txt(M, 330, 46, SUB, "Last Tuesday I published")}
+{txt(M, 388, 46, SUB, "a pick. It resolved Friday.")}
+{txt(M, 500, 56, TEXT, "It won.", 800)}
+{txt(M, 640, 150, GREEN, pct(r["coinReturn"]), 800)}
+{txt(M, 720, 40, TEXT, f'${r["symbol"]}, over the 3 days', 700)}
+{txt(M, 772, 40, TEXT, "the signal actually covers", 700)}
+{txt(M, 880, 34, SUB, "That is the number most accounts")}
+{txt(M, 926, 34, SUB, "would screenshot and stop there.")}
+{txt(M, 1010, 36, ORANGE, "Swipe for the rest of it.", 700)}
 """, "swipe")
 
 
-def slide2() -> str:
+def slide2(r) -> str:
     return frame(2, f"""
-{txt(M, 260, 60, TEXT, "I built the opposite", 800)}
-{txt(M, 330, 36, SUB, "a list that only fires when all three happen")}
-{txt(M, 460, 60, GREEN, "1", 800)}
-{txt(M + 70, 460, 40, TEXT, "A coin's conversation")}
-{txt(M + 70, 512, 40, TEXT, "spikes way above its normal")}
-{txt(M, 630, 60, GREEN, "2", 800)}
-{txt(M + 70, 630, 40, TEXT, "It's real people, not bots")}
-{txt(M + 70, 682, 40, TEXT, "(under 50% spam)")}
-{txt(M, 800, 60, GREEN, "3", 800)}
-{txt(M + 70, 800, 40, TEXT, "The price hasn't moved yet")}
-{txt(M, 940, 38, SUB, "All three at once. Miss one and it doesn't count.")}
+{txt(M, 250, 50, TEXT, "The rest of it", 800)}
+{txt(M, 312, 32, SUB, "Bitcoin over the exact same three days")}
+{stacked(r)}
+{txt(M, 1000, 36, TEXT, f'{pct(r["btcReturn"])} of that was just being in', 700)}
+{txt(M, 1048, 36, TEXT, "crypto during a rally.", 700)}
+""", "you would have gotten it holding BTC and reading nothing")
+
+
+def slide3(r) -> str:
+    return frame(3, f"""
+{txt(M, 250, 50, TEXT, "So what did the", 800)}
+{txt(M, 310, 50, TEXT, "signal actually do?", 800)}
+{txt(M, 450, 130, GREEN, f'{r["spread"] * 100:.1f}', 800)}
+{txt(M, 510, 36, TEXT, "points. That gap is the entire claim.", 700)}
+{txt(M, 620, 36, SUB, "My backtest never said this coin goes up.")}
+{txt(M, 668, 36, SUB, "It said this setup beats Bitcoin over 3 days")}
+{txt(M, 716, 36, SUB, "49% of the time, versus 42% for a random")}
+{txt(M, 764, 36, SUB, "coin. Relative, not directional.")}
+{txt(M, 870, 40, ORANGE, "If I sold you the big number,", 700)}
+{txt(M, 918, 40, ORANGE, "I would be selling you beta", 700)}
+{txt(M, 966, 40, ORANGE, "and calling it alpha.", 700)}
 """)
 
 
-def slide3() -> str:
-    return frame(3, f"""
-{txt(M, 250, 56, TEXT, "Does it work?", 800)}
-{txt(M, 320, 36, SUB, "tested on 6.5 years, 997 coins")}
-{txt(M, 460, 40, TEXT, "When all three line up, the coin beat")}
-{txt(M, 512, 40, TEXT, "Bitcoin over the next 3 days:")}
-{txt(M, 640, 120, GREEN, "49%", 800)}
-{txt(M + 290, 620, 34, SUB, "of the time")}
-{txt(M, 760, 40, TEXT, "A random coin on a random day:")}
-{txt(M, 860, 90, DIM, "42%", 800)}
-{txt(M, 990, 38, TEXT, "A 7 point edge. Not a money printer.")}
-{txt(M, 1040, 38, TEXT, "Half of them still lose.")}
-""", "an odds shift, not a prediction · not financial advice")
-
-
-def slide4(report: dict) -> str:
-    date = datetime.now(timezone.utc).strftime("%B %-d")
-    entries = report.get("entries") or []
-    near = report.get("nearMisses") or []
-    if entries:
-        rows = ""
-        y = 520
-        for e in entries[:4]:
-            rows += txt(M, y, 44, GREEN, f"${e['symbol']}", 700)
-            rows += txt(M + 240, y, 34, SUB,
-                        f"{e['multiple']:.0f}x normal · {round(e['spam']*100)}% spam")
-            y += 90
-        head = txt(M, 250, 56, TEXT, f"Today, {date}", 800) + \
-            txt(M, 330, 36, SUB, "genuine spikes, price hasn't reacted")
-        tail = txt(M, 1040, 36, SUB, "every one shows its evidence")
-        return frame(4, head + rows + tail)
-    miss = ""
-    if near:
-        n = near[0]
-        miss = (txt(M, 700, 36, SUB, "One got close:") +
-                txt(M, 780, 52, TEXT, f"${n['symbol']}", 700) +
-                txt(M, 850, 38, TEXT, f"flagged, then rejected: {n['failed']}") +
-                txt(M, 916, 38, DIM, "That's not a crowd finding a coin.") +
-                txt(M, 962, 38, DIM, "That's a campaign."))
+def slide4() -> str:
     return frame(4, f"""
-{txt(M, 250, 56, TEXT, f"Today, {date}", 800)}
-{txt(M, 420, 130, TEXT, "Nothing.", 800)}
-{txt(M, 500, 36, SUB, "the list is empty, and that is normal")}
-{miss}
-""", "this setup shows up about one day in six")
+{txt(M, 250, 50, TEXT, "And one pick", 800)}
+{txt(M, 310, 50, TEXT, "proves nothing", 800)}
+{txt(M, 430, 36, SUB, "At a 49/42 edge, roughly half of these lose.")}
+{txt(M, 478, 36, SUB, "An early run of wins is exactly what you")}
+{txt(M, 526, 36, SUB, "would expect either way.")}
+{txt(M, 630, 40, TEXT, "So I built a tracker instead of", 700)}
+{txt(M, 678, 40, TEXT, "a victory lap.", 700)}
+{txt(M, 760, 36, SUB, "Every pick this bot publishes, resolved")}
+{txt(M, 808, 36, SUB, "against Bitcoin, scored automatically,")}
+{txt(M, 856, 36, SUB, "in the repo, whether it flatters me or not.")}
+{txt(M, 950, 44, TEXT, "It reads 1 for 1 today.", 700)}
+{txt(M, 1010, 40, ORANGE, "Ask me at 30.", 700)}
+""")
 
 
-def slide5() -> str:
+def slide5(a) -> str:
+    kept = a.now_interactions / a.spike_interactions * 100
     return frame(5, f"""
-{txt(M, 340, 74, TEXT, "A list that has", 800)}
-{txt(M, 424, 74, TEXT, "something for you", 800)}
-{txt(M, 508, 74, TEXT, "every day isn't", 800)}
-{txt(M, 592, 74, TEXT, "finding signals.", 800)}
-{txt(M, 700, 74, RED, "It's filling a", 800)}
-{txt(M, 784, 74, RED, "schedule.", 800)}
-{txt(M, 900, 38, SUB, "Runs daily. Open source. Every post ships")}
-{txt(M, 948, 38, SUB, "the hit rate so you can hold it accountable.")}
-{txt(M, 1040, 42, GREEN, "github.com/nickisanders/", 700)}
-{txt(M, 1090, 42, GREEN, "lunarcrush-projects", 700)}
-""", "Data: LunarCrush · code NICKI gets 15% off")
+{txt(M, 250, 50, TEXT, "One last thing", 800)}
+{txt(M, 360, 36, SUB, "The conversation that flagged it peaked at")}
+{txt(M, 430, 64, TEXT, f"{a.spike_interactions / 1e6:.1f}M", 800)}
+{txt(M, 480, 32, SUB, "interactions on the spike day")}
+{txt(M, 570, 36, SUB, "Six days later:")}
+{txt(M, 640, 64, ORANGE, f"{a.now_interactions / 1e6:.1f}M", 800)}
+{txt(M, 690, 32, SUB, f"about {kept:.0f}% of it left")}
+{txt(M, 780, 40, TEXT, "The price held. The talk did not.", 700)}
+{txt(M, 840, 34, SUB, "Which is why I score these at 3 days,")}
+{txt(M, 886, 34, SUB, "not 30.")}
+{txt(M, 970, 34, GREEN, "Always publish the benchmark next to", 700)}
+{txt(M, 1014, 34, GREEN, "the return. Always publish the losses.", 700)}
+{txt(M, 1082, 32, GREEN, "github.com/nickisanders/lunarcrush-projects", 700)}
+""", "Data: LunarCrush · not advice · code NICKI gets 15% off")
 
 
 def main() -> None:
-    report = json.loads((HERE / "out" / "report.json").read_text())
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--spike-interactions", type=float, required=True)
+    ap.add_argument("--now-interactions", type=float, required=True)
+    a = ap.parse_args()
+
+    track = json.loads((HERE / "out" / "track.json").read_text())
+    r = track["rows"][-1]
+
     OUT.mkdir(parents=True, exist_ok=True)
-    slides = [slide1(), slide2(), slide3(), slide4(report), slide5()]
-    for i, s in enumerate(slides, 1):
+    for i, s in enumerate([slide1(r), slide2(r), slide3(r), slide4(), slide5(a)], 1):
         (OUT / f"slide-{i}.svg").write_text(s)
-    state = "picks" if report.get("entries") else "empty"
-    print(f"Wrote {TOTAL} slides ({state} day) to {OUT}")
+    print(f"Wrote {TOTAL} slides to {OUT}  (${r['symbol']} {pct(r['coinReturn'])} vs BTC {pct(r['btcReturn'])})")
 
 
 if __name__ == "__main__":
