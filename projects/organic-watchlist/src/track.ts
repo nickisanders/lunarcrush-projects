@@ -28,6 +28,17 @@ export interface Pick {
   spam: number;
 }
 
+export interface Decay {
+  /** Interactions on the spike day that triggered the pick. */
+  spike: number;
+  /** Interactions on the most recent COMPLETE day. */
+  latest: number;
+  latestDate: string;
+  daysElapsed: number;
+  /** latest / spike, i.e. how much of the conversation survived. */
+  retained: number;
+}
+
 export interface Resolved extends Pick {
   entry: number;
   exit: number;
@@ -36,6 +47,7 @@ export interface Resolved extends Pick {
   /** The published measure: coin return minus BTC's over the same window. */
   spread: number;
   beatBtc: boolean;
+  decay?: Decay;
 }
 
 /** Every distinct pick in the run history.
@@ -70,6 +82,31 @@ export function closeOn(series: { time: number; close?: number }[], date: string
 
 export function addDays(date: string, days: number): string {
   return new Date(Date.parse(`${date}T00:00:00Z`) + days * DAY * 1000).toISOString().slice(0, 10);
+}
+
+/** How much of the conversation that triggered a pick is still there.
+ *
+ * Measured against the most recent COMPLETE day, never the day in progress.
+ * A partial day holds only the hours elapsed so far, so comparing it to a full
+ * spike day silently overstates the decay: on 2026-08-24 at 15:00 UTC $LINK's
+ * partial row read 1.37M against a complete 2.11M the day before, which turns
+ * "31% retained after 5 days" into "20% after 6" and both numbers are wrong.
+ * This is the same partial-day trap the spam ratios hit. */
+export function attentionDecay(
+  series: { time: number; interactions?: number }[],
+  pickDate: string
+): Decay | undefined {
+  const spikeTime = Date.parse(`${pickDate}T00:00:00Z`) / 1000;
+  const spike = series.find((r) => r.time === spikeTime)?.interactions;
+  const lastComplete = series[series.length - 2];
+  if (!spike || !lastComplete?.interactions) return undefined;
+  return {
+    spike,
+    latest: lastComplete.interactions,
+    latestDate: new Date(lastComplete.time * 1000).toISOString().slice(0, 10),
+    daysElapsed: Math.round((lastComplete.time - spikeTime) / DAY),
+    retained: lastComplete.interactions / spike,
+  };
 }
 
 export function summarize(rows: Resolved[]) {
@@ -118,7 +155,8 @@ async function main(): Promise<void> {
     const coinReturn = exit / entry - 1;
     const btcReturn = btcExit / btcEntry - 1;
     rows.push({ ...p, entry, exit, coinReturn, btcReturn,
-      spread: coinReturn - btcReturn, beatBtc: coinReturn > btcReturn });
+      spread: coinReturn - btcReturn, beatBtc: coinReturn > btcReturn,
+      decay: attentionDecay(series, p.date) });
   }
 
   console.log(`\nResolved picks (${HORIZON_DAYS}-day horizon, the published claim)\n`);
@@ -130,6 +168,15 @@ async function main(): Promise<void> {
         (r.beatBtc ? "beat BTC" : "lost to BTC")
     );
   }
+  for (const r of rows) {
+    if (!r.decay) continue;
+    console.log(
+      `\n$${r.symbol} conversation: ${(r.decay.spike / 1e6).toFixed(1)}M on the spike day, ` +
+        `${(r.decay.latest / 1e6).toFixed(1)}M on ${r.decay.latestDate} ` +
+        `(${r.decay.daysElapsed} days later, ${(r.decay.retained * 100).toFixed(0)}% retained)`
+    );
+  }
+
   const s = summarize(rows);
   console.log(`\n${s.wins} of ${s.n} beat Bitcoin. Mean spread ${(s.meanSpread * 100).toFixed(1)}pp.`);
   console.log(

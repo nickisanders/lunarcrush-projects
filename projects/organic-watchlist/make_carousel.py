@@ -2,17 +2,16 @@
 """Instagram carousel (1080x1350) for a resolved pick.
 
 Reads out/track.json, so the numbers always match the last `npm run track`.
-The attention-decay figures on the final slide are not in that file and are
-passed in.
+The attention-decay figures come from the same file, so the final slide can
+never be handed a partial day by mistake.
 
 Writes out/instagram/slide-N.svg. Rasterize with sharp:
     node -e "const s=require('sharp');[1,2,3,4,5].forEach(i=>s(`out/instagram/slide-${i}.svg`,{density:144}).png().toFile(`out/instagram/slide-${i}.png`))"
 
 Usage:
-    python3 make_carousel.py --spike-interactions 6773778 --now-interactions 1356976
+    python3 make_carousel.py
 """
 
-import argparse
 import json
 from pathlib import Path
 
@@ -146,16 +145,16 @@ def slide4() -> str:
 """)
 
 
-def slide5(a) -> str:
-    kept = a.now_interactions / a.spike_interactions * 100
+def slide5(d) -> str:
+    days = d["daysElapsed"]
     return frame(5, f"""
 {txt(M, 250, 50, TEXT, "One last thing", 800)}
 {txt(M, 360, 36, SUB, "The conversation that flagged it peaked at")}
-{txt(M, 430, 64, TEXT, f"{a.spike_interactions / 1e6:.1f}M", 800)}
+{txt(M, 430, 64, TEXT, f'{d["spike"] / 1e6:.1f}M', 800)}
 {txt(M, 480, 32, SUB, "interactions on the spike day")}
-{txt(M, 570, 36, SUB, "Six days later:")}
-{txt(M, 640, 64, ORANGE, f"{a.now_interactions / 1e6:.1f}M", 800)}
-{txt(M, 690, 32, SUB, f"about {kept:.0f}% of it left")}
+{txt(M, 570, 36, SUB, f'{days} days later:')}
+{txt(M, 640, 64, ORANGE, f'{d["latest"] / 1e6:.1f}M', 800)}
+{txt(M, 690, 32, SUB, f'about {d["retained"] * 100:.0f}% of it left')}
 {txt(M, 780, 40, TEXT, "The price held. The talk did not.", 700)}
 {txt(M, 840, 34, SUB, "Which is why I score these at 3 days,")}
 {txt(M, 886, 34, SUB, "not 30.")}
@@ -166,16 +165,14 @@ def slide5(a) -> str:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--spike-interactions", type=float, required=True)
-    ap.add_argument("--now-interactions", type=float, required=True)
-    a = ap.parse_args()
-
     track = json.loads((HERE / "out" / "track.json").read_text())
     r = track["rows"][-1]
+    decay = r.get("decay")
+    if not decay:
+        raise SystemExit("no decay figures in track.json; run `npm run track` first")
 
     OUT.mkdir(parents=True, exist_ok=True)
-    for i, s in enumerate([slide1(r), slide2(r), slide3(r), slide4(), slide5(a)], 1):
+    for i, s in enumerate([slide1(r), slide2(r), slide3(r), slide4(), slide5(decay)], 1):
         (OUT / f"slide-{i}.svg").write_text(s)
     print(f"Wrote {TOTAL} slides to {OUT}  (${r['symbol']} {pct(r['coinReturn'])} vs BTC {pct(r['btcReturn'])})")
 

@@ -9,7 +9,7 @@ import {
   rankEntries,
   spamRatio,
 } from "../src/watchlist.js";
-import { addDays, closeOn, collectPicks, summarize } from "../src/track.js";
+import { addDays, attentionDecay, closeOn, collectPicks, summarize } from "../src/track.js";
 import type { CoinRow, SeriesRow, WatchEntry } from "../src/types.js";
 
 function coin(over: Partial<CoinRow>): CoinRow {
@@ -144,4 +144,23 @@ test("the track record scores against BTC, not against zero", () => {
   assert.equal(s.n, 2);
   assert.equal(s.wins, 1);
   assert.ok(Math.abs(s.meanSpread - (0.066 + -0.1) / 2) < 1e-9);
+});
+
+test("attention decay never reads the day in progress", () => {
+  const day = (d: string, interactions: number) => ({
+    time: Date.parse(`${d}T00:00:00Z`) / 1000, interactions,
+  });
+  const series = [
+    day("2026-08-18", 6_808_499), // the spike that triggered the pick
+    day("2026-08-22", 3_005_544),
+    day("2026-08-23", 2_113_850), // last complete day
+    day("2026-08-24", 1_366_052), // today, still filling: must be ignored
+  ];
+  const d = attentionDecay(series, "2026-08-18")!;
+  assert.equal(d.latest, 2_113_850, "must not use the partial final row");
+  assert.equal(d.latestDate, "2026-08-23");
+  assert.equal(d.daysElapsed, 5, "elapsed days follow the complete day, not today");
+  assert.ok(Math.abs(d.retained - 2_113_850 / 6_808_499) < 1e-9);
+
+  assert.equal(attentionDecay(series, "2026-01-01"), undefined, "no spike row, no claim");
 });
