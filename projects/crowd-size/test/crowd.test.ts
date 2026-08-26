@@ -10,6 +10,7 @@ import {
   repeatVoices,
   topShare,
 } from "../src/crowd.js";
+import { logCorrelation, summarize, topVoices } from "../src/reach.js";
 import type { CoinRow, Creator } from "../src/types.js";
 
 function coin(over: Partial<CoinRow> = {}): CoinRow {
@@ -83,4 +84,49 @@ test("median handles even and odd", () => {
   assert.equal(median([3, 1, 2]), 2);
   assert.equal(median([4, 1, 2, 3]), 2.5);
   assert.equal(median([]), 0);
+});
+
+test("top voices need a usable follower count to be scored", () => {
+  const raw = [{
+    symbol: "X",
+    creators: [
+      { creator_name: "big", creator_followers: 1_000_000, interactions_24h: 500 },
+      { creator_name: "small", creator_followers: 152, interactions_24h: 900 },
+      { creator_name: "nofollowers", interactions_24h: 400 },
+      { creator_name: "zero", creator_followers: 0, interactions_24h: 300 },
+      { creator_name: "silent", creator_followers: 5000, interactions_24h: 0 },
+    ],
+  }];
+  const v = topVoices(raw);
+  assert.deepEqual(v.map((x) => x.name), ["small", "big"], "ranked by impact, not by followers");
+  assert.equal(v[0].rank, 1, "the 152-follower account is the loudest voice here");
+  assert.ok(!v.some((x) => x.name === "nofollowers"), "no follower count, no point on the chart");
+  assert.ok(!v.some((x) => x.name === "zero"));
+  assert.ok(!v.some((x) => x.name === "silent"), "zero interactions is not a voice");
+});
+
+test("correlation is computed in log space", () => {
+  // Perfectly proportional in log space: 10x followers, 10x interactions.
+  const perfect = [
+    { coin: "X", rank: 1, name: "a", followers: 100, interactions: 100 },
+    { coin: "X", rank: 2, name: "b", followers: 1_000, interactions: 1_000 },
+    { coin: "X", rank: 3, name: "c", followers: 10_000, interactions: 10_000 },
+  ];
+  assert.ok(Math.abs(logCorrelation(perfect) - 1) < 1e-9);
+  // Exactly inverted: the biggest account lands least.
+  const inverted = perfect.map((v, i) => ({ ...v, interactions: [10_000, 1_000, 100][i] }));
+  assert.ok(Math.abs(logCorrelation(inverted) + 1) < 1e-9);
+  assert.equal(logCorrelation([]), 0, "too few points to claim a relationship");
+});
+
+test("the summary counts the follower bands it reports", () => {
+  const v = [152, 900, 5_000, 50_000, 2_000_000].map((followers, i) => ({
+    coin: "X", rank: i + 1, name: `a${i}`, followers, interactions: 1000,
+  }));
+  const s = summarize(v);
+  assert.equal(s.voices, 5);
+  assert.equal(s.underOneThousand, 2);
+  assert.equal(s.underTenThousand, 3);
+  assert.equal(s.overOneMillion, 1);
+  assert.equal(s.medianFollowers, 5_000);
 });

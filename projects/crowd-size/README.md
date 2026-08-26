@@ -48,9 +48,19 @@ The creators endpoint returns the head of the distribution and drops the tail. D
 
 Three thin coins showed a creator sum *above* the coin total, meaning the two fields count differently at low volume. Those sit below the eligibility floor, and `topShare` clamps at 1 regardless.
 
+## Who the loud accounts are
+
+`npm run reach` asks a second question of the same data: does follower count predict who ends up driving a coin's conversation?
+
+Barely. Across the 340 accounts sitting in some major coin's top 10, follower count explains **24%** of the variation in impact (log-log correlation 0.48). A quarter of them have under 10,000 followers, and only 14% have over a million. The median is about 65,000.
+
+Read the population carefully. These are accounts that already landed, so a small account only appears here if it worked. That makes this a statement about *who the loud accounts are*, not a claim that small accounts get more reach in general. Per-follower engagement across these bands would be pure survivorship and is deliberately not reported.
+
 ## Limits
 
 This counts posts and the engagement they draw, not people. One account can be a team, a scheduler, or a bot, and roughly a third of major-coin posting is flagged spam ([bot-share](../bot-share/)). A narrow crowd is evidence that few accounts carry the conversation; whether those accounts are paid, automated, or simply prolific is a separate question this does not answer.
+
+Interactions are attributed per topic, and a post that mentions several tickers counts toward all of them. Most accounts show genuinely different numbers per coin (88% of those appearing on more than one), but a few post identical figures across a dozen coins, which is the signature of an account listing many tickers in one post. For a coin whose top voices are ticker-sprayers, the crowd will read narrower than it is.
 
 It is also a 24-hour snapshot. A coin mid-announcement will look narrower than its normal week.
 

@@ -58,6 +58,9 @@ async function main(): Promise<void> {
 
   mkdirSync(OUT_DIR, { recursive: true });
   writeFileSync(join(OUT_DIR, "report.json"), JSON.stringify({ ...report, repeats }, null, 1));
+  // Raw creator lists, so `npm run reach` can analyse follower counts without
+  // a second pass over the API.
+  writeFileSync(join(OUT_DIR, "creators.json"), JSON.stringify(raw));
   const svg = renderChartSvg(report);
   writeFileSync(join(OUT_DIR, "chart.svg"), svg);
   writeFileSync(join(OUT_DIR, "chart.png"), await svgToPng(svg));
