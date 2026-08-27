@@ -8,6 +8,8 @@ For the top 1,000 coins by market cap, pull full daily history from the LunarCru
 
 Headline result: about 85% of social spikes are spam-heavy, and those carry no positive signal (directionally negative). The organic minority improves the odds of beating BTC over the next 3 days from 41.9% to 49.0% (p = 0.003, the only comparison that survives multiple-testing correction). See [DRAFT.md](DRAFT.md) for the full write-up.
 
+**Sentiment is not an indicator.** Across 449,640 coin-days it is net positive 97.6% of the time, median 86 out of 100, and the monthly median has never left the 77-94 band in six and a half years. It read 90 through the COVID crash, 86 through the LUNA collapse and 86 through the failure of FTX. It also predicts nothing: quintile-sorted, the 3-day beats-BTC rate runs 41.0% to 42.4% (gap +1.4pp, p = 0.12), and its correlation with forward BTC-adjusted return is +0.005. `sentiment_check.py` runs it.
+
 **An early lead means nothing.** Among organic spikes, those ahead of BTC after day 1 beat BTC at day 3 72.8% of the time versus 28.9% for those behind. That 44 point spread is an artifact: day 1 sits inside day 3, so the measure and the outcome share a term. Scored on the non-overlapping remainder, days 2-3 alone, the two groups come in at 46.2% and 46.3% (gap -0.1pp, p = 0.99). `day1_check.py` runs it both ways.
 
 **The flat-price condition is the finding, not a detail.** Split all 1,218 organic spikes by what price did on the spike day: the flat-price slice beats BTC 49.0% of the time (+7.2pp, p = 0.001), while the same quality of spike on a day price had already run 5%+ comes in at 41.7% against a 41.8% baseline (-0.2pp, p = 0.85). Attention arriving after the move is a reaction to it. `price_context.py` runs the split.
@@ -30,6 +32,9 @@ python3 pull.py --top 1000
 # Sensitivity checks
 .venv/bin/python analysis.py --z 2.5 --flat 0.03
 .venv/bin/python analysis.py --spam-split 0.3 --bootstrap 0   # stricter spam cut, skip bootstrap
+
+# Does sentiment ever say anything but "bullish"? (writes out/sentiment.json)
+.venv/bin/python sentiment_check.py
 
 # Is the signal directional or only relative to BTC? (writes out/uprate*.csv)
 .venv/bin/python uprate.py
