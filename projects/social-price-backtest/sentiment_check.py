@@ -65,6 +65,36 @@ def block_bootstrap(hi: pd.DataFrame, lo: pd.DataFrame, iters: int, seed: int = 
             float(2 * min((draws <= 0).mean(), (draws >= 0).mean())))
 
 
+def euphoria_test(e: pd.DataFrame) -> dict:
+    """Does a high-sentiment month precede a bad one? ("Everyone was bullish
+    right before the rug.")
+
+    The anecdote has something to it: three of the five worst months in the
+    data followed a month whose sentiment sat at the 71st percentile. The
+    systematic version does not survive. High-sentiment months are followed by
+    a losing month LESS often than low-sentiment ones, which is the opposite of
+    the folk theory, and the correlation with next month's return is +0.14.
+
+    Both readings are consistent with the simpler explanation: sentiment is
+    high before crashes because sentiment is high before everything.
+    """
+    m = e.groupby("ym").agg(sent=("sentiment", "median"), ret=("ret_1d", "median"),
+                            n=("sentiment", "size"))
+    m = m[m.n >= MIN_MONTH_DAYS].copy()
+    m["next_ret"] = m["ret"].shift(-1)
+    m = m.dropna(subset=["next_ret"])
+    hi = m[m.sent >= m.sent.quantile(0.75)]
+    lo = m[m.sent <= m.sent.quantile(0.25)]
+    return {
+        "months": len(m),
+        "corrNextMonth": float(np.corrcoef(m.sent, m.next_ret)[0, 1]),
+        "highThenNegative": float((hi.next_ret < 0).mean()),
+        "lowThenNegative": float((lo.next_ret < 0).mean()),
+        "baseRateNegative": float((m.next_ret < 0).mean()),
+        "nHigh": len(hi), "nLow": len(lo),
+    }
+
+
 def render_chart(monthly: pd.DataFrame, stats: dict) -> str:
     """Bitcoin's price above, sentiment below, on a shared timeline.
 
@@ -203,8 +233,17 @@ def main() -> None:
     print(f"\nhighest minus lowest: {diff:+.1%}  CI [{lo:+.1%}, {hi:+.1%}]  p={pv:.3f}")
     print(f"corr(sentiment, +3d BTC-adjusted return) = {np.corrcoef(s, e['adj_3d'])[0, 1]:+.3f}")
 
+    euphoria = euphoria_test(e)
+    print("\n\"everyone was bullish right before the rug\" - tested:")
+    print(f"  high-sentiment months followed by a losing month: {euphoria['highThenNegative']:.0%} (n={euphoria['nHigh']})")
+    print(f"  low-sentiment  months followed by a losing month: {euphoria['lowThenNegative']:.0%} (n={euphoria['nLow']})")
+    print(f"  base rate across all {euphoria['months']} months: {euphoria['baseRateNegative']:.0%}")
+    print(f"  corr(this month's sentiment, next month's return) = {euphoria['corrNextMonth']:+.2f}")
+    print("  so the folk theory runs backwards here, on a small sample. Sentiment is")
+    print("  high before crashes because it is high before everything.")
+
     stats = {
-        "coinDays": len(e), "shareAbove50": float((s > 50).mean()),
+        "coinDays": len(e), "euphoria": euphoria, "shareAbove50": float((s > 50).mean()),
         "median": float(s.median()), "monthlyMin": float(monthly.sentiment.min()),
         "monthlyMax": float(monthly.sentiment.max()),
         "lowestRate": rates["lowest"], "highestRate": rates["highest"],
