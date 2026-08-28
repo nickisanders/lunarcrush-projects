@@ -8,6 +8,8 @@ For the top 1,000 coins by market cap, pull full daily history from the LunarCru
 
 Headline result: about 85% of social spikes are spam-heavy, and those carry no positive signal (directionally negative). The organic minority improves the odds of beating BTC over the next 3 days from 41.9% to 49.0% (p = 0.003, the only comparison that survives multiple-testing correction). See [DRAFT.md](DRAFT.md) for the full write-up.
 
+**Two thirds of a spike is the same crowd, louder.** Applying the interaction z-score construction to unique contributors splits the 402 organic spikes: only 33% involve an actual influx of new contributors. On a normal day the median coin draws 296 interactions per active contributor; on a spike day, 1,577. The distinction does not pay, though: the beats-BTC rate is 48.5% versus 49.3%, medians identical, and the mean-return gap is +1.0pp with a CI of [-0.4, +3.0] (p = 0.15). `crowd_growth.py` runs it.
+
 **Sentiment is not an indicator.** Across 449,640 coin-days it is net positive 97.6% of the time, median 86 out of 100, and the monthly median has never left the 77-94 band in six and a half years. It read 90 through the COVID crash, 86 through the LUNA collapse and 86 through the failure of FTX. It also predicts nothing: quintile-sorted, the 3-day beats-BTC rate runs 41.0% to 42.4% (gap +1.4pp, p = 0.12), and its correlation with forward BTC-adjusted return is +0.005. `sentiment_check.py` runs it.
 
 **An early lead means nothing.** Among organic spikes, those ahead of BTC after day 1 beat BTC at day 3 72.8% of the time versus 28.9% for those behind. That 44 point spread is an artifact: day 1 sits inside day 3, so the measure and the outcome share a term. Scored on the non-overlapping remainder, days 2-3 alone, the two groups come in at 46.2% and 46.3% (gap -0.1pp, p = 0.99). `day1_check.py` runs it both ways.
@@ -32,6 +34,9 @@ python3 pull.py --top 1000
 # Sensitivity checks
 .venv/bin/python analysis.py --z 2.5 --flat 0.03
 .venv/bin/python analysis.py --spam-split 0.3 --bootstrap 0   # stricter spam cut, skip bootstrap
+
+# Is a spike new people or the same people louder? (writes out/crowd-growth.json)
+.venv/bin/python crowd_growth.py
 
 # Does sentiment ever say anything but "bullish"? (writes out/sentiment.json)
 .venv/bin/python sentiment_check.py
