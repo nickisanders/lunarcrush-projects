@@ -5,6 +5,8 @@ import {
   eligibleCandidates,
   interactionZScore,
   medianInteractions,
+  bareTopic,
+  isNameCollision,
   qualifies,
   rankEntries,
   spamRatio,
@@ -163,4 +165,39 @@ test("attention decay never reads the day in progress", () => {
   assert.ok(Math.abs(d.retained - 2_113_850 / 6_808_499) < 1e-9);
 
   assert.equal(attentionDecay(series, "2026-01-01"), undefined, "no spike row, no claim");
+});
+
+test("the bare topic is the ticker, which is what collides", () => {
+  assert.equal(bareTopic("hot holo"), "hot");
+  assert.equal(bareTopic("link chainlink"), "link");
+  assert.equal(bareTopic(""), "");
+});
+
+test("a spike that is really a common word is rejected", () => {
+  // $HOT on 2026-08-30: flagged at 37x normal chatter, but the bare word "hot"
+  // draws 492M interactions a day against the coin's 1.85M.
+  const byTopic = isNameCollision({ interactions24h: 1_847_751, bareInteractions: 492_151_322 });
+  assert.equal(byTopic.collision, true);
+  assert.match(byTopic.reason!, /bare ticker/);
+
+  // The same coin fails the second test independently: 1.85M interactions
+  // spread over 71 people is 26,024 each.
+  const byCrowd = isNameCollision({ interactions24h: 1_847_751, contributors: 71 });
+  assert.equal(byCrowd.collision, true);
+  assert.match(byCrowd.reason!, /per contributor/);
+});
+
+test("a genuine spike with a real crowd passes both tests", () => {
+  // $LINK on 2026-08-18: 6.8M interactions, a wide crowd, and "link" does not
+  // carry multiples of it.
+  const ok = isNameCollision({
+    interactions24h: 6_808_499, contributors: 4_200, bareInteractions: 9_000_000,
+  });
+  assert.equal(ok.collision, false);
+  assert.equal(ok.reason, undefined);
+});
+
+test("missing inputs never fabricate a rejection", () => {
+  assert.equal(isNameCollision({ interactions24h: 1e6 }).collision, false);
+  assert.equal(isNameCollision({ interactions24h: 1e6, contributors: 0 }).collision, false);
 });

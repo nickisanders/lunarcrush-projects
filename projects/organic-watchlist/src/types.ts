@@ -20,6 +20,9 @@ export interface SeriesRow {
   posts_created?: number;
   spam?: number;
   close?: number;
+  /** Unique accounts posting that day. Used to sanity-check a spike: a real
+   * crowd produces a plausible number of interactions each. */
+  contributors_active?: number;
 }
 
 export interface Candidate {

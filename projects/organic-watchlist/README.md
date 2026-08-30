@@ -46,6 +46,19 @@ Cost: one coins-list call plus one history call per candidate, about 80 requests
 Candidates are ranked by social volume and AltRank movement before the expensive history call, so a very small coin spiking from a low base could fall outside the top 80 and be missed. Raising `--max-candidates` widens the net at the cost of more requests.
 
 The backtest measured relative performance against BTC, not absolute returns, and ignores fees and slippage. Nothing here is financial advice.
+## The spike has to be about the coin
+
+A qualifying spike is checked twice more before it is published, because a ticker that is also an ordinary word collects every unrelated use of it.
+
+- **The bare ticker's own traffic.** If the ticker as a standalone topic carries 3x the coin's interactions or more, the conversation is more plausibly the word.
+- **Interactions per contributor.** Across the backtest the median coin draws 296 interactions per active contributor on an ordinary day and 1,577 on a spike day. Above 8,000 the crowd is too small for the volume to be real.
+
+Either one is disqualifying, and the second needs no extra request.
+
+This exists because the scanner was fooled. On 2026-08-30 it flagged **$HOT (Holo)** at 37x its normal chatter with a flat price, which is exactly the published setup. Its 1.85M interactions came from 71 contributors, 26,024 each, and only 1% were attributable to any named account, while the bare word "hot" drew 492M interactions that day. It was the word, not the coin. See [name-collision](../name-collision/) for the market-wide version.
+
+A topic that will not resolve returns undefined rather than zero, so a coin the check could not examine is never silently passed.
+
 ## Track record
 
 Every pick this bot has ever published, resolved against the claim it actually makes:

@@ -3,13 +3,15 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderChartSvg, svgToPng } from "./chart.js";
 import { loadEnv } from "./env.js";
-import { fetchCoinsList, fetchDailySeries } from "./lunarcrush.js";
+import { fetchCoinsList, fetchDailySeries, fetchTopic } from "./lunarcrush.js";
 import { renderPost } from "./render.js";
 import {
   eligibleCandidates,
   failureReason,
   interactionZScore,
   medianInteractions,
+  bareTopic,
+  isNameCollision,
   qualifies,
   rankEntries,
   spamRatio,
@@ -23,6 +25,24 @@ const FIXTURES = join(HERE, "..", "fixtures", "sample.json");
 interface MockData {
   coins: CoinRow[];
   series: Record<string, SeriesRow[]>;
+}
+
+/** Traffic on the bare ticker as a topic, or undefined if it will not resolve.
+ *
+ * A topic that does not exist is not evidence either way, so it returns
+ * undefined rather than zero: zero would read as "no collision" and quietly
+ * pass a coin the check never actually examined. */
+async function bareTopicInteractions(topic: string): Promise<number | undefined> {
+  const apiKey = process.env.LUNARCRUSH_API_KEY;
+  const bare = bareTopic(topic);
+  if (!apiKey || !bare) return undefined;
+  try {
+    const t = await fetchTopic(apiKey, bare);
+    const n = Number(t.interactions_24h);
+    return Number.isFinite(n) && n > 0 ? n : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 async function main(): Promise<void> {
@@ -76,6 +96,24 @@ async function main(): Promise<void> {
         }
         continue;
       }
+      // A qualifying spike still has to be about the coin. Only run this for
+      // coins that already passed everything else: it costs a request each,
+      // and only a handful get this far on any given day.
+      const lastComplete = series[series.length - 2];
+      const collision = isNameCollision({
+        interactions24h: row.interactions_24h,
+        contributors: lastComplete?.contributors_active,
+        bareInteractions: await bareTopicInteractions(row.topic),
+      });
+      if (collision.collision) {
+        console.log(`  ${row.symbol}: rejected, ${collision.reason}`);
+        nearMisses.push({
+          symbol: row.symbol, z, spam, percentChange24h: row.percent_change_24h,
+          failed: `the conversation is not about the coin: ${collision.reason}`,
+        });
+        continue;
+      }
+
       entries.push({
         symbol: row.symbol,
         name: row.name,

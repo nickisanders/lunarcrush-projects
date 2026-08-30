@@ -141,3 +141,52 @@ export function failureReason(e: {
   if (e.z < CRITERIA.zMin) return `spike only ${e.z.toFixed(1)} of ${CRITERIA.zMin.toFixed(1)}`;
   return null;
 }
+
+/** The first word of a LunarCrush topic string, which is the ticker.
+ *
+ * Topics read "hot holo": the ticker followed by the name. The ticker alone is
+ * what a common word collides with, so that is what gets checked. */
+export function bareTopic(topic: string): string {
+  return (topic || "").trim().split(/\s+/)[0] || "";
+}
+
+/** How much bigger the bare ticker's own traffic must be before a coin's spike
+ * is more plausibly the word than the coin. */
+export const COLLISION_MULTIPLE = 3;
+
+/** Interactions per active contributor above which a spike is not credible.
+ *
+ * Measured, not guessed: across the backtest the median coin draws 296
+ * interactions per active contributor on an ordinary day and 1,577 on a spike
+ * day. $HOT was flagged at 37x normal chatter on 2026-08-30 with 1.85M
+ * interactions from 71 contributors, or 26,024 each, which is 16x the spike-day
+ * norm. A real crowd does not do that; a name collision does. */
+export const MAX_PER_CONTRIBUTOR = 8_000;
+
+/** Is this spike more plausibly about the word than the coin?
+ *
+ * Two independent tests, either of which is disqualifying:
+ *
+ * 1. The bare ticker carries multiples of the coin's own traffic. A ticker that
+ *    is also an ordinary word ("hot", "am", "47") collects every unrelated use
+ *    of it.
+ * 2. The interactions are spread over too few contributors to be real. This
+ *    catches collisions the topic check misses, and needs no extra request.
+ */
+export function isNameCollision(input: {
+  interactions24h: number;
+  contributors?: number;
+  bareInteractions?: number;
+}): { collision: boolean; reason?: string } {
+  const { interactions24h, contributors, bareInteractions } = input;
+  if (bareInteractions !== undefined && bareInteractions >= interactions24h * COLLISION_MULTIPLE) {
+    return { collision: true, reason: `the bare ticker draws ${Math.round(bareInteractions / interactions24h)}x the coin's traffic` };
+  }
+  if (contributors && contributors > 0) {
+    const per = interactions24h / contributors;
+    if (per > MAX_PER_CONTRIBUTOR) {
+      return { collision: true, reason: `${Math.round(per).toLocaleString()} interactions per contributor, against a spike-day norm of ~1,600` };
+    }
+  }
+  return { collision: false };
+}

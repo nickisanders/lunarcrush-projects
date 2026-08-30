@@ -24,3 +24,11 @@ export function fetchCoinsList(apiKey: string, limit = 1000): Promise<CoinRow[]>
 export function fetchDailySeries(apiKey: string, coinId: number): Promise<SeriesRow[]> {
   return get(`/public/coins/${coinId}/time-series/v2?bucket=day&interval=3m`, apiKey);
 }
+
+/** A topic's own traffic, used to detect ticker name collisions. */
+export function fetchTopic(
+  apiKey: string,
+  topic: string
+): Promise<{ interactions_24h?: number; num_contributors?: number }> {
+  return get(`/public/topic/${encodeURIComponent(topic)}/v1`, apiKey);
+}
