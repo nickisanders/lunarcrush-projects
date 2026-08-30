@@ -135,3 +135,91 @@ export function renderTrackChartSvg(r: {
     `</svg>`,
   ].join("\n");
 }
+
+/** Break a caption on word boundaries. Slicing at a character count split
+ * "~1,600" into "~1,60" and "0." on the first render. */
+function wrap(text: string, width: number): string[] {
+  const lines: string[] = [];
+  let line = "";
+  for (const word of text.split(" ")) {
+    if (line && (line + " " + word).length > width) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = line ? `${line} ${word}` : word;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+/** Anatomy of a rejected spike: what the setup saw, and what killed it.
+ *
+ * Two panels because the story is the contrast. On the left the coin passes
+ * every published leg, which is exactly why it is dangerous. On the right the
+ * two checks that show the conversation was never about the coin.
+ */
+export function renderCollisionChartSvg(
+  miss: { symbol: string; z: number; spam: number; percentChange24h: number;
+          collision?: { multiple: number; interactions24h: number; contributors?: number;
+                        perContributor?: number; bareTopic?: string; bareInteractions?: number } },
+  generatedAt: string
+): string {
+  const c = miss.collision;
+  if (!c) return "";
+  const W = 1300, H = 760;
+  const RED = "#f85149";
+  const short = (n: number) =>
+    n >= 1e9 ? `${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `${(n / 1e6).toFixed(1)}M`
+    : n >= 1e3 ? `${(n / 1e3).toFixed(0)}k` : String(Math.round(n));
+
+  const pass = [
+    [`${c.multiple.toFixed(0)}x its normal chatter`, `z-score ${miss.z.toFixed(1)}, threshold is 3.0`],
+    [`${(miss.spam * 100).toFixed(0)}% spam`, "under the 50% ceiling"],
+    [`price ${miss.percentChange24h >= 0 ? "+" : ""}${miss.percentChange24h.toFixed(1)}%`, "flat, within the 2% band"],
+    [`${short(c.interactions24h)} interactions`, "a real social baseline"],
+  ];
+  const fail: [string, string][] = [];
+  if (c.perContributor !== undefined) {
+    fail.push([`${Math.round(c.perContributor).toLocaleString()} interactions per person`,
+               `${(c.contributors ?? 0).toLocaleString()} contributors made all of it. A genuine spike day runs ~1,600.`]);
+  }
+  if (c.bareInteractions) {
+    fail.push([`the word "${esc(c.bareTopic ?? "")}" drew ${short(c.bareInteractions)}`,
+               `${Math.round(c.bareInteractions / c.interactions24h)}x the coin's own traffic, on the same day`]);
+  }
+
+  const parts = [
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${FONT}">`,
+    `<rect width="${W}" height="${H}" fill="${COLORS.bg}"/>`,
+    `<text x="60" y="76" font-size="38" font-weight="700" fill="${COLORS.text}">My scanner's best signal in a month was a word</text>`,
+    `<text x="60" y="120" font-size="23" fill="${COLORS.sub}">$${esc(miss.symbol)} cleared every published condition, then failed two checks that ask whether the conversation is about the coin</text>`,
+    `<text x="70" y="200" font-size="25" font-weight="700" fill="${COLORS.green}">What the setup saw</text>`,
+    `<text x="700" y="200" font-size="25" font-weight="700" fill="${RED}">What it actually was</text>`,
+  ];
+  pass.forEach(([head, sub], i) => {
+    const y = 260 + i * 96;
+    parts.push(
+      `<rect x="70" y="${y - 34}" width="8" height="66" rx="4" fill="${COLORS.green}"/>`,
+      `<text x="100" y="${y}" font-size="27" font-weight="700" fill="${COLORS.text}">${esc(head)}</text>`,
+      `<text x="100" y="${y + 30}" font-size="20" fill="${COLORS.sub}">${esc(sub)}</text>`
+    );
+  });
+  fail.forEach(([head, sub], i) => {
+    const y = 260 + i * 130;
+    parts.push(
+      `<rect x="700" y="${y - 34}" width="8" height="94" rx="4" fill="${RED}"/>`,
+      `<text x="730" y="${y}" font-size="27" font-weight="700" fill="${RED}">${head}</text>`,
+      ...wrap(sub, 58).map((line, k) =>
+        `<text x="730" y="${y + 32 + k * 26}" font-size="20" fill="${COLORS.sub}">${esc(line)}</text>`)
+    );
+  });
+  parts.push(
+    `<text x="60" y="${H - 112}" font-size="23" fill="${COLORS.text}">Rejected. Both checks now run on every coin that clears the rest of the setup.</text>`,
+    `<text x="60" y="${H - 76}" font-size="21" fill="${COLORS.sub}">Either one is disqualifying, and the per-contributor test needs no extra request.</text>`,
+    `<text x="60" y="${H - 46}" font-size="21" fill="${COLORS.sub}">Nothing here is a verdict on the project. A team that picked a three-letter ticker did not choose to collide with a word.</text>`,
+    `<text x="60" y="${H - 16}" font-size="19" fill="${COLORS.sub}">Data: LunarCrush · ${esc(generatedAt.slice(0, 10))} · method and code in the repo</text>`,
+    `</svg>`
+  );
+  return parts.join("\n");
+}

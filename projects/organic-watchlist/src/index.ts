@@ -1,7 +1,7 @@
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { renderChartSvg, svgToPng } from "./chart.js";
+import { renderChartSvg, renderCollisionChartSvg, svgToPng } from "./chart.js";
 import { loadEnv } from "./env.js";
 import { fetchCoinsList, fetchDailySeries, fetchTopic } from "./lunarcrush.js";
 import { renderPost } from "./render.js";
@@ -100,16 +100,27 @@ async function main(): Promise<void> {
       // coins that already passed everything else: it costs a request each,
       // and only a handful get this far on any given day.
       const lastComplete = series[series.length - 2];
+      const bare = await bareTopicInteractions(row.topic);
       const collision = isNameCollision({
         interactions24h: row.interactions_24h,
         contributors: lastComplete?.contributors_active,
-        bareInteractions: await bareTopicInteractions(row.topic),
+        bareInteractions: bare,
       });
       if (collision.collision) {
         console.log(`  ${row.symbol}: rejected, ${collision.reason}`);
+        const contributors = lastComplete?.contributors_active;
         nearMisses.push({
           symbol: row.symbol, z, spam, percentChange24h: row.percent_change_24h,
           failed: `the conversation is not about the coin: ${collision.reason}`,
+          collision: {
+            multiple: med > 0 ? row.interactions_24h / med : 0,
+            interactions24h: row.interactions_24h,
+            medianInteractions: med,
+            contributors,
+            perContributor: contributors ? row.interactions_24h / contributors : undefined,
+            bareTopic: bareTopic(row.topic),
+            bareInteractions: bare,
+          },
         });
         continue;
       }
@@ -146,6 +157,16 @@ async function main(): Promise<void> {
   const svg = renderChartSvg(report);
   writeFileSync(join(OUT_DIR, "chart.svg"), svg);
   writeFileSync(join(OUT_DIR, "chart.png"), await svgToPng(svg));
+
+  // A rejected collision gets its own chart: it is the more interesting result
+  // on a day the scanner finds nothing.
+  const collided = report.nearMisses.find((m) => m.collision);
+  if (collided) {
+    const cSvg = renderCollisionChartSvg(collided, report.generatedAt);
+    writeFileSync(join(OUT_DIR, "collision.svg"), cSvg);
+    writeFileSync(join(OUT_DIR, "collision.png"), await svgToPng(cSvg));
+    console.log(`Wrote out/collision.png ($${collided.symbol})`);
+  }
 
   if (!mock) {
     const dataDir = join(HERE, "..", "data");

@@ -53,6 +53,17 @@ export interface NearMiss {
   percentChange24h: number;
   /** which leg of the setup it failed */
   failed: string;
+  /** Present only when the rejection was a name collision. Kept so the
+   * rejection can be charted and audited rather than just asserted. */
+  collision?: {
+    multiple: number;
+    interactions24h: number;
+    medianInteractions: number;
+    contributors?: number;
+    perContributor?: number;
+    bareTopic?: string;
+    bareInteractions?: number;
+  };
 }
 
 export interface WatchlistReport {
