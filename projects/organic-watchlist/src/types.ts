@@ -44,6 +44,9 @@ export interface WatchEntry {
   medianInteractions: number;
   /** how many times its own normal day this is */
   multiple: number;
+  /** Return over the 7 days before the signal. Context, not a filter: see
+   * priorWeekReturn for why the data does not support filtering on it. */
+  priorWeekReturn?: number;
 }
 
 export interface NearMiss {

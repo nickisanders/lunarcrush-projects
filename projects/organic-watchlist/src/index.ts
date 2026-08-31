@@ -12,6 +12,7 @@ import {
   medianInteractions,
   bareTopic,
   isNameCollision,
+  priorWeekReturn,
   qualifies,
   rankEntries,
   spamRatio,
@@ -135,6 +136,7 @@ async function main(): Promise<void> {
         interactions24h: row.interactions_24h,
         medianInteractions: med,
         multiple: med > 0 ? row.interactions_24h / med : 0,
+        priorWeekReturn: priorWeekReturn(series),
       });
       console.log(`  ${row.symbol}: z=${z.toFixed(1)} spam=${(spam * 100).toFixed(0)}%`);
     } catch (e) {

@@ -59,6 +59,25 @@ This exists because the scanner was fooled. On 2026-08-30 it flagged **$HOT (Hol
 
 A topic that will not resolve returns undefined rather than zero, so a coin the check could not examine is never silently passed.
 
+## The 24-hour flatness test is blind to the week
+
+The setup requires the price to be flat within 2% over 24 hours. A coin can satisfy that on a quiet day at the end of an enormous week.
+
+On 2026-08-31 the scanner flagged **$HNT (Helium)** at 47x its normal chatter, 24% spam, price +0.1%. It passed both collision checks and had a genuinely wide crowd: 98 named creators, the largest holding 11%. It had also risen **278% over the previous seven days**, from $0.187 to $0.74.
+
+The obvious fix is to require a quiet prior week as well. The data does not support it:
+
+| The week before the spike | n | +3d beats BTC |
+|---|---|---|
+| quiet week (±10%) | 317 | 48.6% |
+| already ran 10%+ | 49 | 51.0% |
+
+Quiet minus already-ran is **-2.4pp with p = 0.76**. There is no detectable difference, and adding a filter on 49 events would be fitting a rule to noise.
+
+What the history does say is that it has barely seen this case: only **2 of 402** signals followed a week as large as HNT's. The published 49% carries almost no information about a coin that has just quadrupled.
+
+So `priorWeekReturn` is reported alongside any pick that moved 10%+ in the prior week, and the post output carries a warning line. Context for the reader, not a filter fitted to eight events.
+
 ## Track record
 
 Every pick this bot has ever published, resolved against the claim it actually makes:

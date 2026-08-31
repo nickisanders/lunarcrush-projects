@@ -190,3 +190,28 @@ export function isNameCollision(input: {
   }
   return { collision: false };
 }
+
+
+/** Return over the seven days BEFORE the signal day.
+ *
+ * Reported as context, deliberately not used as a filter. The setup requires a
+ * flat price over 24 hours, which a coin can satisfy on a quiet day after an
+ * enormous week. $HNT qualified on 2026-08-31 having risen 278% in the prior
+ * seven days.
+ *
+ * The obvious fix is to require a quiet prior week too, and the data does not
+ * support it: spikes after a quiet week beat BTC 48.6% of the time and spikes
+ * after a 10%+ run beat it 51.0%, a difference of -2.4pp with p = 0.76. Adding
+ * the filter would be fitting a rule to 49 events on no evidence.
+ *
+ * What the history does say is that it has barely seen this. Only 2 of 402
+ * historical signals followed a week as large as HNT's, so the published 49%
+ * carries almost no information about that case. Showing the number lets a
+ * reader apply that judgement themselves. */
+export function priorWeekReturn(series: SeriesRow[], days = 7): number | undefined {
+  const complete = series.slice(0, -1);
+  const last = complete[complete.length - 1];
+  const before = complete[complete.length - 1 - days];
+  if (!last?.close || !before?.close) return undefined;
+  return last.close / before.close - 1;
+}

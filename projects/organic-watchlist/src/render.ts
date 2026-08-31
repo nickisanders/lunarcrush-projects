@@ -12,7 +12,14 @@ function fmtDate(iso: string): string {
 function line(e: WatchEntry, i: number): string {
   const spam = Math.round(e.spam * 100);
   const move = e.percentChange24h >= 0 ? `+${e.percentChange24h.toFixed(1)}` : e.percentChange24h.toFixed(1);
-  return `${i + 1}. $${e.symbol} · ${e.multiple.toFixed(0)}x its normal chatter · ${spam}% spam · price ${move}%`;
+  const line = `${i + 1}. $${e.symbol} · ${e.multiple.toFixed(0)}x its normal chatter · ${spam}% spam · price ${move}%`;
+  // The prior week is context the 24h flatness test cannot see. Only shown
+  // when it is large enough to change how the signal reads.
+  if (e.priorWeekReturn !== undefined && Math.abs(e.priorWeekReturn) >= 0.10) {
+    const wk = `${e.priorWeekReturn >= 0 ? "+" : ""}${(e.priorWeekReturn * 100).toFixed(0)}%`;
+    return `${line}\n   ⚠ but it is ${wk} over the prior 7 days, so the price has already moved`;
+  }
+  return line;
 }
 
 export function renderPost(report: WatchlistReport, promoCode?: string): string {

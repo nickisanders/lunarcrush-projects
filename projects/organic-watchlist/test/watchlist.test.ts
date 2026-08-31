@@ -7,6 +7,7 @@ import {
   medianInteractions,
   bareTopic,
   isNameCollision,
+  priorWeekReturn,
   qualifies,
   rankEntries,
   spamRatio,
@@ -200,4 +201,17 @@ test("a genuine spike with a real crowd passes both tests", () => {
 test("missing inputs never fabricate a rejection", () => {
   assert.equal(isNameCollision({ interactions24h: 1e6 }).collision, false);
   assert.equal(isNameCollision({ interactions24h: 1e6, contributors: 0 }).collision, false);
+});
+
+test("prior-week return reads complete days and tolerates a short series", () => {
+  const day = (close: number, i: number) => ({ time: i, interactions: 1000, close });
+  // 10 complete days then today's partial row, price 4x over the last 7.
+  const s = [
+    ...[0.18, 0.18, 0.19, 0.19, 0.19].map(day),
+    ...[0.23, 0.22, 0.21, 0.39, 0.74].map((c, i) => day(c, i + 5)),
+    day(0.72, 10), // today, partial
+  ];
+  const r = priorWeekReturn(s)!;
+  assert.ok(Math.abs(r - (0.74 / 0.19 - 1)) < 1e-9, "0.74 against the close 7 complete days earlier");
+  assert.equal(priorWeekReturn([day(1, 0), day(2, 1)]), undefined, "too short to answer");
 });
