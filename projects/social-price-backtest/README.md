@@ -8,6 +8,8 @@ For the top 1,000 coins by market cap, pull full daily history from the LunarCru
 
 Headline result: about 85% of social spikes are spam-heavy, and those carry no positive signal (directionally negative). The organic minority improves the odds of beating BTC over the next 3 days from 41.9% to 49.0% (p = 0.003, the only comparison that survives multiple-testing correction). See [DRAFT.md](DRAFT.md) for the full write-up.
 
+**Chasing a pump is the worst trade in the dataset.** Bucketing every coin-day by how much the coin had risen over the previous seven days gives a clean monotonic gradient in what happens next. Median return over the following 90 days: -9.2% after a quiet week, -25.0% after a 50-100% run, -35.5% after 100-200%, and -42.8% after 200%+. Of the 355 resolvable 200%+ episodes, 68% were lower 90 days later and 45% had lost half. Gap versus a quiet week is -33.6pp, CI [-42.1, -16.3], p < 0.001. Consecutive qualifying days collapse to one episode, and survivorship makes the figures generous rather than harsh: coins that pumped and died out of the top 1,000 are absent. `after_the_run.py` runs it.
+
 **Two thirds of a spike is the same crowd, louder.** Applying the interaction z-score construction to unique contributors splits the 402 organic spikes: only 33% involve an actual influx of new contributors. On a normal day the median coin draws 296 interactions per active contributor; on a spike day, 1,577. The distinction does not pay, though: the beats-BTC rate is 48.5% versus 49.3%, medians identical, and the mean-return gap is +1.0pp with a CI of [-0.4, +3.0] (p = 0.15). `crowd_growth.py` runs it.
 
 **Sentiment is not an indicator.** Across 449,640 coin-days it is net positive 97.6% of the time, median 86 out of 100, and the monthly median has never left the 77-94 band in six and a half years. It read 90 through the COVID crash, 86 through the LUNA collapse and 86 through the failure of FTX. It also predicts nothing: quintile-sorted, the 3-day beats-BTC rate runs 41.0% to 42.4% (gap +1.4pp, p = 0.12), and its correlation with forward BTC-adjusted return is +0.005. `sentiment_check.py` runs it.
@@ -34,6 +36,9 @@ python3 pull.py --top 1000
 # Sensitivity checks
 .venv/bin/python analysis.py --z 2.5 --flat 0.03
 .venv/bin/python analysis.py --spam-split 0.3 --bootstrap 0   # stricter spam cut, skip bootstrap
+
+# You missed the pump. Should you buy it anyway? (writes out/after-the-run.json)
+.venv/bin/python after_the_run.py
 
 # Is a spike new people or the same people louder? (writes out/crowd-growth.json)
 .venv/bin/python crowd_growth.py
