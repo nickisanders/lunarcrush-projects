@@ -8,6 +8,8 @@ For the top 1,000 coins by market cap, pull full daily history from the LunarCru
 
 Headline result: about 85% of social spikes are spam-heavy, and those carry no positive signal (directionally negative). The organic minority improves the odds of beating BTC over the next 3 days from 41.9% to 49.0% (p = 0.003, the only comparison that survives multiple-testing correction). See [DRAFT.md](DRAFT.md) for the full write-up.
 
+**Buying the dip is not the mirror image.** The pump side is a clean gradient; the crash side has no structure, and the only dip bucket that clears its own interval runs against dip buyers. A modest 10-30% dip returns a median -20.4% over 90 days against -9.2% for a quiet week, a gap of -11.2pp at p < 0.001. Deeper falls are indistinguishable from doing nothing (50-70%: +3.6%, p = 0.69). What separates a crash from a pump is the median, not the spread: after a 200%+ pump the median is -43% and 45% lose another half, after a 50%+ crash the median is -2% and 21% do. `buy_the_dip.py` runs it.
+
 **Chasing a pump is the worst trade in the dataset.** Bucketing every coin-day by how much the coin had risen over the previous seven days gives a clean monotonic gradient in what happens next. Median return over the following 90 days: -9.2% after a quiet week, -25.0% after a 50-100% run, -35.5% after 100-200%, and -42.8% after 200%+. Of the 355 resolvable 200%+ episodes, 68% were lower 90 days later and 45% had lost half. Gap versus a quiet week is -33.6pp, CI [-42.1, -16.3], p < 0.001. Consecutive qualifying days collapse to one episode, and survivorship makes the figures generous rather than harsh: coins that pumped and died out of the top 1,000 are absent. `after_the_run.py` runs it.
 
 **Two thirds of a spike is the same crowd, louder.** Applying the interaction z-score construction to unique contributors splits the 402 organic spikes: only 33% involve an actual influx of new contributors. On a normal day the median coin draws 296 interactions per active contributor; on a spike day, 1,577. The distinction does not pay, though: the beats-BTC rate is 48.5% versus 49.3%, medians identical, and the mean-return gap is +1.0pp with a CI of [-0.4, +3.0] (p = 0.15). `crowd_growth.py` runs it.
@@ -36,6 +38,9 @@ python3 pull.py --top 1000
 # Sensitivity checks
 .venv/bin/python analysis.py --z 2.5 --flat 0.03
 .venv/bin/python analysis.py --spam-split 0.3 --bootstrap 0   # stricter spam cut, skip bootstrap
+
+# Does buying the dip work? (writes out/buy-the-dip.json)
+.venv/bin/python buy_the_dip.py
 
 # You missed the pump. Should you buy it anyway? (writes out/after-the-run.json)
 .venv/bin/python after_the_run.py
