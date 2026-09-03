@@ -27,6 +27,23 @@ Note the two measures disagree in direction: mentioned coins beat Bitcoin **less
 
 The blunt version: across 6,685 mentions by 137 named accounts, a coin they talked about did not beat Bitcoin more often than a coin nobody mentioned.
 
+## Stance makes no difference either
+
+The strongest objection to the result above is that a mention is not a recommendation, so mixing whale-dump reports with bullish calls could be hiding a signal in the bullish half.
+
+It is not. `sentiment_split.py` splits the mentions into quarters by the post's own sentiment score:
+
+| Band | n | Score range | Beat BTC over 7d |
+|---|---|---|---|
+| most bearish | 978 | 1.13-2.95 | 38.5% |
+| 2 | 1,038 | 2.96-3.11 | 32.3% |
+| 3 | 881 | 3.12-3.22 | 38.3% |
+| most bullish | 966 | 3.23-4.14 | 37.4% |
+
+Most bullish minus most bearish: **-1.2pp, p = 0.59**, and the bands are not even in order. Correlation between a post's sentiment and the coin's 7-day excess return: **-0.001**.
+
+Two handling notes. A third of posts score exactly 3.00, the neutral midpoint of a 1-5 scale, on 2,433 of 7,053 mentions: far too many to be a measurement, so they are treated as unscored rather than filed as neutral opinion. And even after excluding them the spread is narrow, roughly 2.8 to 3.4 between the 5th and 95th percentile, so this tests relative stance within a tight band rather than bulls against bears.
+
 ## What this does not measure
 
 - **A mention is not a recommendation.** `lookonchain` mostly reports whale movements, so a `$ETH` post is frequently "somebody just dumped 40,000 ETH". `post_sentiment` is carried on every event so stance can be split out, but sentiment is a blunt instrument and this is the weakest joint in the study.
