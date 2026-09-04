@@ -108,22 +108,26 @@ test("entries rank by spike strength, ties to the cleaner conversation", () => {
   );
 });
 
-test("picks are deduplicated per day and pegged assets never count", () => {
-  const line = (date: string, symbols: string[]) =>
+test("only the last run of a day counts, so rejected picks never enter the record", () => {
+  const line = (stamp: string, symbols: string[]) =>
     JSON.stringify({
-      generatedAt: `${date}T13:00:00.000Z`,
+      generatedAt: `${stamp}.000Z`,
       entries: symbols.map((symbol) => ({ symbol, z: 3.2, spam: 0.2 })),
     });
   const picks = collectPicks([
-    line("2026-08-18", ["LINK"]),
-    line("2026-08-18", ["LINK"]), // bot run twice that day; still one pick
-    line("2026-08-21", ["USDE"]), // flat by construction, never a real pick
-    line("2026-08-19", []),
+    line("2026-08-18T15:06:00", []),
+    line("2026-08-18T15:12:00", ["LINK"]), // published
+    // $HOT was flagged, then rejected by a filter added the same afternoon.
+    // The record must reflect the later run, not the earlier one.
+    line("2026-08-30T17:08:00", ["HOT"]),
+    line("2026-08-30T17:12:00", []),
+    line("2026-08-21T15:22:00", ["USDE"]), // pegged, never a real pick
     "",
   ]);
   assert.deepEqual(
     picks.map((p) => `${p.date}:${p.symbol}`),
-    ["2026-08-18:LINK"]
+    ["2026-08-18:LINK"],
+    "$HOT was withdrawn the same day and must not be credited or blamed"
   );
 });
 

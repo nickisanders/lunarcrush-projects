@@ -50,20 +50,32 @@ export interface Resolved extends Pick {
   decay?: Decay;
 }
 
-/** Every distinct pick in the run history.
+/** Every pick this bot actually published.
  *
- * Runs are deduplicated on symbol+date because the bot is sometimes run twice
- * in a day, and a pick is a pick once. Pegged assets are dropped to match the
- * live filter: they sit inside the flat-price band by construction, and $USDE
- * only ever appeared because of that bug.
+ * Only the LAST run of each date counts. The bot is often run more than once a
+ * day, and when a filter is added mid-day the earlier run reflects the state
+ * before it. Counting every run credited the record with $HOT and $HNT, both
+ * of which were caught by new checks in a later run the same day and publicly
+ * rejected rather than published. A track record that includes calls I told
+ * people not to take is worse than no track record.
+ *
+ * Pegged assets are dropped to match the live filter: they sit inside the
+ * flat-price band by construction, and $USDE only ever appeared through that
+ * bug.
  */
 export function collectPicks(lines: string[]): Pick[] {
-  const seen = new Set<string>();
-  const picks: Pick[] = [];
+  const lastRunByDate = new Map<string, WatchlistReport>();
   for (const line of lines) {
     if (!line.trim()) continue;
     const report = JSON.parse(line) as WatchlistReport;
     const date = report.generatedAt.slice(0, 10);
+    const prior = lastRunByDate.get(date);
+    if (!prior || report.generatedAt > prior.generatedAt) lastRunByDate.set(date, report);
+  }
+
+  const seen = new Set<string>();
+  const picks: Pick[] = [];
+  for (const [date, report] of lastRunByDate) {
     for (const e of report.entries ?? []) {
       const key = `${e.symbol}@${date}`;
       if (seen.has(key) || PEGGED.has(e.symbol)) continue;
