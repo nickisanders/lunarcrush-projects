@@ -46,6 +46,21 @@ Cost: one coins-list call plus one history call per candidate, about 80 requests
 Candidates are ranked by social volume and AltRank movement before the expensive history call, so a very small coin spiking from a low base could fall outside the top 80 and be missed. Raising `--max-candidates` widens the net at the cost of more requests.
 
 The backtest measured relative performance against BTC, not absolute returns, and ignores fees and slippage. Nothing here is financial advice.
+## A bigger signal is not a better signal
+
+The setup has thresholds: z >= 3, spam < 50%, price flat within 2%. Once a coin clears them, how far it cleared them predicts nothing.
+
+Splitting the 402 historical events into quartiles:
+
+| Split | Gap in beats-BTC rate | p |
+|---|---|---|
+| biggest z vs smallest z | +5.9pp, CI [-0.6, +27.5] | 0.068 |
+| cleanest vs dirtiest spam | +2.0pp, CI [-18.3, +19.5] | 0.991 |
+
+Correlation between z and the 3-day excess return is **+0.056**; between spam level and the same, **-0.048**. Meanwhile the qualifying set as a whole still beats baseline by +7.1pp at p = 0.002. The thresholds do all the work.
+
+This mattered because the bot used to sort picks strongest-first, which presents a hierarchy the data does not support. The function is now `orderForDisplay`, and on days with more than one pick the output says the order is not meaningful.
+
 ## The spike has to be about the coin
 
 A qualifying spike is checked twice more before it is published, because a ticker that is also an ordinary word collects every unrelated use of it.

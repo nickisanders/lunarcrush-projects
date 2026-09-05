@@ -38,6 +38,14 @@ export function renderPost(report: WatchlistReport, promoCode?: string): string 
     lines.push("Genuine attention spikes where price hasn't reacted yet:");
     lines.push("");
     report.entries.forEach((e, i) => lines.push(line(e, i)));
+    // Multiple picks are a list, not a leaderboard. Within the qualifying set
+    // neither a bigger spike nor a cleaner one predicts a better outcome
+    // (p = 0.07 and p = 0.99), so the order must not read as a ranking.
+    if (report.entries.length > 1) {
+      lines.push("");
+      lines.push("Listed in no meaningful order: once a coin clears the setup, a bigger");
+      lines.push("or cleaner spike does not predict a better outcome.");
+    }
   }
   lines.push("");
   lines.push(

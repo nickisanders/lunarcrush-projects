@@ -97,7 +97,7 @@ test("qualifies enforces every leg of the published setup", () => {
   assert.equal(qualifies({ ...ok, percentChange24h: 5 }), false, "price already moved");
 });
 
-test("entries rank by spike strength, ties to the cleaner conversation", () => {
+test("display order is stable but carries no information", () => {
   const e = (symbol: string, z: number, spam: number): WatchEntry => ({
     symbol, name: symbol, marketCapRank: 10, z, spam, percentChange24h: 0,
     interactions24h: 1000, medianInteractions: 100, multiple: 10,

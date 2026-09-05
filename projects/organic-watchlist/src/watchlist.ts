@@ -123,10 +123,27 @@ export function qualifies(e: {
   );
 }
 
-export function rankEntries(entries: WatchEntry[]): WatchEntry[] {
-  // Strongest spike first; ties to the cleaner conversation.
+/** A stable display order. Explicitly NOT a ranking.
+ *
+ * This used to sort strongest spike first, which implies a bigger z is a
+ * better signal. Within the qualifying set it is not. Across the 402
+ * historical events, splitting into quartiles:
+ *
+ *   biggest z vs smallest z:    +5.9pp, CI [-0.6, +27.5], p = 0.068
+ *   cleanest vs dirtiest spam:  +2.0pp, CI [-18.3, +19.5], p = 0.991
+ *
+ * Correlation between z and the 3-day excess return is +0.056; between spam
+ * level and the same, -0.048. The thresholds do all the work, and once a coin
+ * clears them nothing about how far it cleared them predicts the outcome.
+ *
+ * The sort is kept for deterministic output, and callers must present the
+ * result as a list rather than a leaderboard. */
+export function orderForDisplay(entries: WatchEntry[]): WatchEntry[] {
   return [...entries].sort((a, b) => b.z - a.z || a.spam - b.spam);
 }
+
+/** @deprecated Renamed: the order carries no information. Use orderForDisplay. */
+export const rankEntries = orderForDisplay;
 
 /** Which leg of the setup a candidate failed, for the near-miss list. */
 export function failureReason(e: {
