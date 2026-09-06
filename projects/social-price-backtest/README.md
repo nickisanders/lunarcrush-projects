@@ -8,6 +8,8 @@ For the top 1,000 coins by market cap, pull full daily history from the LunarCru
 
 Headline result: about 85% of social spikes are spam-heavy, and those carry no positive signal (directionally negative). The organic minority improves the odds of beating BTC over the next 3 days from 41.9% to 49.0% (p = 0.003, the only comparison that survives multiple-testing correction). See [DRAFT.md](DRAFT.md) for the full write-up.
 
+**No market regime reverses the edge.** Split by what Bitcoin had done over the 30 days before each signal, the gap over baseline is +8.3pp when Bitcoin was falling, +4.6pp when flat and +8.6pp when rising. Stated carefully: cut into thirds no single regime clears its own interval (p = 0.05, 0.32, 0.07 on ~130 events each), which is what splitting 402 events costs in power. The pooled +7.1pp at p = 0.002 carries the claim; the split shows the absence of a reversal, not three confirmations. The setup also fires 1.7x more often in a downturn, one signal per 836 coin-days against one per 1,403 in a rally. `regime_check.py` runs it.
+
 **The threshold does the work; clearing it by more does not.** Qualifying spikes beat BTC 49.0% of the time against 41.9% (+7.1pp, p = 0.002), but within that set neither a larger spike nor a cleaner conversation predicts a better outcome: biggest z vs smallest is +5.9pp (p = 0.068) and cleanest spam vs dirtiest is +2.0pp (p = 0.991). Correlations with the 3-day excess return are +0.056 and -0.048. A tool that sorts its picks strongest-first is showing a hierarchy that is not there. `threshold_check.py` runs it.
 
 **Buying the dip is not the mirror image.** The pump side is a clean gradient; the crash side has no structure, and the only dip bucket that clears its own interval runs against dip buyers. A modest 10-30% dip returns a median -20.4% over 90 days against -9.2% for a quiet week, a gap of -11.2pp at p < 0.001. Deeper falls are indistinguishable from doing nothing (50-70%: +3.6%, p = 0.69). What separates a crash from a pump is the median, not the spread: after a 200%+ pump the median is -43% and 45% lose another half, after a 50%+ crash the median is -2% and 21% do. `buy_the_dip.py` runs it.
@@ -40,6 +42,9 @@ python3 pull.py --top 1000
 # Sensitivity checks
 .venv/bin/python analysis.py --z 2.5 --flat 0.03
 .venv/bin/python analysis.py --spam-split 0.3 --bootstrap 0   # stricter spam cut, skip bootstrap
+
+# Does the edge survive a falling market? (writes out/regime.json)
+.venv/bin/python regime_check.py
 
 # Does clearing the threshold by more help? (writes out/threshold.json)
 .venv/bin/python threshold_check.py
