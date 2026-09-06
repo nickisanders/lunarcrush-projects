@@ -17,6 +17,24 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 07 | [organic-watchlist](projects/organic-watchlist/) | Daily watchlist of genuine attention spikes where price hasn't moved yet |
 | 08 | [attention-cascade](projects/attention-cascade/) | Tests the BTC-to-alts attention cascade folklore. It does not exist |
 | 09 | [attention-death](projects/attention-death/) | Dying conversations predict nothing, and the altcoin base rate that fell out of it |
+| 10 | [bot-share](projects/bot-share/) | How much of each major coin's conversation is flagged spam. The median is about 40% |
+| 11 | [attention-clock](projects/attention-clock/) | Crypto conversation runs on a 2.1x daily cycle, and every major coin keeps the same Western hours |
+| 12 | [crowd-size](projects/crowd-size/) | How many accounts it takes to make half a coin's conversation. Bitcoin needs hundreds, some coins need three |
+| 13 | [name-collision](projects/name-collision/) | Coins whose social volume is mostly about something else, because the ticker is an ordinary word |
+| 14 | [influencer-scorecard](projects/influencer-scorecard/) | Scores named crypto accounts on whether the coins they post about beat Bitcoin. They do not |
+
+## What the backtest found
+
+The founding question was whether social attention leads price. The short answer, from [project 02](projects/social-price-backtest/):
+
+- About **85% of social spikes are spam-heavy**, and those carry no positive signal. Filtering them is the difference between a signal and an anti-signal.
+- The organic minority improves the odds of **beating Bitcoin** over 3 days from 41.9% to 49.0% (+7.1pp, p = 0.002). It is the only comparison that survives multiple-testing correction.
+- That edge is **relative, not directional**. Scored on whether the price simply rose, it disappears (+1.5pp, p = 0.54).
+- It requires the price to **not have moved yet**. The same spike after a 5%+ run is worth nothing.
+- It **does not need a bull market**, and it fires 1.7x more often in a downturn.
+- It **does not work on stocks**: 4,063 tickers, 9,073 events, no effect.
+
+Most of what is in here is a null result, and the nulls are published with the same care as the finding.
 
 ## Getting an API key
 
