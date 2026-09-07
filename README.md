@@ -22,6 +22,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 12 | [crowd-size](projects/crowd-size/) | How many accounts it takes to make half a coin's conversation. Bitcoin needs hundreds, some coins need three |
 | 13 | [name-collision](projects/name-collision/) | Coins whose social volume is mostly about something else, because the ticker is an ordinary word |
 | 14 | [influencer-scorecard](projects/influencer-scorecard/) | Scores named crypto accounts on whether the coins they post about beat Bitcoin. They do not |
+| 15 | [launch-check](projects/launch-check/) | How many contracts share a trending ticker, and whether the volume is plausible or churn |
 
 ## What the backtest found
 
