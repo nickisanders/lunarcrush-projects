@@ -86,6 +86,59 @@ export async function svgToPng(svg: string): Promise<Buffer> {
   return sharp(Buffer.from(svg), { density: 144 }).png().toBuffer();
 }
 
+/** The full record: every resolved pick, coin against Bitcoin.
+ *
+ * Shows the spread, which is the published claim, rather than the raw return.
+ * A pick can rise and still lose, and fall and still win, and a chart of raw
+ * returns would hide both.
+ */
+export function renderRecordChartSvg(
+  rows: { date: string; symbol: string; coinReturn: number; btcReturn: number;
+          spread: number; beatBtc: boolean }[],
+  summary: { n: number; wins: number; meanSpread: number }
+): string {
+  const W = 1200;
+  const H = 300 + rows.length * 120 + 180;
+  const CX = 640;
+  const SCALE = 26; // px per percentage point of spread
+  const clamp = (v: number) => Math.max(-380, Math.min(380, v * 100 * SCALE));
+
+  const parts: string[] = [
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${FONT}">`,
+    `<rect width="${W}" height="${H}" fill="${COLORS.bg}"/>`,
+    `<text x="60" y="76" font-size="36" font-weight="700" fill="${COLORS.text}">Every pick this bot has published</text>`,
+    `<text x="60" y="118" font-size="23" fill="${COLORS.sub}">performance against Bitcoin over the 3 days the signal covers, which is the claim being made</text>`,
+    `<line x1="${CX}" y1="180" x2="${CX}" y2="${180 + rows.length * 120}" stroke="${COLORS.track}" stroke-width="2"/>`,
+    `<text x="${CX}" y="168" font-size="19" fill="${COLORS.sub}" text-anchor="middle">matched Bitcoin</text>`,
+  ];
+
+  rows.forEach((r, i) => {
+    const y = 240 + i * 120;
+    const w = clamp(r.spread);
+    const col = r.beatBtc ? COLORS.green : "#f85149";
+    parts.push(
+      `<text x="60" y="${y + 8}" font-size="28" font-weight="700" fill="${COLORS.text}">$${esc(r.symbol)}</text>`,
+      `<text x="60" y="${y + 38}" font-size="19" fill="${COLORS.sub}">${esc(r.date)}</text>`,
+      `<rect x="${w >= 0 ? CX : CX + w}" y="${y - 20}" width="${Math.max(4, Math.abs(w))}" height="40" rx="6" fill="${col}"/>`,
+      // Always to the right of the zero line. A small negative bar's label,
+      // placed on its own side, lands on top of the coin/BTC columns.
+      `<text x="${CX + Math.max(w, 0) + 18}" y="${y + 8}" font-size="26" font-weight="700" fill="${col}">${r.spread >= 0 ? "+" : ""}${(r.spread * 100).toFixed(1)}pp</text>`,
+      `<text x="300" y="${y + 8}" font-size="20" fill="${COLORS.sub}">coin ${(r.coinReturn * 100).toFixed(1)}%</text>`,
+      `<text x="440" y="${y + 8}" font-size="20" fill="${COLORS.sub}">BTC ${(r.btcReturn * 100).toFixed(1)}%</text>`
+    );
+  });
+
+  const footY = 240 + rows.length * 120 + 40;
+  parts.push(
+    `<text x="60" y="${footY}" font-size="26" font-weight="700" fill="${COLORS.text}">${summary.wins} of ${summary.n} beat Bitcoin.</text>`,
+    `<text x="60" y="${footY + 40}" font-size="21" fill="${COLORS.sub}">Which tells you nothing. The measured edge is 49% against 42%, so at two picks any record at all is expected.</text>`,
+    `<text x="60" y="${footY + 70}" font-size="21" fill="${COLORS.sub}">Published win or lose, and the tracker counts only what was actually posted, not everything the bot flagged.</text>`,
+    `<text x="60" y="${footY + 106}" font-size="19" fill="${COLORS.sub}">Data: LunarCrush · method and code in the repo</text>`,
+    `</svg>`
+  );
+  return parts.join("\n");
+}
+
 /** Decomposition of a resolved pick: how much of the move was the market, and
  * how much was the thing the signal actually claims.
  *

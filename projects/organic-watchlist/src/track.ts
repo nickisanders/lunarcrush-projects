@@ -11,7 +11,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { renderTrackChartSvg, svgToPng } from "./chart.js";
+import { renderRecordChartSvg, renderTrackChartSvg, svgToPng } from "./chart.js";
 import { PEGGED } from "./watchlist.js";
 import { loadEnv } from "./env.js";
 import { fetchCoinsList, fetchDailySeries } from "./lunarcrush.js";
@@ -195,6 +195,12 @@ async function main(): Promise<void> {
     "Far too few to mean anything: the backtest edge is 49% vs 42%, so a run of\n" +
       "either kind is expected early. This exists to be honest, not to be evidence."
   );
+
+  if (rows.length > 1) {
+    const recordSvg = renderRecordChartSvg(rows, s);
+    writeFileSync(join(HERE, "..", "out", "record-chart.svg"), recordSvg);
+    writeFileSync(join(HERE, "..", "out", "record-chart.png"), await svgToPng(recordSvg));
+  }
 
   const latest = rows[rows.length - 1];
   if (latest) {
