@@ -20,9 +20,11 @@ Every celebrity or news-driven token launch produces the same situation: a name 
 - **Turnover** = 24h volume divided by pool liquidity. A pool holding $495k that reports $325M of daily volume has traded its entire depth 657 times in a day. Healthy pools turn over a few times.
 - **Volume per trading wallet** = 24h volume divided by distinct buyers plus sellers. Real retail does not average six figures on a token that is hours old.
 
-## The $LAPTOP launch, 2026-09-07
+## The $LAPTOP case, 2026-09-07
 
-Run on the day the name started circulating:
+The clearest possible demonstration: the ticker was circulating two days **before** the announced launch date of September 9. Every contract trading under the name on the 7th is therefore a copycat by definition, regardless of what launches later.
+
+Run on that day:
 
 | | |
 |---|---|
@@ -43,6 +45,8 @@ The three busiest, all on BSC and all created that day:
 
 ## What it cannot do
 
-**It cannot tell you which contract is official.** Neither can a screener, and that is the finding rather than a limitation to apologise for. Verifying a launch means a signed announcement from the party involved, published somewhere they control. On-chain data cannot substitute for that.
+**It cannot tell you which contract is official.** Neither can a screener, and that is the finding rather than a limitation to apologise for. Verifying a launch means an announcement from the party involved, published somewhere they control, naming the contract address. Onchain data cannot substitute for that.
+
+The $LAPTOP case shows why the timing check matters most: when a launch has an announced date, anything trading before it is settled without needing any other evidence.
 
 It also says nothing about who deployed anything. High turnover is consistent with wash trading and with a genuine frenzy; the tool reports the ratio and leaves the inference where it belongs.
