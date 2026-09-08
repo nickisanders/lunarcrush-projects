@@ -42,6 +42,13 @@ UA = "lunarcrush-projects-launch-check/0.1"
 TURNOVER_FLAG = 20
 # Real retail buyers do not average this much per wallet.
 PER_WALLET_FLAG = 25_000
+# A pool reporting far more depth than every peer while doing almost no volume
+# is a bad reading, not a market. Seen on 2026-09-08: a Base pool reported
+# $3.35 BILLION of liquidity on $1,198 of daily volume, which alone dwarfed the
+# real total and dragged combined turnover to zero. Excluded from the totals
+# and reported separately rather than silently dropped.
+IMPLAUSIBLE_LIQUIDITY_MULTIPLE = 50
+IMPLAUSIBLE_VOLUME_RATIO = 0.001
 
 
 def get(path: str) -> dict:
@@ -94,12 +101,26 @@ def summarize(pools: list[dict], ticker: str) -> dict:
     for e in by_addr.values():
         e["turnover"] = e["volume24h"] / e["liquidity"] if e["liquidity"] else 0
         e["volumePerWallet"] = e["volume24h"] / e["traders24h"] if e["traders24h"] else 0
-    tot_liq = sum(e["liquidity"] for e in by_addr.values())
-    tot_vol = sum(e["volume24h"] for e in by_addr.values())
+    # Screen out implausible liquidity readings before totalling.
+    liqs = sorted(e["liquidity"] for e in by_addr.values() if e["liquidity"] > 0)
+    median_liq = liqs[len(liqs) // 2] if liqs else 0
+    excluded = {}
+    for addr, e in list(by_addr.items()):
+        too_deep = median_liq > 0 and e["liquidity"] > median_liq * IMPLAUSIBLE_LIQUIDITY_MULTIPLE
+        too_quiet = e["volume24h"] < e["liquidity"] * IMPLAUSIBLE_VOLUME_RATIO
+        if too_deep and too_quiet:
+            e["implausible"] = True
+            excluded[addr] = e
+
+    counted = {a: e for a, e in by_addr.items() if a not in excluded}
+    tot_liq = sum(e["liquidity"] for e in counted.values())
+    tot_vol = sum(e["volume24h"] for e in counted.values())
     return {
         "ticker": ticker, "contracts": len(by_addr), "pools": len(pools),
         "totalLiquidity": tot_liq, "totalVolume24h": tot_vol,
         "combinedTurnover": tot_vol / tot_liq if tot_liq else 0,
+        "excludedImplausible": {a: e["liquidity"] for a, e in excluded.items()},
+        "medianContractLiquidity": median_liq,
         "networks": sorted({e["network"] for e in by_addr.values()}),
         "created": sorted({e["created"] for e in by_addr.values()}),
         "byContract": by_addr,
@@ -112,9 +133,16 @@ def report(s: dict) -> None:
     print(f"  pools created: {', '.join(s['created'])}")
     print(f"  combined liquidity: ${s['totalLiquidity']:,.0f}")
     print(f"  combined 24h volume: ${s['totalVolume24h']:,.0f}")
-    print(f"  combined turnover: {s['combinedTurnover']:.0f}x\n")
+    print(f"  combined turnover: {s['combinedTurnover']:.0f}x")
+    if s.get("excludedImplausible"):
+        print(f"\n  {len(s['excludedImplausible'])} contract(s) excluded from the totals as implausible:")
+        for addr, liq in s["excludedImplausible"].items():
+            print(f"    {addr[:24]}… reported ${liq:,.0f} of liquidity on negligible volume")
+        print(f"    (median contract liquidity here is ${s['medianContractLiquidity']:,.0f})")
+    print()
 
-    top = sorted(s["byContract"].items(), key=lambda kv: -kv[1]["volume24h"])[:8]
+    top = sorted((kv for kv in s["byContract"].items() if not kv[1].get("implausible")),
+                 key=lambda kv: -kv[1]["volume24h"])[:8]
     print(f"{'network':<11}{'liquidity':>13}{'vol 24h':>16}{'turnover':>10}{'per wallet':>13}  contract")
     for addr, e in top:
         flag = ""

@@ -43,6 +43,29 @@ The three busiest, all on BSC and all created that day:
 | $406k | $320.7M | 790x | $138,224 |
 | $1.2M | $317.2M | 267x | $174,553 |
 
+## What happened next
+
+Re-run 24 hours later (`compare.py` diffs two runs). Of the six biggest pools from the 7th:
+
+| Chain | Liquidity then | Now | Change |
+|---|---|---|---|
+| bsc | $495k | $706k | +43% |
+| bsc | $406k | delisted | gone |
+| bsc | $1.2M | **$542** | -100% |
+| base | $483k | delisted | gone |
+| robinhood | $109k | $156k | +43% |
+| solana | $36k | $36k | -1% |
+
+Two delisted, one drained to $542, and the contract count rose from 37 to 38 as new ones kept arriving.
+
+The pool that fell to $542 **still reports $320M of daily volume**: a turnover of 589,813x. There is no money left in it and the tape has not noticed. Volume is what screeners rank by; liquidity is what you get back when you sell.
+
+## A guard the tool needed
+
+The second run reported $3.39B of combined liquidity and a turnover of 0x. One Base pool was reporting **$3,349,853,387** of depth on $1,198 of daily volume, a bad reading that alone dwarfed the real total.
+
+Contracts reporting more than 50x the median liquidity while doing negligible volume are now excluded from the totals and listed separately rather than silently dropped. Third time a guard against bad external data has been needed in this repo, after the thin-pool check and the partial-day check.
+
 ## What it cannot do
 
 **It cannot tell you which contract is official.** Neither can a screener, and that is the finding rather than a limitation to apologise for. Verifying a launch means an announcement from the party involved, published somewhere they control, naming the contract address. Onchain data cannot substitute for that.
