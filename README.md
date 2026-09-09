@@ -23,6 +23,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 13 | [name-collision](projects/name-collision/) | Coins whose social volume is mostly about something else, because the ticker is an ordinary word |
 | 14 | [influencer-scorecard](projects/influencer-scorecard/) | Scores named crypto accounts on whether the coins they post about beat Bitcoin. They do not |
 | 15 | [launch-check](projects/launch-check/) | How many contracts share a trending ticker, and whether the volume is plausible or churn |
+| 16 | [weekend-crowd](projects/weekend-crowd/) | The weekend crowd is 7% smaller, the spike detector misses 19.5% more, and fixing it buys nothing |
 
 ## What the backtest found
 
