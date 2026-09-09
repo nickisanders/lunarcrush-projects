@@ -18,9 +18,16 @@ Two derived numbers do the work:
 
 - **Turnover** = 24h volume divided by pool liquidity. Above roughly 20x,
   ask what is producing it.
-- **Volume per trading wallet.** Real retail does not average six figures. On
-  the $LAPTOP launch of 2026-09-07 the three largest pools averaged $115,676,
-  $140,779 and $178,864 per distinct wallet, on a token hours old.
+- **Volume per trading wallet, and the raw wallet count.** Real retail does not
+  average six figures. On the $LAPTOP launch of 2026-09-07 the three largest
+  pools averaged $115,676, $140,779 and $178,864 per distinct wallet, on a token
+  hours old.
+
+  The wallet count is the stronger of the two. When $LAPTOP's genuine contract
+  was identified on 2026-09-09, it held 42,114 distinct trading wallets, more
+  than every other contract carrying the name combined, at $647 each. It ranked
+  9th of 28 by volume and 1st by wallets. Ranking by volume hides the real
+  token; ranking by wallets surfaces it.
 
 This tool cannot tell you which contract is official, and neither can a
 screener. That is the finding, not a limitation to apologise for.
@@ -65,7 +72,7 @@ def get(path: str) -> dict:
         return json.load(r)
 
 
-def find_pools(ticker: str, pages: int = 2) -> list[dict]:
+def find_pools(ticker: str, pages: int = 5) -> list[dict]:
     out = []
     for page in range(1, pages + 1):
         data = get(f"/search/pools?query={urllib.parse.quote(ticker)}&page={page}").get("data") or []
@@ -162,6 +169,18 @@ def report(s: dict) -> None:
             flag += " ⚠per-wallet"
         print(f"{e['network']:<11}${e['liquidity']:>12,.0f}${e['volume24h']:>15,.0f}"
               f"{e['turnover']:>9.0f}x${e['volumePerWallet']:>12,.0f}  {addr[:18]}…{flag}")
+
+    print()
+    wal = sorted((kv for kv in s["byContract"].items() if not kv[1].get("implausible")),
+                 key=lambda kv: -kv[1]["traders24h"])[:5]
+    tot_tr = sum(e["traders24h"] for a, e in s["byContract"].items() if not e.get("implausible"))
+    print("Most distinct trading wallets. Volume can be manufactured by a few addresses")
+    print("trading with themselves; tens of thousands of wallets is harder to fake.\n")
+    print(f"{'network':<11}{'wallets':>10}{'share':>8}{'per wallet':>13}{'vol 24h':>16}  contract")
+    for addr, e in wal:
+        sh = e["traders24h"] / tot_tr * 100 if tot_tr else 0
+        print(f"{e['network']:<11}{e['traders24h']:>10,}{sh:>7.0f}%${e['volumePerWallet']:>12,.0f}"
+              f"${e['volume24h']:>15,.0f}  {addr[:18]}…")
 
     print()
     if s["contracts"] > 1:

@@ -106,3 +106,39 @@ reserves at 0.01 to 0.5 of FDV; the bad ones at 0.99, 1.02, 1.15 and 1.52.
 
 The new rule caught five contracts, including two worth $224k and $124k that a
 median-multiple test could never have flagged. It needs no tuning.
+
+## The rule I published was wrong
+
+On 2026-09-08 I wrote, and repeated on the 9th: "if a token is trading before
+its announced launch, that settles it." It does not settle it. $LAPTOP's genuine
+contract, 0xB095274743941e953c746F9C228DA9c18Bb6ec29, opened its first pool at
+**2026-09-07T15:38:39Z**, two days before the announced date. My own rule,
+applied as written, condemns the real token.
+
+The rule confused a deployment schedule with a marketing date. Teams deploy and
+seed liquidity before they announce, which is the ordinary case rather than the
+suspicious one. A test that fires on the genuine article is not a test.
+
+## What did work, and what nearly hid it
+
+The genuine contract is not distinguishable by volume. It ranked **9th of 42**
+by 24h volume, below eight contracts running manufactured turnover. Ranked by
+distinct trading wallets it is **1st**, with 52,648, six times the next contract
+and 42% of every wallet trading the name, at $552 each on 2.5% of the volume.
+
+Volume can be produced by a handful of addresses trading with themselves. Wallet
+count is expensive to fake. `report()` now prints both rankings.
+
+Two sampling problems nearly buried this:
+
+- **The search was too narrow.** `find_pools` read 2 pages, roughly 40 pools,
+  from a relevance-ranked endpoint. The genuine contract does not appear in the
+  2026-09-07 or 2026-09-08 output at all, while manufactured-volume copycats do.
+  Widening to 5 pages took the contract count from 28 to 58 and brought it in.
+  A tool that samples the top of a volume-ranked list inherits exactly the bias
+  it was built to expose.
+- **Wallet counts were computed but never surfaced.** The number that identifies
+  the real token was in every JSON file since the 7th, printed nowhere.
+
+Contract identity here came from its publisher. Nothing in this tool derives it
+from onchain data, and that remains true.
