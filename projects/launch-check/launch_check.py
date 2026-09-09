@@ -42,13 +42,21 @@ UA = "lunarcrush-projects-launch-check/0.1"
 TURNOVER_FLAG = 20
 # Real retail buyers do not average this much per wallet.
 PER_WALLET_FLAG = 25_000
-# A pool reporting far more depth than every peer while doing almost no volume
-# is a bad reading, not a market. Seen on 2026-09-08: a Base pool reported
-# $3.35 BILLION of liquidity on $1,198 of daily volume, which alone dwarfed the
-# real total and dragged combined turnover to zero. Excluded from the totals
-# and reported separately rather than silently dropped.
-IMPLAUSIBLE_LIQUIDITY_MULTIPLE = 50
-IMPLAUSIBLE_VOLUME_RATIO = 0.001
+# A pool whose reported depth is roughly its entire fully diluted valuation is
+# holding the token, not money. All the supply sits on one side of the pool and
+# is valued at the price that same pool quotes, so the "liquidity" is circular:
+# it measures the token against itself. Real pools report reserves far below
+# FDV (LAPTOP's genuine ones ran 0.01 to 0.5 of it).
+#
+# This replaces a threshold pair (50x median depth AND near-zero volume) that
+# was added on 2026-09-08 after a Base pool reported $3.35 BILLION on $1,198 of
+# volume. That rule caught one such pool on 2026-09-09 and missed two more,
+# because one did 0.0015 of its depth in volume and the cutoff was 0.001. The
+# totals came out at $90.8M of liquidity when the real figure was $35.5M,
+# understating combined turnover by a factor of 2.6. Picking a cutoff is the
+# thing this repo criticises screeners for. The ratio below is not a tuned
+# threshold, it is a structural test: reserve cannot legitimately equal FDV.
+RESERVE_IS_FDV_RATIO = 0.9
 
 
 def get(path: str) -> dict:
@@ -69,12 +77,13 @@ def find_pools(ticker: str, pages: int = 2) -> list[dict]:
             net = ((rel.get("network") or {}).get("data") or {}).get("id") or base.split("_")[0]
             tx = (a.get("transactions") or {}).get("h24") or {}
             liq = float(a.get("reserve_in_usd") or 0)
+            fdv = float(a.get("fdv_usd") or 0)
             vol = float((a.get("volume_usd") or {}).get("h24") or 0)
             traders = (tx.get("buyers") or 0) + (tx.get("sellers") or 0)
             out.append({
                 "name": a.get("name"), "network": net,
                 "address": base.split("_", 1)[1] if "_" in base else base,
-                "liquidity": liq, "volume24h": vol,
+                "liquidity": liq, "fdv": fdv, "volume24h": vol,
                 "turnover": vol / liq if liq else 0,
                 "traders24h": traders,
                 "volumePerWallet": vol / traders if traders else 0,
@@ -92,8 +101,10 @@ def summarize(pools: list[dict], ticker: str) -> dict:
             continue
         e = by_addr.setdefault(p["address"], {"network": p["network"], "liquidity": 0.0,
                                               "volume24h": 0.0, "traders24h": 0,
+                                              "fdv": 0.0,
                                               "created": p["created"], "pools": 0})
         e["liquidity"] += p["liquidity"]
+        e["fdv"] = max(e["fdv"], p.get("fdv", 0.0))
         e["volume24h"] += p["volume24h"]
         e["traders24h"] += p["traders24h"]
         e["pools"] += 1
@@ -101,15 +112,14 @@ def summarize(pools: list[dict], ticker: str) -> dict:
     for e in by_addr.values():
         e["turnover"] = e["volume24h"] / e["liquidity"] if e["liquidity"] else 0
         e["volumePerWallet"] = e["volume24h"] / e["traders24h"] if e["traders24h"] else 0
-    # Screen out implausible liquidity readings before totalling.
-    liqs = sorted(e["liquidity"] for e in by_addr.values() if e["liquidity"] > 0)
-    median_liq = liqs[len(liqs) // 2] if liqs else 0
+    # Screen out circular liquidity readings before totalling. See
+    # RESERVE_IS_FDV_RATIO: depth that equals the token's own valuation is the
+    # token sitting on one side of its own pool, not money you could sell into.
     excluded = {}
     for addr, e in list(by_addr.items()):
-        too_deep = median_liq > 0 and e["liquidity"] > median_liq * IMPLAUSIBLE_LIQUIDITY_MULTIPLE
-        too_quiet = e["volume24h"] < e["liquidity"] * IMPLAUSIBLE_VOLUME_RATIO
-        if too_deep and too_quiet:
+        if e["fdv"] > 0 and e["liquidity"] >= e["fdv"] * RESERVE_IS_FDV_RATIO:
             e["implausible"] = True
+            e["reserveOverFdv"] = e["liquidity"] / e["fdv"]
             excluded[addr] = e
 
     counted = {a: e for a, e in by_addr.items() if a not in excluded}
@@ -120,7 +130,6 @@ def summarize(pools: list[dict], ticker: str) -> dict:
         "totalLiquidity": tot_liq, "totalVolume24h": tot_vol,
         "combinedTurnover": tot_vol / tot_liq if tot_liq else 0,
         "excludedImplausible": {a: e["liquidity"] for a, e in excluded.items()},
-        "medianContractLiquidity": median_liq,
         "networks": sorted({e["network"] for e in by_addr.values()}),
         "created": sorted({e["created"] for e in by_addr.values()}),
         "byContract": by_addr,
@@ -135,10 +144,11 @@ def report(s: dict) -> None:
     print(f"  combined 24h volume: ${s['totalVolume24h']:,.0f}")
     print(f"  combined turnover: {s['combinedTurnover']:.0f}x")
     if s.get("excludedImplausible"):
-        print(f"\n  {len(s['excludedImplausible'])} contract(s) excluded from the totals as implausible:")
+        print(f"\n  {len(s['excludedImplausible'])} contract(s) excluded: reported depth is the token itself,")
+        print("  not money. Reserve at or above fully diluted valuation is circular.")
         for addr, liq in s["excludedImplausible"].items():
-            print(f"    {addr[:24]}… reported ${liq:,.0f} of liquidity on negligible volume")
-        print(f"    (median contract liquidity here is ${s['medianContractLiquidity']:,.0f})")
+            r = s["byContract"][addr].get("reserveOverFdv", 0)
+            print(f"    {addr[:24]}… ${liq:,.0f} of \"liquidity\" = {r:.2f}x its own FDV")
     print()
 
     top = sorted((kv for kv in s["byContract"].items() if not kv[1].get("implausible")),

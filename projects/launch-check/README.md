@@ -73,3 +73,36 @@ Contracts reporting more than 50x the median liquidity while doing negligible vo
 The $LAPTOP case shows why the timing check matters most: when a launch has an announced date, anything trading before it is settled without needing any other evidence.
 
 It also says nothing about who deployed anything. High turnover is consistent with wash trading and with a genuine frenzy; the tool reports the ratio and leaves the inference where it belongs.
+
+## Day three: the announced launch date
+
+Re-ran on 2026-09-09, the date the launch had been announced for. 28 contracts
+still carry the name, down from 37 on the 7th as copycats were delisted.
+
+The number worth keeping: **82% of the day's $1.11B in volume ran through five
+contracts holding $3.2M between them.** That is 7.2% of the money moving 82% of
+the tape. Those five turn their entire depth over more than 100x a day; the two
+largest sit at 296x and 337x, on BSC, at $57,402 and $139,763 of volume per
+distinct wallet.
+
+Nothing here identifies which contract, if any, is official. That remains the
+finding rather than a limitation.
+
+## The guard I got wrong
+
+The 2026-09-08 guard used two thresholds: more than 50x the median contract
+depth AND less than 0.001 of that depth in daily volume. On the 9th it caught
+one bad pool and missed two, because one of them did 0.0015 of its depth in
+volume. The tool reported $90.8M of combined liquidity when the real figure was
+$35.5M, and combined turnover as 12x when it was 32x. My own tool made the
+situation look 2.6x safer than it was.
+
+Picking a cutoff is the thing this repo criticises screeners for, so the
+threshold pair is gone. The replacement is structural: a pool reporting reserves
+at or above its own fully diluted valuation is holding the token, not money. All
+the supply sits on one side and is valued at the price that same pool quotes, so
+the depth measures the token against itself. $LAPTOP's genuine pools reported
+reserves at 0.01 to 0.5 of FDV; the bad ones at 0.99, 1.02, 1.15 and 1.52.
+
+The new rule caught five contracts, including two worth $224k and $124k that a
+median-multiple test could never have flagged. It needs no tuning.
