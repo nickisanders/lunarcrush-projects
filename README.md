@@ -26,6 +26,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 16 | [weekend-crowd](projects/weekend-crowd/) | The weekend crowd is 7% smaller, the spike detector misses 19.5% more, and fixing it buys nothing |
 | 17 | [attention-premium](projects/attention-premium/) | Coins talked about more than they are worth are not punished. How stablecoins nearly made them look punished |
 | 18 | [top-ten](projects/top-ten/) | Seven coins own crypto's top-ten conversation. A visitor's median stay in the other three seats is one day |
+| 19 | [polygon](projects/polygon/) | Polygon held a top-20 seat in crypto conversation for four years, then fell to #110. So did every Ethereum L2 |
 
 ## What the backtest found
 
