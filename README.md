@@ -29,6 +29,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 19 | [polygon](projects/polygon/) | Polygon held a top-20 seat in crypto conversation for four years, then fell to #110. So did every Ethereum L2 |
 | 20 | [narrative-shift](projects/narrative-shift/) | Half of crypto is talking about three coins. Every altcoin narrative lost share between 2024 and 2026 |
 | 21 | [headcount](projects/headcount/) | The median top-1,000 coin has 24 people posting about it a day. 82% have fewer than 100 |
+| 22 | [who-moved-first](projects/who-moved-first/) | For a coin pumping right now, hour by hour: did the crowd arrive before the price move or after it |
 
 ## What the backtest found
 
