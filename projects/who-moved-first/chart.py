@@ -40,7 +40,14 @@ def render(d: dict) -> str:
     ev = {(e["what"], e["level"]): (pd.Timestamp(e["t"]) if e["t"] else None) for e in d["events"]}
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
          f'<rect width="{W}" height="{H}" fill="{BG}"/>']
-    o.append(txt(60, 74, 38, TEXT, f"${d['symbol']} is up {s['priceRel'].iloc[-1] * 100:.0f}%. The crowd showed up after.", 700))
+    peak_i = int(s["close"].idxmax())
+    hours_since_peak = len(s) - 1 - peak_i
+    crowd_since_peak = s["contributors"].iloc[-1] / s["contributors"].iloc[peak_i] - 1
+    if hours_since_peak >= 12 and crowd_since_peak > 0.15:
+        title = f"${d['symbol']} stopped moving {hours_since_peak}h ago. The crowd is still arriving."
+    else:
+        title = f"${d['symbol']} is up {s['priceRel'].iloc[-1] * 100:.0f}%. The crowd showed up after."
+    o.append(txt(60, 74, 38, TEXT, title, 700))
     o.append(txt(60, 112, 20, SUB,
                  f"Price and distinct accounts posting, hour by hour, last {d['hours']} hours. Each relative to where it started."))
 
@@ -53,7 +60,8 @@ def render(d: dict) -> str:
     def X(i): return px0 + (px1 - px0) * i / (n - 1)
     def Y(v): return py1 - (py1 - py0) * (v - ymin) / (ymax - ymin)
 
-    for lv in (0, 0.25, 0.5, 0.75, 1.0):
+    grid = [0, 0.25, 0.5, 0.75, 1.0] if ymax < 1.5 else [0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0]
+    for lv in grid:
         if ymin <= lv <= ymax:
             o.append(f'<line x1="{px0}" y1="{Y(lv):.1f}" x2="{px1}" y2="{Y(lv):.1f}" stroke="{GRID}" stroke-width="1"/>')
             o.append(txt(px0 - 10, Y(lv) + 5, 14, SUB, f"{lv * 100:+.0f}%", 400, "end"))
@@ -78,11 +86,17 @@ def render(d: dict) -> str:
         o.append(txt(x, y - 42 if above else y + 52, 15, col, label, 700, anchor))
 
     tp = ev[("price", 0.25)]
-    tc = ev[("crowd", 0.5)]
+    # The +100% crowd crossing is the clearer marker when it exists, and sits
+    # further from the price marker on the canvas.
+    tc = ev[("crowd", 1.0)] if ev.get(("crowd", 1.0)) is not None else ev[("crowd", 0.5)]
+    tc_level = 1.0 if ev.get(("crowd", 1.0)) is not None else 0.5
+    if hours_since_peak >= 12:
+        tpk = s["t"].iloc[peak_i]
+        mark(tpk, float(s["priceRel"].iloc[peak_i]), ORANGE, f"price peak  {tpk:%a %H:%M}")
     if tp is not None:
         mark(tp, float(s.loc[s["t"] == tp, "priceRel"].iloc[0]), ORANGE, f"price +25%  {tp:%H:%M}")
     if tc is not None:
-        mark(tc, float(s.loc[s["t"] == tc, "crowdRel"].iloc[0]), BLUE, f"crowd +50%  {tc:%H:%M}", above=False)
+        mark(tc, float(s.loc[s["t"] == tc, "crowdRel"].iloc[0]), BLUE, f"crowd +{tc_level * 100:.0f}%  {tc:%H:%M}", above=(tc_level >= 1.0))
 
     o.append(f'<rect x="{px0}" y="{py0 - 30}" width="14" height="14" fill="{ORANGE}" rx="2"/>')
     o.append(txt(px0 + 22, py0 - 18, 15, TEXT, "price"))
@@ -92,7 +106,10 @@ def render(d: dict) -> str:
     # Verdict and backtest context.
     vy = 640
     o.append(f'<rect x="60" y="{vy}" width="1180" height="120" fill="{PANEL}" rx="6"/>')
-    o.append(txt(84, vy + 40, 22, TEXT, d["verdict"].capitalize() + ".", 700))
+    verdict = d["verdict"].capitalize() + "."
+    if hours_since_peak >= 12 and crowd_since_peak > 0.15:
+        verdict += f" Since the price peaked, the crowd has grown another {crowd_since_peak * 100:.0f}%."
+    o.append(txt(84, vy + 40, 22, TEXT, verdict, 700))
     o.append(txt(84, vy + 74, 17, SUB,
                  "Six years of backtest: an attention spike that lands on a flat price beats Bitcoin 49% of the time over 3 days,"))
     o.append(txt(84, vy + 100, 17, SUB,

@@ -27,6 +27,17 @@ The crowd arrived nine hours after the price move, and at the end of the
 window it was up 51% against a price up 80%. The conversation is the move
 being noticed.
 
+## $AKE, 24 hours later
+
+Price peaked at 16:00 UTC on the 15th and has traded within 5% of that for
+the 20 hours since. The crowd kept growing: 181 accounts an hour at the price
+peak, 246 an hour at 12:00 on the 16th, up 36% while the price went nowhere,
+and still rising at the last complete hour.
+
+Since the first post, +13.9%. The claim was that a crowd arriving after the
+move tells you nothing about what comes next, and a flat day is consistent
+with that. It did not say the price would fall.
+
 ## Method
 
 Two hourly series from `/public/coins/:symbol/time-series/v2?bucket=hour`,
