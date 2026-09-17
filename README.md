@@ -30,6 +30,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 20 | [narrative-shift](projects/narrative-shift/) | Half of crypto is talking about three coins. Every altcoin narrative lost share between 2024 and 2026 |
 | 21 | [headcount](projects/headcount/) | The median top-1,000 coin has 24 people posting about it a day. 82% have fewer than 100 |
 | 22 | [who-moved-first](projects/who-moved-first/) | For a coin pumping right now, hour by hour: did the crowd arrive before the price move or after it |
+| 23 | [mood](projects/mood/) | The more people talk about a coin, the less they like it. Bitcoin is the least-liked coin in the top ten |
 
 ## What the backtest found
 
