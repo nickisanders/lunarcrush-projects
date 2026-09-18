@@ -32,6 +32,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 22 | [who-moved-first](projects/who-moved-first/) | For a coin pumping right now, hour by hour: did the crowd arrive before the price move or after it |
 | 23 | [mood](projects/mood/) | The more people talk about a coin, the less they like it. Bitcoin is the least-liked coin in the top ten |
 | 24 | [where-are-they-now](projects/where-are-they-now/) | 130 coins have held a top-20 conversation seat since 2020. 17 still do. Of the class of 2021, only DOGE |
+| 25 | [pumps-not-dumps](projects/pumps-not-dumps/) | A +5% day is 2.4x as likely to trigger an attention spike as a -5% day. A -5% day barely beats a flat one |
 
 ## What the backtest found
 
