@@ -34,6 +34,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 24 | [where-are-they-now](projects/where-are-they-now/) | 130 coins have held a top-20 conversation seat since 2020. 17 still do. Of the class of 2021, only DOGE |
 | 25 | [pumps-not-dumps](projects/pumps-not-dumps/) | A +5% day is 2.4x as likely to trigger an attention spike as a -5% day. A -5% day barely beats a flat one |
 | 26 | [loud-dumps](projects/loud-dumps/) | A 10% dump the crowd talks about beats BTC 39% of the time afterwards. One nobody mentions, 49% |
+| 27 | [comeback](projects/comeback/) | Zcash was #126 in crypto conversation in January 2025 and $20 in mid-2024. Today #4, $1,439, #9 by market cap |
 
 ## What the backtest found
 
