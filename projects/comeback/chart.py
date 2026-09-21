@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Chart: one coin's price and its seat in the conversation, month by month.
 
-Usage: python3 chart.py out/zec.json
+Usage: python3 chart.py out/zec.json ["optional title"]
 """
 
 import json
@@ -32,13 +32,13 @@ def txt(x, y, size, fill, s, weight=400, anchor="start") -> str:
             f'text-anchor="{anchor}" font-family="{FONT}">{body}</text>')
 
 
-def render(d: dict) -> str:
+def render(d: dict, title: str | None = None) -> str:
     W, H = 1300, 900
     m = [x for x in d["monthly"] if x["rank"] is not None]
     lv = d["live"]
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
          f'<rect width="{W}" height="{H}" fill="{BG}"/>']
-    o.append(txt(60, 74, 38, TEXT, f"${d['symbol']} was left for dead. It's #{lv['crowdRank']} in crypto conversation.", 700))
+    o.append(txt(60, 74, 38, TEXT, title or f"${d['symbol']} was left for dead. It's #{lv['crowdRank']} in crypto conversation.", 700))
     o.append(txt(60, 112, 20, SUB,
                  f"{d['name']}'s price and its seat in the conversation, month by month, 2020 to today."))
 
@@ -63,6 +63,11 @@ def render(d: dict) -> str:
     o.append(f'<line x1="{X(n - 1):.1f}" y1="{Yp(m[-1]["close"]):.1f}" x2="{xl:.1f}" y2="{Yp(lv["price"]):.1f}" stroke="{ORANGE}" stroke-width="3" stroke-dasharray="4 3"/>')
     o.append(f'<circle cx="{xl:.1f}" cy="{Yp(lv["price"]):.1f}" r="7" fill="{ORANGE}" stroke="{BG}" stroke-width="2"/>')
     o.append(txt(xl - 12, Yp(lv["price"]) - 16, 16, ORANGE, f"${lv['price']:,.0f} today", 700, "end"))
+    if d.get("athIsOld"):
+        ah = d["ath"]
+        i_a = [x["ym"] for x in m].index(ah["ym"])
+        o.append(f'<circle cx="{X(i_a):.1f}" cy="{Yp(ah["close"]):.1f}" r="7" fill="{ORANGE}" stroke="{BG}" stroke-width="2"/>')
+        o.append(txt(X(i_a), Yp(ah["close"]) - 16, 15, ORANGE, f"${ah['close']:,.2f}, {ah['ym']}", 700, "middle"))
     lp = d["lowestPrice"]
     i_lo = [x["ym"] for x in m].index(lp["ym"])
     o.append(f'<circle cx="{X(i_lo):.1f}" cy="{Yp(lp["close"]):.1f}" r="7" fill="{ORANGE}" stroke="{BG}" stroke-width="2"/>')
@@ -85,7 +90,10 @@ def render(d: dict) -> str:
     wr = d["worstRank"]
     i_w = [x["ym"] for x in m].index(wr["ym"])
     o.append(f'<circle cx="{X(i_w):.1f}" cy="{Yr(wr["rank"]):.1f}" r="7" fill="{BLUE}" stroke="{BG}" stroke-width="2"/>')
-    o.append(txt(X(i_w) - 14, Yr(wr["rank"]) + 6, 15, BLUE, f"#{wr['rank']:.0f}, {wr['ym']}", 700, "end"))
+    if X(i_w) < px0 + 200:
+        o.append(txt(X(i_w) + 14, Yr(wr["rank"]) + 6, 15, BLUE, f"#{wr['rank']:.0f}, {wr['ym']}", 700, "start"))
+    else:
+        o.append(txt(X(i_w) - 14, Yr(wr["rank"]) + 6, 15, BLUE, f"#{wr['rank']:.0f}, {wr['ym']}", 700, "end"))
 
     for i, x in enumerate(m):
         if x["ym"].endswith("-01"):
@@ -94,10 +102,17 @@ def render(d: dict) -> str:
 
     # Stats strip.
     sy = 760
-    stats = [(f"{lv['price'] / lp['close']:.0f}x", f"from the {lp['ym'][:4]} low"),
-             (f"#{wr['rank']:.0f} → #{lv['crowdRank']}", "seat in the conversation"),
-             (f"${lp['mcap'] / 1e9:.1f}B → ${lv['mcap'] / 1e9:.0f}B", "market cap"),
-             (f"#{lv['mcapRank']}", "by market cap today")]
+    if d.get("athIsOld"):
+        ah = d["ath"]
+        stats = [(f"${ah['close']:,.0f} → ${lp['close']:,.2f} → ${lv['price']:,.2f}", f"high {ah['ym'][:4]}, low {lp['ym'][:4]}, today"),
+                 (f"{lv['price'] / lp['close']:.1f}x", f"from the {lp['ym']} low"),
+                 (f"#{ah['rank']:.0f} → #{wr['rank']:.0f} → #{lv['crowdRank']}", "seat: at the high, at the low, today"),
+                 (f"#{lv['mcapRank']}", "by market cap today")]
+    else:
+        stats = [(f"{lv['price'] / lp['close']:.0f}x", f"from the {lp['ym'][:4]} low"),
+                 (f"#{wr['rank']:.0f} → #{lv['crowdRank']}", "seat in the conversation"),
+                 (f"${lp['mcap'] / 1e9:.1f}B → ${lv['mcap'] / 1e9:.0f}B", "market cap"),
+                 (f"#{lv['mcapRank']}", "by market cap today")]
     for i, (big, small) in enumerate(stats):
         x = 60 + i * 295
         o.append(f'<rect x="{x}" y="{sy}" width="275" height="70" fill="{PANEL}" rx="6"/>')
@@ -112,9 +127,10 @@ def render(d: dict) -> str:
 
 def main() -> None:
     src = Path(sys.argv[1] if len(sys.argv) > 1 else "out/zec.json")
+    title = sys.argv[2] if len(sys.argv) > 2 else None
     d = json.loads(src.read_text())
     out = src.with_suffix(".svg")
-    out.write_text(render(d))
+    out.write_text(render(d, title))
     print(f"Wrote {out}")
 
 

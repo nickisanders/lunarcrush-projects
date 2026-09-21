@@ -96,9 +96,21 @@ def main() -> None:
         h[c] = pd.to_numeric(h[c], errors="coerce")
     h = h.iloc[:-1]  # drop the partial day
 
-    lowest = m.loc[m["rank"].idxmax()]
-    lowest_price = m.loc[m["close"].idxmin()]
+    # Anchors. If the all-time high is recent the story is "from the low"; if it
+    # is old, the story is "from the high, through the low since, to today".
+    ath = m.loc[m["close"].idxmax()]
+    after = m[m["ym"] > ath["ym"]]
+    if len(after) >= 6:
+        # The low that precedes the current run, not the deepest low since the
+        # high: a coin can bottom, double, and bottom again.
+        recent = m.tail(12)
+        lowest_price = recent.loc[recent["close"].idxmin()]
+        lowest = recent.loc[recent["rank"].idxmax()]
+    else:
+        lowest_price = m.loc[m["close"].idxmin()]
+        lowest = m.loc[m["rank"].idxmax()]
     print(f"${sym}  {live['name']}\n")
+    print(f"all-time high month: {ath['ym']}  ${ath['close']:,.2f}  mcap ${ath['mcap'] / 1e9:.2f}B  seat #{ath['rank']:.0f}")
     print(f"lowest price month:  {lowest_price['ym']}  ${lowest_price['close']:,.2f}  mcap ${lowest_price['mcap'] / 1e9:.2f}B")
     print(f"worst crowd rank:    {lowest['ym']}  #{lowest['rank']:.0f}  ({lowest['contrib']:,.0f} people/day)")
     print(f"today:               ${float(live['price']):,.2f}  mcap ${float(live['market_cap']) / 1e9:.1f}B  "
@@ -116,6 +128,8 @@ def main() -> None:
         "monthly": [{"ym": r["ym"], "close": float(r["close"]), "mcap": float(r["mcap"]),
                      "contrib": float(r["contrib"]), "rank": float(r["rank"]) if pd.notna(r["rank"]) else None}
                     for _, r in m.iterrows()],
+        "ath": {"ym": ath["ym"], "close": float(ath["close"]), "mcap": float(ath["mcap"]), "rank": float(ath["rank"])},
+        "athIsOld": bool(len(after) >= 6),
         "lowestPrice": {"ym": lowest_price["ym"], "close": float(lowest_price["close"]), "mcap": float(lowest_price["mcap"])},
         "worstRank": {"ym": lowest["ym"], "rank": float(lowest["rank"]), "contrib": float(lowest["contrib"])},
         "live": {"price": float(live["price"]), "mcap": float(live["market_cap"]),

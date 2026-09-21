@@ -37,6 +37,31 @@ $20B coin rather than a $600M one.
 Nothing in the crowd data foreshadowed October. The seat was #66 in
 September, roughly where it had been for a year.
 
+## $NEAR
+
+The other kind of arc: a name everyone knows, an all-time high a long time
+ago, and a week that suddenly looks like 2021 again.
+
+| | price | seat in the conversation |
+|---|---:|---:|
+| Dec 2021, all-time high | $15.42 | #34 |
+| Feb 2026, low | $1.17 | #70 |
+| today (2026-09-21) | $4.14 | #6 |
+
++79% over seven days to 2026-09-20, the ninth largest 7-day gain in NEAR's
+2,161-day history and the same size as the two weeks that made its
+all-time high (+81% and +80%, December 2021). Since 2022 only two weeks
+have been bigger, both in the 2023-24 run.
+
+The seat is the twist. At $15 in 2021, NEAR was #34 in crypto conversation.
+At $4 today it is #6. Part of that is the whole market's crowd growing, and
+part of it is that a coin most people wrote off as a 2021 name has a bigger
+share of the room now than it did at its peak.
+
+The anchors adapt: when the all-time high is more than six months old the
+tool marks it, and takes the low from the last twelve months rather than the
+deepest low since the high, since a coin can bottom, double, and bottom again.
+
 ## Why a rank and not a count
 
 Contributor counts on this coin run 61 a day in 2020 and 8,902 in November
