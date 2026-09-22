@@ -35,6 +35,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 25 | [pumps-not-dumps](projects/pumps-not-dumps/) | A +5% day is 2.4x as likely to trigger an attention spike as a -5% day. A -5% day barely beats a flat one |
 | 26 | [loud-dumps](projects/loud-dumps/) | A 10% dump the crowd talks about beats BTC 39% of the time afterwards. One nobody mentions, 49% |
 | 27 | [comeback](projects/comeback/) | Zcash was #126 in crypto conversation in January 2025 and $20 in mid-2024. Today #4, $1,439, #9 by market cap |
+| 28 | [graveyard](projects/graveyard/) | 9 of this week's 20 biggest gainers sit 80%+ below their peak. ICON was once #4 in all of crypto conversation |
 
 ## What the backtest found
 
