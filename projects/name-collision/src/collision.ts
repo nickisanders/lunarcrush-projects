@@ -46,6 +46,32 @@ export function bareTopic(topic: string): string {
   return (topic || "").trim().split(/\s+/)[0] || "";
 }
 
+/** How many of the loudest coins get their topic checked regardless of ratio.
+ *
+ * The ratio leg is tuned for microcaps and silently misses collisions on
+ * larger coins: a $55M coin needs far less borrowed traffic to look normal
+ * per dollar than a $150k one does. Harmony ($ONE) on 2026-09-22 sat at 24x
+ * the median, under the 100x bar, while the bare word "one" drew 5.0 BILLION
+ * interactions from 1.3 million people, 15,721x the coin's own number and 22x
+ * Bitcoin's entire daily conversation. Checking the loudest coins by raw
+ * interactions catches that class without checking all 1,000 topics. */
+export const CHECK_LOUDEST = 25;
+
+/** The loudest coins by raw interactions, for a topic check that does not
+ * depend on the per-dollar ratio. */
+export function loudest(coins: CoinRow[], n = CHECK_LOUDEST): Suspect[] {
+  const eligible = coins.filter(isEligible);
+  const med = median(eligible.map(perDollar).filter((v) => v > 0)) || 1;
+  return [...eligible]
+    .sort((a, b) => b.interactions_24h - a.interactions_24h)
+    .slice(0, n)
+    .map((c) => ({
+      symbol: c.symbol, name: c.name, topic: c.topic,
+      marketCap: c.market_cap, interactions24h: c.interactions_24h,
+      perDollar: perDollar(c), vsMedian: perDollar(c) / med,
+    }));
+}
+
 export function findSuspects(coins: CoinRow[], multiple = SUSPECT_MULTIPLE): {
   suspects: Suspect[];
   medianPerDollar: number;

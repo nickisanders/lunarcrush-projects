@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { bareTopic, findSuspects, isEligible, median, perDollar } from "../src/collision.js";
+import { bareTopic, classify, findSuspects, loudest, isEligible, median, perDollar } from "../src/collision.js";
 import type { CoinRow } from "../src/types.js";
 
 function coin(over: Partial<CoinRow> = {}): CoinRow {
@@ -60,4 +60,24 @@ test("median handles even and odd", () => {
   assert.equal(median([3, 1, 2]), 2);
   assert.equal(median([4, 1, 2, 3]), 2.5);
   assert.equal(median([]), 0);
+});
+
+test("loudest() surfaces a big-coin collision the ratio leg misses", () => {
+  // Harmony on 2026-09-22: 24x the median per dollar, well under the 100x
+  // suspect bar, while the word "one" drew 5.0 billion interactions.
+  const coins = [
+    { symbol: "ONE", name: "Harmony", topic: "one harmony", market_cap: 55_000_000,
+      interactions_24h: 321_024, market_cap_rank: 395 },
+    ...Array.from({ length: 30 }, (_, i) => ({
+      symbol: `C${i}`, name: `Coin ${i}`, topic: `c${i} coin`, market_cap: 100_000_000,
+      interactions_24h: 25_000, market_cap_rank: i + 1,
+    })),
+  ] as CoinRow[];
+
+  const { suspects } = findSuspects(coins);
+  assert.ok(!suspects.some((s) => s.symbol === "ONE"), "ratio leg misses it, by design");
+
+  const loud = loudest(coins, 5);
+  assert.equal(loud[0].symbol, "ONE");
+  assert.equal(classify(321_024, 5_046_904_079), "collision");
 });

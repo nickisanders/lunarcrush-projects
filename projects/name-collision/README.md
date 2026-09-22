@@ -40,6 +40,35 @@ The distinction is the whole point of the tool. Flagging on the ratio alone woul
 
 `$OPTIMUS` (Digital Optimus, Solana) is the case that prompted this: a $158k token whose topic inherits traffic from Tesla's humanoid robot.
 
+## The threshold missed a big one
+
+On 2026-09-22, Harmony ($ONE) was up 446% in a week and one of the largest
+movers on the board. The scanner did not flag it.
+
+| | |
+|---|---:|
+| market cap | $55M, #395 |
+| the coin's own interactions, 24h | 321,024 |
+| people posting about the coin, per day | 504 |
+| the bare word "one", 24h | **5,046,904,079** |
+| people using the word | **1,312,815** |
+| word over coin | 15,727x |
+| word over Bitcoin's entire daily conversation | 22.5x |
+
+The ratio leg is why it was missed. $ONE sits at 24x the median interactions
+per dollar, under the 100x bar, because a $55M coin needs far less borrowed
+traffic to look normal per dollar than a $150k one does. The threshold was
+tuned on microcaps and silently misses this whole class.
+
+`loudest()` now returns the top 25 coins by raw interactions for a topic check
+that does not depend on the ratio, and a test plants the Harmony numbers so
+the gap cannot reopen. The cost is 25 extra topic calls a day.
+
+None of this says the 446% is fake. 504 people a day posting about the coin is
+a real crowd, five times what it was before the run. It says that anyone
+ranking coins by social volume cannot see this one clearly, because the
+measurement is competing with the most common word in the language.
+
 ## Limits
 
 This is a naming problem, not an accusation. Nothing here says a project did anything wrong; a team that picked a short ticker in 2021 did not choose to collide with a robot or an election. What it says is that **ranking coins by social volume puts these near the top**, and any screen built on that number will surface them first.
