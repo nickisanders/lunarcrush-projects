@@ -43,6 +43,42 @@ moves rather than by the average, old names are heavily over-represented. A
 coin 99% below its peak needs very little buying to move 450%, which is most
 of the mechanism.
 
+## One day later
+
+Grading the list, 2026-09-23:
+
+| coin | the run | next day |
+|---|---:|---:|
+| $AURORA | +561% | -24.7% |
+| $ONE | +450% | -19.9% |
+| $SYN | +197% | -10.8% |
+| $AIOZ | +87% | -2.5% |
+| $MINA | +68% | +4.4% |
+| $PHA | +68% | +5.5% |
+| $AR | +64% | +1.5% |
+| $ICX | +63% | -22.6% |
+| $ZETA | +58% | -6.8% |
+
+Median -6.8% against a market median of +0.2% and Bitcoin at -0.5%. Six of the
+nine fell.
+
+The split by size of the prior run is the part worth keeping:
+
+| | median next day |
+|---|---:|
+| runs over +150% (AURORA, ONE, SYN) | **-18.0%** |
+| the other six | -0.5% |
+| the market | +0.2% |
+
+Spearman between the size of the run and the next day's return: -0.37. $ICX is
+the exception, down 22.6% on a +63% run.
+
+This is nine coins over one day, which is far too small to conclude anything
+on its own. It points the same way as
+[after_the_run.py](../social-price-backtest/after_the_run.py), which measured
+382,644 coin-days: the 90-day median after a week up 50-100% is -25.0%, after
+100-200% is -35.5%, and after 200%+ is -42.8%.
+
 ## Method
 
 Seat is a coin's best-ever rank by daily active contributors against every
