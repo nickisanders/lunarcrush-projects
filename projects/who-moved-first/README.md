@@ -38,6 +38,27 @@ Since the first post, +13.9%. The claim was that a crowd arriving after the
 move tells you nothing about what comes next, and a flat day is consistent
 with that. It did not say the price would fall.
 
+## $TAKE, 2026-09-24
+
+The sharpest version of the same pattern. OVERTAKE ran from $0.058 to $0.206
+in five hours on the 23rd, then gave it all back.
+
+| | |
+|---|---|
+| price peak | $0.20568, Wed 11:00 UTC |
+| crowd peak | 244 accounts/hour, Wed 20:00 UTC |
+| lag | **9 hours** |
+| since the price peak | price **-68%**, crowd **+67%** |
+| crowd at the price peak | 141/hour |
+| crowd now | 236/hour |
+
+The coin is 68% off its top and more people are posting about it now than
+were posting at the top. Over the 72-hour window the price is +12% and the
+crowd is +3,047%.
+
+The chart is two stacked panels rather than one shared axis, because a series
+up 3,047% flattens a series up 256% into a straight line.
+
 ## Method
 
 Two hourly series from `/public/coins/:symbol/time-series/v2?bucket=hour`,
