@@ -37,6 +37,13 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 27 | [comeback](projects/comeback/) | Zcash was #126 in crypto conversation in January 2025 and $20 in mid-2024. Today #4, $1,439, #9 by market cap |
 | 28 | [graveyard](projects/graveyard/) | 9 of this week's 20 biggest gainers sit 80%+ below their peak. ICON was once #4 in all of crypto conversation |
 
+## The scoreboard
+
+`python3 tools/scoreboard.py` prints every headline result across the repo,
+sorted into what held up, what was tested and buried, and where the data
+misleads. 20 recorded findings across 28 projects: 10 hold, 6 are nulls, 4
+are measurement traps. `tools/scoreboard_chart.py` renders it.
+
 ## What the backtest found
 
 The founding question was whether social attention leads price. The short answer, from [project 02](projects/social-price-backtest/):
