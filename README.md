@@ -36,6 +36,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 26 | [loud-dumps](projects/loud-dumps/) | A 10% dump the crowd talks about beats BTC 39% of the time afterwards. One nobody mentions, 49% |
 | 27 | [comeback](projects/comeback/) | Zcash was #126 in crypto conversation in January 2025 and $20 in mid-2024. Today #4, $1,439, #9 by market cap |
 | 28 | [graveyard](projects/graveyard/) | 9 of this week's 20 biggest gainers sit 80%+ below their peak. ICON was once #4 in all of crypto conversation |
+| 29 | [incident-watch](projects/incident-watch/) | Watches falling coins for hacks and freezes being discussed. The aggregate metrics miss these; the post text does not |
 
 ## The scoreboard
 
