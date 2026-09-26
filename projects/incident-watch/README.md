@@ -55,6 +55,29 @@ each post:
    matches "growth hack", so the words that survive are the ones with no
    common non-crypto use.
 
+## The timing, which is the point
+
+The tool works. It also settles what it is for.
+
+| time (UTC) | what happened |
+|---|---|
+| Fri 10:00 | $ZANO trading at $6.87 |
+| **Fri 11:00** | **$5.83. A 20% fall in one hour** |
+| Fri 17:16 | "CEASE ALL ECONOMIC ACTIVITY INVOLVING ZANO AND fUSD IMMEDIATELY" posted, 11,164 interactions |
+| Fri 18:03 | 24-hour chain rollback listed publicly, impact 8/10 |
+| Sat 11:40 | "We expect economic activity to be able to resume ... within the next 24 hours" |
+
+The price moved **6 hours and 16 minutes** before the public warning. By the
+time the most-shared post about the incident existed, the fall had already
+happened and the price had been flat at the bottom for five hours.
+
+This is the same ordering [who-moved-first](../who-moved-first/) finds on
+pumps, on an incident rather than a rally. The tool tells you **why** a coin
+is falling, hours faster than a news cycle and hours slower than the market.
+It is an explanation, not a warning.
+
+$ZANO closed the episode up 17.9% the next day.
+
 ## On 2026-09-25
 
 Ten coins qualified. Nine were clean. $ZANO returned two posts, 1.3 and 2.1
