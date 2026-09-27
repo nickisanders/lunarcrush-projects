@@ -84,6 +84,30 @@ Ten coins qualified. Nine were clean. $ZANO returned two posts, 1.3 and 2.1
 hours old: a scheduled 24-hour chain rollback listed with an impact rating,
 and the warning quoted above.
 
+## Two false positives it had to learn
+
+Every filter here exists because the tool got something wrong in public.
+
+**The post must name the coin.** Without this, $ELF surfaced a post about
+Stable Diffusion models being "stolen" and $LIT one about a neighbour's
+motion-sensor light. The topics "elf" and "lit" are not the coins.
+
+**The incident wording must sit within 100 characters of the coin's name.**
+$ZANO's warning reads "CEASE ALL ECONOMIC ACTIVITY INVOLVING ZANO", twenty
+characters apart.
+
+**The post must not name more than one other project.** On 2026-09-27 two
+posts about a hackathon entry called NOCK cleared both checks above: they
+name the coin repeatedly, they contain "hacks", "drained", "breach" and
+"paused withdrawals", and they are 683 and 2,434 characters of commentary
+about Bitget, Drift, Kelp and Aave losing money. Proximity cannot separate
+them, because a long post about building NOCK repeats the word beside every
+incident word in it. Counting the other projects can: an incident report is
+about one project, commentary is about several.
+
+`test_flags.py` holds all three as cases, with the real text, so they cannot
+come back.
+
 ## What this does not do
 
 It reports what is being said and who said it. It does not decide whether a

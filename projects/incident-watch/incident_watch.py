@@ -60,6 +60,46 @@ PATTERNS = [
 CONTEXT_NOISE = re.compile(r"\b(game|gaming|football|soccer|match|season|movie|film|goal)\b", re.I)
 
 
+PROXIMITY = 100   # characters between the coin's name and the incident word
+MAX_OTHERS = 1    # distinct other projects a real incident post will name
+
+# Projects named so often in market commentary that mentioning one says
+# nothing about whether the post is about them.
+UBIQUITOUS = {"BITCOIN", "ETHEREUM", "SOLANA", "BNB", "CRYPTO"}
+
+
+def other_projects(text: str, symbol: str, name: str, universe: dict[str, str]) -> set[str]:
+    """Distinct other projects this post names.
+
+    An incident report is about one project. Commentary is about several. The
+    two $NOCK posts on 2026-09-27 name Bitget, Drift, Kelp and Aave while
+    describing their losses; $ZANO's warning names only Zano and its own
+    stablecoin. Counting the others separates them where proximity cannot,
+    because a long post about building something called NOCK repeats the word
+    beside every incident word in it.
+    """
+    mine = {symbol.upper(), re.sub(r"\s*\(.*?\)\s*", " ", name).strip().upper()}
+    found = set()
+    for sym_, nm in universe.items():
+        if sym_ in mine or nm.upper() in mine or nm.upper() in UBIQUITOUS or sym_ in UBIQUITOUS:
+            continue
+        if re.search(rf"\${re.escape(sym_)}\b", text, re.I):
+            found.add(sym_)
+        elif len(nm) > 3 and re.search(rf"\b{re.escape(nm)}\b", text, re.I):
+            found.add(sym_)
+    return found
+
+
+def coin_positions(text: str, symbol: str, name: str) -> list[int]:
+    """Every character offset where this coin is named."""
+    spots = [m.start() for m in re.finditer(rf"\${re.escape(symbol)}\b", text, re.I)]
+    spots += [m.start() for m in re.finditer(rf"(?<![A-Za-z0-9]){re.escape(symbol)}(?![A-Za-z0-9])", text)]
+    clean = re.sub(r"\s*\(.*?\)\s*", " ", name).strip()
+    if clean and len(clean) > 2:
+        spots += [m.start() for m in re.finditer(rf"\b{re.escape(clean)}\b", text, re.I)]
+    return sorted(set(spots))
+
+
 def names_the_coin(text: str, symbol: str, name: str) -> bool:
     """Does the post actually name this coin?
 
@@ -93,8 +133,31 @@ def get(path: str, tries: int = 3) -> dict:
             time.sleep(2)
 
 
-def flags(text: str) -> list[str]:
-    hits = [label for pat, label in PATTERNS if re.search(pat, text, re.I)]
+def flags(text: str, symbol: str, name: str, universe: dict[str, str] | None = None) -> list[str]:
+    """Incident wording that sits next to this coin's name.
+
+    Proximity is what separates a warning from an essay. $ZANO's real warning
+    reads "CEASE ALL ECONOMIC ACTIVITY INVOLVING ZANO", twenty characters
+    apart. On 2026-09-27 $NOCK surfaced two posts about a hackathon project of
+    that name whose author then listed other people's incidents: 683 and 2,434
+    characters long, naming the coin once at the top and reaching "hacks",
+    "drained" and "breach" more than a hundred characters later, about Drift,
+    Kelp and Bitget. Both name the coin and both carry the wording. Only the
+    distance between the two tells them apart.
+    """
+    spots = coin_positions(text, symbol, name)
+    if not spots:
+        return []
+    if universe:
+        others = other_projects(text, symbol, name, universe)
+        if len(others) > MAX_OTHERS:
+            return []
+    hits = []
+    for pat, label in PATTERNS:
+        for m in re.finditer(pat, text, re.I):
+            if min(abs(m.start() - s_) for s_ in spots) <= PROXIMITY:
+                hits.append(label)
+                break
     return [] if CONTEXT_NOISE.search(text) and len(hits) < 2 else hits
 
 
@@ -109,11 +172,16 @@ def main() -> None:
     L = pd.DataFrame(get("/public/coins/list/v2?limit=1000")["data"])
     for c in ("market_cap", "percent_change_24h", "volume_24h", "price"):
         L[c] = pd.to_numeric(L.get(c), errors="coerce")
+    # LunarCrush lists 12 tickers twice under different ids (KMNO appears as
+    # both "Kamino" and "Kamino Finance"). Keep the larger listing per symbol.
+    L = L.sort_values("market_cap", ascending=False).drop_duplicates("symbol", keep="first")
     fallers = L[(L["market_cap"] >= args.min_mcap) & (L["volume_24h"] > 5e5)
                 & (L["percent_change_24h"] <= -args.drop)
                 & (L["symbol"].str.len() >= 2)].nsmallest(args.max_coins, "percent_change_24h")
     print(f"{len(fallers)} coins down {args.drop:.0f}%+ in 24h, over ${args.min_mcap / 1e6:.0f}M\n")
 
+    universe = {str(x["symbol"]).upper(): str(x["name"]) for _, x in L.iterrows()
+                if isinstance(x.get("symbol"), str) and len(str(x["symbol"])) >= 3}
     cutoff = time.time() - args.hours * 3600
     found = []
     for _, r in fallers.iterrows():
@@ -125,9 +193,7 @@ def main() -> None:
             if (p.get("post_created") or 0) < cutoff:
                 continue
             text = f"{p.get('post_title') or ''} {p.get('post_description') or ''}"
-            if not names_the_coin(text, sym, str(r["name"])):
-                continue
-            f = flags(text)
+            f = flags(text, sym, str(r["name"]), universe)
             if f:
                 hits.append({"flags": f, "age_h": (time.time() - p["post_created"]) / 3600,
                              "interactions": p.get("interactions_24h") or 0,
