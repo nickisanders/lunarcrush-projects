@@ -71,7 +71,9 @@ def render(d: dict, title: str | None = None) -> str:
     lp = d["lowestPrice"]
     i_lo = [x["ym"] for x in m].index(lp["ym"])
     o.append(f'<circle cx="{X(i_lo):.1f}" cy="{Yp(lp["close"]):.1f}" r="7" fill="{ORANGE}" stroke="{BG}" stroke-width="2"/>')
-    o.append(txt(X(i_lo), Yp(lp["close"]) + 28, 15, ORANGE, f"${lp['close']:.2f}, {lp['ym']}", 700, "middle"))
+    anch = "end" if X(i_lo) > px1 - 140 else "middle"
+    o.append(txt(X(i_lo) + (-10 if anch == "end" else 0), Yp(lp["close"]) + 28, 15, ORANGE,
+                 f"${lp['close']:.2f}, {lp['ym']}", 700, anch))
 
     # Bottom: crowd rank, inverted (1 at top), log scale.
     ry0, ry1 = 480, 700
@@ -104,10 +106,10 @@ def render(d: dict, title: str | None = None) -> str:
     sy = 760
     if d.get("athIsOld"):
         ah = d["ath"]
-        stats = [(f"${ah['close']:,.0f} → ${lp['close']:,.2f} → ${lv['price']:,.2f}", f"high {ah['ym'][:4]}, low {lp['ym'][:4]}, today"),
+        stats = [(f"${ah['close']:,.0f} → ${lp['close']:,.0f} → ${lv['price']:,.0f}", f"high {ah['ym'][:4]}, low {lp['ym'][:4]}, today"),
                  (f"{lv['price'] / lp['close']:.1f}x", f"from the {lp['ym']} low"),
                  (f"#{ah['rank']:.0f} → #{wr['rank']:.0f} → #{lv['crowdRank']}", "seat: at the high, at the low, today"),
-                 (f"#{lv['mcapRank']}", "by market cap today")]
+                 (d.get("rarity", f"#{lv['mcapRank']}"), d.get("rarityNote", "by market cap today"))]
     else:
         stats = [(f"{lv['price'] / lp['close']:.0f}x", f"from the {lp['ym'][:4]} low"),
                  (f"#{wr['rank']:.0f} → #{lv['crowdRank']}", "seat in the conversation"),

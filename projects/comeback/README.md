@@ -62,6 +62,27 @@ The anchors adapt: when the all-time high is more than six months old the
 tool marks it, and takes the low from the last twelve months rather than the
 deepest low since the high, since a coin can bottom, double, and bottom again.
 
+## $QNT
+
+The strongest version so far, because the coin is not a microcap.
+
+| | price | market cap | seat in the conversation |
+|---|---:|---:|---:|
+| Oct 2021, all-time high | $278.89 | $3.73B | #19 |
+| Apr 2026, worst seat | $69.00 | $0.83B | **#90** |
+| Jul 2026, price low | $60.46 | $0.88B | #75 |
+| today (2026-09-27) | **$184.61** | $2.66B | **#4** |
+
+Up 184% in seven days, and the fourth most-discussed coin in crypto behind
+only Bitcoin, Ethereum and Solana. Ahead of XRP, Zcash and Dogecoin.
+
+The seat is the part with no precedent. In 2,392 days of cached history QNT
+has been in the top ten on **13 of them**, and its best day ever was #7 in
+October 2022. Today is the biggest conversation moment the coin has had.
+
+Daily contributors went 163 to 1,162 in eight days while the price went $64
+to $185.
+
 ## Why a rank and not a count
 
 Contributor counts on this coin run 61 a day in 2020 and 8,902 in November
