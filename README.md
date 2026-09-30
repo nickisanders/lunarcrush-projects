@@ -39,6 +39,7 @@ Each project is self-contained under `projects/` with its own README, dependenci
 | 29 | [incident-watch](projects/incident-watch/) | Watches falling coins for hacks and freezes being discussed. The aggregate metrics miss these; the post text does not |
 | 30 | [old-bags](projects/old-bags/) | Coins that peaked in 2021 and never recovered returned +1.4% this week against -4.0% for memecoins |
 | 31 | [altseason](projects/altseason/) | Share of the top 100 beating Bitcoin, every day since 2020. Today is the 97th percentile |
+| 32 | [crowd-peak](projects/crowd-peak/) | A coin entering crypto's top-10 conversation loses 21% to Bitcoin over the next 90 days. 79 events |
 
 ## The scoreboard
 
