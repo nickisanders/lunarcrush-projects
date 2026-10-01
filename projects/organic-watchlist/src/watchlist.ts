@@ -42,7 +42,20 @@ export const PEGGED = new Set([
   "WBTC", "WETH", "WBNB", "STETH", "WSTETH", "WEETH", "CBBTC", "RETH", "SOLVBTC", "LBTC",
 ]);
 
-export function eligibleCandidates(rows: CoinRow[], max = 80): Candidate[] {
+/** How many flat-price coins get a detailed check.
+ *
+ * The ranking below is by absolute interactions, while a qualifying event is a
+ * z-score against a coin's own baseline, so the two disagree: a $200M coin
+ * spiking against itself can sit far down a list sorted by raw volume. Checked
+ * against the backtest on 2026-10-01, taking the top 80 catches 93% of the 392
+ * qualifying events in six years, the top 120 catches 98%, and the top 200
+ * catches all of them. The worst event ever sat at rank 181.
+ *
+ * 200 costs 120 extra history calls a day and removes the gap entirely, so
+ * there is no reason to keep paying for a 7% blind spot. */
+export const CHECK_CANDIDATES = 200;
+
+export function eligibleCandidates(rows: CoinRow[], max = CHECK_CANDIDATES): Candidate[] {
   const eligible = rows.filter(
     (r) =>
       !PEGGED.has(r.symbol) &&

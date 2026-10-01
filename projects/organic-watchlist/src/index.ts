@@ -50,7 +50,7 @@ async function main(): Promise<void> {
   loadEnv();
   const mock = process.argv.includes("--mock");
   const maxArg = process.argv.indexOf("--max-candidates");
-  const maxCandidates = maxArg > -1 ? Number(process.argv[maxArg + 1]) : 80;
+  const maxCandidates = maxArg > -1 ? Number(process.argv[maxArg + 1]) : CHECK_CANDIDATES;
 
   let coins: CoinRow[];
   let getSeries: (c: CoinRow) => Promise<SeriesRow[]>;
