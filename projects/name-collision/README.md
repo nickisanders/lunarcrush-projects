@@ -78,3 +78,10 @@ Topic attribution is the mechanism: a post naming a ticker counts toward that to
 Two suspects each run (`$BIFI2`, `$POLY` on the first pass) have topic strings that do not resolve to a topic at all. They are reported as unchecked rather than assumed either way.
 
 Related: [crowd-size](../crowd-size/) measures how few accounts carry a coin's conversation; this measures whether the conversation is about the coin at all.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

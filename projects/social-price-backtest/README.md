@@ -101,3 +101,10 @@ So the finding is specific to crypto, not a general property of attention. The p
 Three adjustments were needed and each is in the code: weekend rows carry the Friday close and would pass a "price is flat" filter for free, so only trading days count; the stocks feed has no `posts_created`, so spam share uses `posts_active` as the denominator and is not strictly comparable to the crypto threshold; and with no BTC to measure against, excess return is against the equal-weighted mean of eligible stocks that day.
 
 Two process notes worth recording. At 69 stocks this test showed a *significant inversion* (-6.0 points, p = 0.033); at 385 stocks it read -0.1; at 4,063 it reads +1.1. All three are consistent with a true effect of about zero, and only the first looked publishable. Partial data has now produced a convincing-looking artifact twice in this repo.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

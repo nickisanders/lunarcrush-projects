@@ -97,3 +97,10 @@ source ../social-price-backtest/.venv/bin/activate
 LUNARCRUSH_API_KEY=... python3 graveyard.py   # out/graveyard.json
 python3 chart.py                              # out/graveyard.svg
 ```
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

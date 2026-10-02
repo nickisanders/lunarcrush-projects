@@ -55,3 +55,10 @@ are the worst outcomes, so the real numbers are likely worse than these.
 
 Entry is defined on a single day's rank. A coin that touched #10 for one day
 counts the same as one that sat at #4 for a month.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

@@ -35,3 +35,10 @@ On the first live run that flagged 10 of 33 coins, including the two highest.
 Posts, not reach. One bot post and one viral thread weigh the same here, so a high share means a lot of junk was written, not that a lot of people saw junk.
 
 The labels are LunarCrush's classifier, not ground truth. A high share is also not a verdict on a project: airdrops, incentive campaigns and large retail communities all attract automated posting without anyone at the project asking for it.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

@@ -142,3 +142,10 @@ Two sampling problems nearly buried this:
 
 Contract identity here came from its publisher. Nothing in this tool derives it
 from onchain data, and that remains true.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

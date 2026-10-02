@@ -66,3 +66,10 @@ Twelve readings, none distinguishable from zero, on 1,701 days.
 One pattern is worth mentioning without overselling it. In the test of BTC attention against lower tiers' raw returns, all twelve readings came out mildly negative (-0.011 to -0.035). A run of twelve same-signed results looks striking, but these tests are not independent (overlapping horizons, correlated tiers), so the intuitive "one in four thousand" reading is wrong. Individually none is significant and every interval includes zero. It is consistent with Bitcoin's conversation spiking during market stress rather than before rallies, which would be a reasonable hypothesis for someone to test properly. It is not a finding here.
 
 So the cascade fails twice: attention does not move down the tiers, and it does not move price down them either.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

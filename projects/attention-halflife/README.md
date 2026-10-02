@@ -51,3 +51,10 @@ No. `office_hours.py` compares WHEN spikes peak (UTC hour of day, and weekday) f
 ## Caveats
 
 Daily buckets hide intraday decay shape. The overlap exclusion removes sustained multi-spike attention waves, which is conservative for measuring single-spike decay but means "campaigns that keep spending" are underrepresented. Spam labels are LunarCrush's classification, reprocessed historically. And the one-day half-life is a crypto-social fact, not a universal one; other domains likely differ.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

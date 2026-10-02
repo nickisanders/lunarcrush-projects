@@ -62,3 +62,10 @@ Two handling notes. A third of posts score exactly 3.00, the neutral midpoint of
 **The bootstrap is blocked by calendar month.** Mentions cluster hard: a hundred accounts naming the same coin in one week are not a hundred independent draws, and an unclustered test reports an interval several times too tight.
 
 **Creator universe comes from topic creator lists, not `/public/creators/list/v1`.** That endpoint is LunarCrush's whole-platform ranking and returns Netflix, ESPN and Red Bull. The network is parsed from the `creator_id` prefix, since topic creator records carry no `creator_network` field.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

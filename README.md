@@ -65,7 +65,9 @@ Most of what is in here is a null result, and the nulls are published with the s
 
 ## Getting an API key
 
-All projects authenticate with a LunarCrush API key passed as a Bearer token. Sign up and grab a key at [lunarcrush.com](https://lunarcrush.com/) under Settings > API.
+All projects authenticate with a LunarCrush API key passed as a Bearer token. Sign up at [lunarcrush.com](https://lunarcrush.com/) and grab a key under Settings > API.
+
+Code `NICKI` takes 15% off a subscription, and pays me a commission. It costs you less, not more. Every finding in this repo, including the ones that say the data is wrong or that a signal does not exist, was published the same way before and after that arrangement existed.
 
 ## License
 

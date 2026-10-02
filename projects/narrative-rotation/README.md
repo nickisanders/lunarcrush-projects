@@ -29,3 +29,10 @@ The tracked set lives in `src/rotation.ts` (`NARRATIVES`). Categories that 404 a
 ## Automate it
 
 `.github/workflows/narrative-rotation.yml` runs every Sunday at 14:00 UTC and uploads the outputs as an artifact. Requires the `LUNARCRUSH_API_KEY` secret (already set for this repo).
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

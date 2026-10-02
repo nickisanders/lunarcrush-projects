@@ -81,3 +81,10 @@ source ../social-price-backtest/.venv/bin/activate
 python3 fallen.py   # out/fallen.json
 python3 chart.py    # out/fallen.svg
 ```
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

@@ -64,3 +64,10 @@ at $53B days after launching in May 2021, is inside the window and correct.
 
 A 90% drawdown means small absolute numbers. $ILV's crowd going from 20 to 43
 people a day is +115% and is still 43 people.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

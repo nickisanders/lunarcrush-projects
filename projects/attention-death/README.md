@@ -52,3 +52,10 @@ It reframes every edge measured here. The [organic spike setup](../organic-watch
 ../social-price-backtest/.venv/bin/python analysis.py     # the death-signal null
 ../social-price-backtest/.venv/bin/python base_rate.py    # the base rate
 ```
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

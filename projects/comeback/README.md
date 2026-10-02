@@ -101,3 +101,10 @@ python3 chart.py out/zec.json                    # out/zec.svg
 ```
 
 Works on any ticker in the cache. The live numbers come from the API.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

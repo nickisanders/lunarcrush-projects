@@ -76,3 +76,10 @@ compared to complete days, which has bitten three projects in this repo.
 LUNARCRUSH_API_KEY=... python3 who_moved_first.py AKE
 python3 chart.py out/ake.json
 ```
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

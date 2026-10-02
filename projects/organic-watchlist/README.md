@@ -112,3 +112,9 @@ Two resolved picks. That is far too few to mean anything: at a measured 49% vs 4
 
 Picks are deduplicated per day, and pegged assets are excluded to match the live filter.
 
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

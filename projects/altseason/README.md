@@ -59,3 +59,10 @@ within days. What is unusual here is the level, not the direction.
 This says nothing about what happens next. [graveyard](../graveyard/) and
 [after_the_run.py](../social-price-backtest/after_the_run.py) both cover that,
 and neither is encouraging about chasing it.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

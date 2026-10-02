@@ -75,3 +75,10 @@ requests.
 Crowd change is a ratio, so a coin going from 49 to 112 people a day shows as
 +129% and one going from 394 to 2,216 shows as +462%, which are not comparable
 amounts of attention. The people-a-day column is there to keep that visible.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

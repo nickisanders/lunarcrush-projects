@@ -56,3 +56,10 @@ This counts posts created, not people. A prolific account and a quiet one weigh 
 Stablecoins and wrapped assets are excluded; their conversation is plumbing rather than a community.
 
 Related: [attention-halflife/office_hours.py](../attention-halflife/office_hours.py) asks whether manufactured spikes peak at different hours than organic ones (they don't). This measures the underlying rhythm both sit on.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

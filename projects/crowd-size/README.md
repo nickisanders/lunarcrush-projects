@@ -65,3 +65,10 @@ Interactions are attributed per topic, and a post that mentions several tickers 
 It is also a 24-hour snapshot. A coin mid-announcement will look narrower than its normal week.
 
 Related: [hype-detector](../hype-detector/) uses top-3 creator concentration as one input to its manufactured score, and treats near-total concentration with low spam as a megaphone rather than a botnet. This measures the same property across the whole market instead of only on spike days.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

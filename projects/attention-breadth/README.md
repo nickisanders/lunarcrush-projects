@@ -41,3 +41,10 @@ Needs the backtest's cached data (`../social-price-backtest/data/raw`):
 ```bash
 ../social-price-backtest/.venv/bin/python analysis.py --json out/breadth.json
 ```
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

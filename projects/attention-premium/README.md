@@ -109,3 +109,10 @@ LUNARCRUSH_API_KEY=... python3 today.py   # today's loudest and quietest names
 
 `premium.py` and `robustness.py` are kept deliberately. The wrong version is
 part of the record.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.

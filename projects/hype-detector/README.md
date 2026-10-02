@@ -50,3 +50,10 @@ Outputs `out/post.txt`, `out/chart.png` (leaderboard), and `out/report.json` (fu
 - Creator concentration uses the top-creators endpoint, which reflects measurable interactions; sock-puppet networks that spread activity across many small accounts will read as less concentrated than they are.
 - Spam labels are LunarCrush's classification; the backtest showed they carry signal, but they are not ground truth.
 - A manufactured-looking spike is not proof of a coordinated campaign, and an organic-looking one is not an endorsement. The score summarizes evidence; it does not read minds.
+
+<!-- lunarcrush-referral -->
+---
+
+Needs a [LunarCrush](https://lunarcrush.com/) API key. Code `NICKI` takes 15% off a
+subscription, and pays me a commission. It costs you less, not more, and
+nothing here changes based on it.
