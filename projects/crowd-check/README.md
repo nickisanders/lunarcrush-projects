@@ -10,31 +10,32 @@ python3 chart.py
 Takes the week's biggest gainers and reports four things per coin. It is the
 screen, not the audit: it says where to look.
 
-## 2026-10-03
+## 2026-10-04
 
 | coin | 7d | people a day | a month ago | change | spam vs own norm | read |
 |---|---:|---:|---:|---:|---:|---|
-| $QNT | +109% | 2,844 | 196 | +1347% | 1.24x | crowd more than doubled |
-| $NIGHT | +91% | 399 | 188 | +112% | 1.04x | crowd more than doubled |
-| $SHX | +83% | 167 | 86 | +93% | 1.04x | crowd grew with the price |
-| $SAND | +63% | 63 | 43 | +47% | 0.34x | crowd grew with the price |
-| $CARDS | +44% | 236 | 118 | +99% | **1.53x** | fresh spam wave |
-| $OMI | +38% | 73 | 42 | +72% | 0.81x | crowd grew with the price |
-| $PUMP | +36% | 93 | 50 | +84% | 0.73x | crowd grew with the price |
-| $AGT | +36% | 14 | 10 | +47% | **2.05x** | fresh spam wave |
-| $SUPER | +30% | 156 | 94 | +67% | 1.14x | crowd grew with the price |
-| $PURR | +30% | 33 | 47 | **-30%** | **1.49x** | price up, fewer people talking |
+| $NIGHT | +86% | 529 | 188 | +181% | 1.11x | crowd more than doubled |
+| $SAND | +76% | 63 | 43 | +47% | 0.45x | crowd grew with the price |
+| $NOS | +65% | 83 | 34 | +148% | 1.20x | crowd more than doubled |
+| $QNT | +44% | 2,846 | 196 | +1348% | 1.33x | crowd more than doubled |
+| $STRK | +42% | 129 | 100 | +30% | 0.98x | crowd grew with the price |
+| $OMI | +42% | 94 | 42 | +121% | 0.59x | crowd more than doubled |
+| $QUBIC | +38% | 232 | 146 | +58% | 0.92x | crowd grew with the price |
+| $PUMP | +35% | 93 | 50 | +88% | 0.78x | crowd grew with the price |
+| $MUBARAK | +34% | 149 | 60 | +146% | 1.30x | crowd more than doubled |
+| $CARDS | +29% | 245 | 120 | +104% | **2.04x** | fresh spam wave |
 
-Seven of ten had people arrive. Three did not.
+Nine of ten had people arrive, and nobody's crowd shrank. That is not the
+usual result.
 
-- **$SAND rose 63% on 63 people a day**, with spam at a third of its own norm.
-  A small crowd and a clean one.
-- **$QNT went from 196 people a day to 2,844.** Whatever else is true, that is
-  a genuine arrival.
-- **$PURR rose 30% with fewer people talking about it than a month ago**, and
-  spam at 1.49x its baseline. The only coin on the list whose crowd shrank
-  while the price rose.
-- **$AGT is 14 people a day** at 2.05x its spam norm, on a $83M token.
+- **$SAND rose 76% on 63 people a day**, with spam at 0.45x its own norm. The
+  leanest crowd on the list and the cleanest.
+- **$QNT sits at 2,846 people a day** against 196 a month ago.
+- **$CARDS is the one exception**, at 2.04x its spam baseline. It was 1.53x
+  the day before, so the wave is getting louder rather than fading.
+
+The day before, three of ten were flagged and $PURR's crowd had shrunk 30%
+while its price rose. It fell off the gainers list entirely the next day.
 
 ## Spam lift, not spam share
 
