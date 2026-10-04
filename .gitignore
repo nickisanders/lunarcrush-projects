@@ -6,3 +6,7 @@ out/
 data/
 *.log
 .DS_Store
+
+# Python bytecode, written wherever a script imports a sibling module.
+__pycache__/
+*.pyc
