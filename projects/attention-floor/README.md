@@ -46,8 +46,10 @@ Supporting checks on the same token: zero near-identical posts across separate
 accounts, so no copypasta campaign, and spam rose 2.3x against a crowd that
 rose 2.2x, so no fresh wave running ahead of the people.
 
-`python3 chart.py` draws it. Charts are not committed anywhere in this repo,
-so rerun the two scripts to regenerate both the numbers and the image.
+`python3 chart.py` draws it and `python3 carousel.py` builds the five-slide
+Instagram version, both reading the same `out/floor.json` so neither can drift
+from the numbers. Charts are not committed anywhere in this repo, so rerun the
+scripts to regenerate them.
 
 ## What it does not say
 
