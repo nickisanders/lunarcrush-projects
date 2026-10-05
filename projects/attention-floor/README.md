@@ -46,7 +46,8 @@ Supporting checks on the same token: zero near-identical posts across separate
 accounts, so no copypasta campaign, and spam rose 2.3x against a crowd that
 rose 2.2x, so no fresh wave running ahead of the people.
 
-![FET attention floor](out/floor.png)
+`python3 chart.py` draws it. Charts are not committed anywhere in this repo,
+so rerun the two scripts to regenerate both the numbers and the image.
 
 ## What it does not say
 
