@@ -4,6 +4,8 @@ Example projects built on the [LunarCrush API](https://lunarcrush.com/developers
 
 Each project is self-contained under `projects/` with its own README, dependencies, and instructions.
 
+The same methodology is run as a paid service at [Proof of Crowd](https://proofofcrowd.com), which audits a single token in depth.
+
 ## Projects
 
 | # | Project | What it does |
@@ -63,6 +65,17 @@ The founding question was whether social attention leads price. The short answer
 - It **does not work on stocks**: 4,063 tickers, 9,073 events, no effect.
 
 Most of what is in here is a null result, and the nulls are published with the same care as the finding.
+
+## Having it run on your token
+
+These projects measure the whole market. [Proof of Crowd](https://proofofcrowd.com)
+runs the same pipeline on one token at professional depth: spam against its own
+baseline, creator concentration, near-duplicate wording across accounts, how
+many of those accounts work several tokens at once, supply concentration, and
+whether the attention produced first-time holders.
+
+Every claim in a report is tied to evidence you can check, and the fee buys the
+audit rather than the answer. [See a sample report](https://proofofcrowd.com/sample.html).
 
 ## Getting an API key
 
