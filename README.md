@@ -45,6 +45,7 @@ The same methodology is run as a paid service at [Proof of Crowd](https://proofo
 | 33 | [month-review](projects/month-review/) | The month's biggest price gains against its biggest crowd gains. In September only 3 of 10 overlapped |
 | 34 | [metaverse](projects/metaverse/) | 29 gaming and NFT coins worth $173B at their peaks are worth $4.8B today, and all moved together |
 | 35 | [crowd-check](projects/crowd-check/) | The week's biggest gainers, against whether anyone new actually showed up for them |
+| 36 | [attention-floor](projects/attention-floor/) | A spike is easy to see. Did anyone stay? $FET spiked five times in three weeks and the floor between them rose 2.4x |
 
 ## The scoreboard
 
