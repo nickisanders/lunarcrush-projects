@@ -51,7 +51,7 @@ The same methodology is run as a paid service at [Proof of Crowd](https://proofo
 
 `python3 tools/scoreboard.py` prints every headline result across the repo,
 sorted into what held up, what was tested and buried, and where the data
-misleads. 20 recorded findings across 28 projects: 10 hold, 6 are nulls, 4
+misleads. 21 recorded findings across 36 projects: 10 hold, 7 are nulls, 4
 are measurement traps. `tools/scoreboard_chart.py` renders it.
 
 ## What the backtest found

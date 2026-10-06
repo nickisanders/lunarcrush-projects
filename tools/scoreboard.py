@@ -24,6 +24,7 @@ FINDINGS = [
     ("social-price-backtest", "85% of spikes are spam-heavy and carry no signal. Filtering them is the difference between a signal and an anti-signal", "works"),
     ("social-price-backtest", "None of it works on stocks. 4,063 tickers, 9,073 events, no effect", "null"),
     ("attention-cascade", "The Bitcoin-to-alts attention cascade does not exist", "null"),
+    ("attention-floor", "Talkers per DEX trader tracks where a token trades, not whether its attention converts. LINK scores worst because it trades on exchanges", "null"),
     ("attention-death", "Dying conversations predict nothing", "null"),
     ("attention-halflife", "Crypto attention has a one-day half-life, organic or manufactured", "works"),
     ("attention-premium", "Coins talked about more than they are worth are not punished. The first version of this result was 30% stablecoins", "null"),

@@ -51,6 +51,29 @@ Instagram version, both reading the same `out/floor.json` so neither can drift
 from the numbers. Charts are not committed anywhere in this repo, so rerun the
 scripts to regenerate them.
 
+## Null: talkers per DEX trader
+
+Tested as a cheap stand-in for the onchain conversion work and **discarded**.
+LunarCrush gives people posting per day and GeckoTerminal gives unique buyers
+and sellers per day, so the ratio looked like a conversion proxy costing two
+calls instead of four hours.
+
+| | people posting | DEX traders 24h | talkers per trader |
+|---|---:|---:|---:|
+| PEPE | 1,006 | 537 | 1.9 |
+| UNI | 444 | 195 | 2.3 |
+| FET | 879 | 57 | 15.4 |
+| LINK | 2,089 | 45 | 46.4 |
+
+It separates tokens across a 25x range and separates them on the wrong thing.
+LINK scores worst because it trades on centralised exchanges, not because its
+attention fails to convert; PEPE scores best because memecoins trade onchain.
+The ratio measures where a token trades.
+
+It would hold up on a token that only trades onchain. It is wrong on anything
+listed, and a metric that is confidently wrong on blue chips is worse than no
+metric. Measured 2026-10-06.
+
 ## What it does not say
 
 It makes no claim about who is behind any spike. The same pattern is compatible
