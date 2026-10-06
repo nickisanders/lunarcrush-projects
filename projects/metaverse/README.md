@@ -5,7 +5,26 @@ The 2021 metaverse bags just woke up, and the crowd came with them.
 ```bash
 LUNARCRUSH_API_KEY=... python3 metaverse.py
 python3 chart.py
+python3 followup.py          # this run against an earlier snapshot
 ```
+
+Every run keeps a dated copy in `out/history/`. Market caps and crowd counts
+are point-in-time readings and the API will not hand them back later, so a
+comparison that was not captured on the day cannot be reconstructed afterwards.
+
+## 2026-10-06 · four days later
+
+The move mostly gave itself back and the crowd did not follow it out.
+
+| | 2026-10-02 | 2026-10-06 |
+|---|---:|---:|
+| beating the market | 23 of 29 | **13 of 29** |
+| crowd still growing | 20 of 29 | **24 of 29** |
+
+Median coin is down 1.1% since the first post. $RLC is the exception at +132%
+over those four days, and it is also the one [crowd-check](../crowd-check/)
+flags: 26 people a day, 1,463 interactions each, spam at 2.6x its own norm.
+The best performer in the cohort is the one with the thinnest crowd behind it.
 
 ## 2026-10-02
 

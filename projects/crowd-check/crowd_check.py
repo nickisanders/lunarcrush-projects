@@ -128,12 +128,21 @@ def main() -> None:
     print(f"median interactions per person: {d['perPerson'].median():,.0f}")
 
     (HERE / "out").mkdir(exist_ok=True)
-    (HERE / "out" / "crowd_check.json").write_text(json.dumps({
+    payload = json.dumps({
         "asOf": dt.date.today().isoformat(), "freshWave": FRESH_WAVE,
         "medianPerPerson": float(d["perPerson"].median()),
         "shrank": list(shrank["symbol"]), "fresh": list(fresh["symbol"]),
         "coins": rows,
-    }, indent=2))
+    }, indent=2)
+    (HERE / "out" / "crowd_check.json").write_text(payload)
+
+    # Dated copy, same reasoning as projects/metaverse: these are
+    # point-in-time readings and the screen is only half the story.
+    # Whether the coins it flagged held up is the other half, and
+    # that needs a reading taken on the day.
+    snaps = HERE / "out" / "history"
+    snaps.mkdir(exist_ok=True)
+    (snaps / f"crowd_check-{dt.date.today().isoformat()}.json").write_text(payload)
     print(f"\nWrote {HERE / 'out' / 'crowd_check.json'}")
 
 

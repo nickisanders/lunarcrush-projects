@@ -119,15 +119,27 @@ def main() -> None:
     print(f"combined market cap now ${d['mcap'].sum()/1e9:.1f}B against ${d['peakMcap'].sum()/1e9:.1f}B at their peaks")
 
     (HERE / "out").mkdir(exist_ok=True)
-    (HERE / "out" / "metaverse.json").write_text(json.dumps({
+    payload = json.dumps({
         "asOf": dt.date.today().isoformat(), "market": market, "universe": int(len(f)),
         "cohortMedian": float(cohort["percent_change_24h"].median()),
         "beat": int((cohort["percent_change_24h"] > market).sum()), "n": int(len(cohort)),
         "crowdMedian": float(cm), "crowdGrew": int((d["crowdChange"] > 0).sum()),
         "mcapNow": float(d["mcap"].sum()), "mcapPeak": float(d["peakMcap"].sum()),
         "coins": d.to_dict("records"),
-    }, indent=2))
-    print(f"\nWrote {HERE / 'out' / 'metaverse.json'}")
+    }, indent=2)
+    (HERE / "out" / "metaverse.json").write_text(payload)
+
+    # Keep a dated copy. The latest run used to be the only run, so asking
+    # "what happened after the last post" meant having copied the file aside
+    # by hand first. A cohort's follow-up is often the better story than its
+    # first appearance, and that comparison is impossible to reconstruct after
+    # the fact: these are point-in-time market and crowd readings, not history
+    # the API will hand back.
+    snaps = HERE / "out" / "history"
+    snaps.mkdir(exist_ok=True)
+    (snaps / f"metaverse-{dt.date.today().isoformat()}.json").write_text(payload)
+
+    print(f"\nWrote {HERE / 'out' / 'metaverse.json'} and a dated copy in out/history/")
 
 
 if __name__ == "__main__":
