@@ -46,12 +46,13 @@ The same methodology is run as a paid service at [Proof of Crowd](https://proofo
 | 34 | [metaverse](projects/metaverse/) | 29 gaming and NFT coins worth $173B at their peaks are worth $4.8B today, and all moved together |
 | 35 | [crowd-check](projects/crowd-check/) | The week's biggest gainers, against whether anyone new actually showed up for them |
 | 36 | [attention-floor](projects/attention-floor/) | A spike is easy to see. Did anyone stay? $FET spiked five times in three weeks and the floor between them rose 2.4x |
+| 37 | [size-bias](projects/size-bias/) | Two of the signals people use to detect manufactured attention are partly measuring market cap, in opposite directions |
 
 ## The scoreboard
 
 `python3 tools/scoreboard.py` prints every headline result across the repo,
 sorted into what held up, what was tested and buried, and where the data
-misleads. 21 recorded findings across 36 projects: 10 hold, 7 are nulls, 4
+misleads. 22 recorded findings across 37 projects: 10 hold, 7 are nulls, 5
 are measurement traps. `tools/scoreboard_chart.py` renders it.
 
 ## What the backtest found
