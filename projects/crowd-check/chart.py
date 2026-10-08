@@ -37,14 +37,25 @@ def render(d: dict) -> str:
          f'<rect width="{W}" height="{H}" fill="{BG}"/>']
     # The headline is derived, not written: the split changes every day and a
     # hardcoded finding goes stale the moment the screen is re-run.
-    flagged = [c for c in coins if (c["growth"] or 0) < 0 or (c["spamLift"] or 0) >= d["freshWave"]]
-    n, k = len(coins), len(flagged)
-    if k == 0:
+    # Two different things get flagged and they do not mean the same thing. A
+    # shrinking crowd is nobody new; a spam wave is plenty of new noise. Saying
+    # "nobody new" about both mislabels a coin whose crowd doubled, which is
+    # what this headline did while the table underneath contradicted it.
+    shrank = [c for c in coins if (c["growth"] or 0) < 0]
+    wave = [c for c in coins if (c["growth"] or 0) >= 0
+            and (c["spamLift"] or 0) >= d["freshWave"]]
+    flagged = shrank + wave
+    n = len(coins)
+    if not flagged:
         title = f"All {n} of this week's biggest gainers had people show up."
-    elif k == 1:
-        title = f"{n} coins are up big. {k} has nobody new behind it."
     else:
-        title = f"{n} coins are up big. {k} have nobody new behind them."
+        bits = []
+        if shrank:
+            bits.append(f"{len(shrank)} lost "
+                        + ("its audience" if len(shrank) == 1 else "their audience"))
+        if wave:
+            bits.append(f"{len(wave)} came with a spam wave")
+        title = f"{n} coins are up big. " + ", ".join(bits) + "."
     o.append(txt(60, 74, 37, TEXT, title, 700))
     o.append(txt(60, 112, 20, SUB,
                  "This week's biggest gainers, against how many people are actually posting about each one."))
@@ -82,12 +93,17 @@ def render(d: dict) -> str:
     o.append(txt(84, by + 38, 19, TEXT,
                  f"${lean['symbol']} rose {lean['pct7d']:.0f}% on {lean['crowdNow']:,.0f} people a day. "
                  f"${best['symbol']} went from {best['crowdBase']:,.0f} people to {best['crowdNow']:,.0f}.", 700))
-    if flagged:
-        f0 = flagged[0]
-        detail = (f"a crowd {abs(f0['growth']) * 100:.0f}% smaller than a month ago"
-                  if (f0["growth"] or 0) < 0 else f"spam at {f0['spamLift']:.2f}x its own norm")
+    # Prefer a coin the line above has not already used, so the panel does not
+    # print the same ticker twice.
+    used = {lean["symbol"], best["symbol"]}
+    pick = next((c for c in shrank if c["symbol"] not in used), None) \
+        or next((c for c in flagged if c["symbol"] not in used), None) \
+        or (flagged[0] if flagged else None)
+    if pick:
+        detail = (f"a crowd {abs(pick['growth']) * 100:.0f}% smaller than a month ago"
+                  if (pick["growth"] or 0) < 0 else f"spam at {pick['spamLift']:.2f}x its own norm")
         o.append(txt(84, by + 70, 19, TEXT,
-                     f"${f0['symbol']} rose {f0['pct7d']:.0f}% with {detail}.", 700))
+                     f"${pick['symbol']} rose {pick['pct7d']:.0f}% with {detail}.", 700))
     else:
         o.append(txt(84, by + 70, 19, TEXT,
                      "Nothing on the list had a shrinking crowd, which is not the usual result.", 700))

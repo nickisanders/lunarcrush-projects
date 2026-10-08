@@ -47,12 +47,13 @@ The same methodology is run as a paid service at [Proof of Crowd](https://proofo
 | 35 | [crowd-check](projects/crowd-check/) | The week's biggest gainers, against whether anyone new actually showed up for them |
 | 36 | [attention-floor](projects/attention-floor/) | A spike is easy to see. Did anyone stay? $FET spiked five times in three weeks and the floor between them rose 2.4x |
 | 37 | [size-bias](projects/size-bias/) | Two of the signals people use to detect manufactured attention are partly measuring market cap, in opposite directions |
+| 38 | [polymarket-rewards](projects/polymarket-rewards/) | Half of Polymarket's fill notional has the exchange as counterparty rather than another trader, so a counterparty graph sees about half the money |
 
 ## The scoreboard
 
 `python3 tools/scoreboard.py` prints every headline result across the repo,
 sorted into what held up, what was tested and buried, and where the data
-misleads. 22 recorded findings across 37 projects: 10 hold, 7 are nulls, 5
+misleads. 23 recorded findings across 38 projects: 10 hold, 7 are nulls, 6
 are measurement traps. `tools/scoreboard_chart.py` renders it.
 
 ## What the backtest found
