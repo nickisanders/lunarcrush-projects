@@ -111,6 +111,36 @@ Only one exchange contract emits fills today,
 checked on 2026-10-07 and are dormant; they stay in the query so a run over
 older history is correct rather than silently empty.
 
+## Daily snapshots
+
+Reward status is unrecoverable once a market closes, so the paid-versus-unpaid
+comparison cannot be run backwards over an arbitrary week. It has to be run
+forward from snapshots taken while the markets were open.
+
+`snapshot.sh` captures the live board once a day. Installed on this machine as a
+LaunchAgent at 09:15 local:
+
+```bash
+cp com.proofofcrowd.polymarket-snapshot.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.proofofcrowd.polymarket-snapshot.plist
+launchctl start com.proofofcrowd.polymarket-snapshot   # force one run
+launchctl list | grep polymarket                       # confirm it is registered
+```
+
+To stop it:
+
+```bash
+launchctl unload ~/Library/LaunchAgents/com.proofofcrowd.polymarket-snapshot.plist
+```
+
+Each snapshot is about 1.7MB and lands in `out/history/`, which is gitignored.
+A year is kept and older ones are pruned. The log is `out/snapshot.log`.
+
+First capture: 2026-10-08, 2,100 live markets, 752 paying rewards (35.8%),
+$17,001 a day advertised across them. The comparison becomes runnable once there
+are enough days to pair a snapshot against the fills in the window that follows
+it, so roughly a week.
+
 ## Notes
 
 Fills are aggregated as they stream and never retained raw, because the
