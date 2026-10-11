@@ -17,6 +17,7 @@ Usage:
 import argparse
 import json
 import os
+from datetime import datetime, timezone
 import subprocess
 import urllib.request
 from pathlib import Path
@@ -118,6 +119,33 @@ def main() -> None:
     b.append(txt(60, H - 20, 16, SUB, "Source: LunarCrush"))
     b.append(txt(1140, H - 20, 16, SUB,
                  "github.com/nickisanders/lunarcrush-projects", 400, "end"))
+
+    # Saved so a carousel or a post can read the same numbers rather than
+    # having them retyped, which is how slides go stale.
+    year = get(f"/public/coins/{sym}/time-series/v2?bucket=day&interval=1y").get("data") or []
+    def fnum(x):
+        try:
+            return float(x)
+        except (TypeError, ValueError):
+            return 0.0
+    hist = [r for r in year if r.get("contributors_active") is not None]
+    peak = max(hist[:-8], key=lambda r: fnum(r["contributors_active"])) if len(hist) > 10 else {}
+    today = fnum(hist[-1]["contributors_active"]) if hist else 0
+    facts = {
+        "symbol": sym, "name": name, "price_pct_7d": round(pct, 1),
+        "price": fnum(coin.get("price")),
+        "metrics": [{"label": l, "before": round(b), "after": round(a)} for l, b, a in data],
+        "spam_before": round(s_before, 4), "spam_after": round(s_after, 4),
+        "today_people": round(today),
+        "year_peak": {
+            "people": round(fnum(peak.get("contributors_active"))),
+            "day": datetime.fromtimestamp(peak["time"], timezone.utc).strftime("%Y-%m-%d")
+                   if peak.get("time") else None,
+            "price": fnum(peak.get("close")),
+        } if peak else None,
+    }
+    (HERE / "out").mkdir(exist_ok=True)
+    (HERE / "out" / f"spotlight-{sym.lower()}.json").write_text(json.dumps(facts, indent=2))
 
     svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
            f'viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="{BG}"/>'
