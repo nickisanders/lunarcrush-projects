@@ -85,10 +85,13 @@ def main() -> None:
     s_before = avg(prior, "spam") / max(avg(prior, "posts_created"), 1)
     s_after = avg(last, "spam") / max(avg(last, "posts_created"), 1)
 
+    # Say "price" explicitly. On a chart whose every other number is social
+    # volume, a bare "up 118%" reads as though the crowd grew by that much.
     b = [txt(60, 60, 36, TEXT,
-             f"{name} is up {pct:.0f}% and the crowd came with it", 700),
+             f"{name}'s price is up {pct:.0f}% and the crowd came with it", 700),
          txt(60, 94, 20, SUB,
-             f"${sym}, the last 7 days against the 30 days before")]
+             f"${sym}, 7-day price change. Social measures are the last 7 days "
+             f"against the 30 days before.")]
 
     TOP, ROW, X0, BARW = 150, 150, 330, 560
     for i, (label, before, after) in enumerate(data):
