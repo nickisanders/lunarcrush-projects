@@ -73,39 +73,66 @@ def frame(n: int, body: str, footer: str = "") -> str:
 
 def slide1(d) -> str:
     return frame(1,
-        wrap(M, 320, 84, TEXT, f"{d['name']}'s price doubled this week.", W - 2*M, 700)
+        wrap(M, 320, 84, TEXT,
+             f"{d['name']}'s price is up {d['price_pct_7d']:.0f}% this week.", W - 2*M, 700)
         + wrap(M, 580, 52, SUB, "Most pumps arrive with a crowd that was already there, "
                                 "just shouting louder.", W - 2*M)
-        + txt(M, 900, 46, GREEN, "So I counted the people.", 700),
+        + txt(M, 900, 46, GREEN if d["crowd_grew"] else AMBER,
+              "So I counted the people.", 700),
         "swipe")
 
 
 def slide2(d) -> str:
     rows, y = [], 490
     for m in d["metrics"]:
+        up = m["after"] >= m["before"]
         rows.append(txt(M, y, 38, SUB, m["label"].split(",")[0]))
         rows.append(txt(M, y + 62, 54, TEXT, f"{m['before']:,}", 700))
         rows.append(txt(M + 250, y + 62, 46, SUB, "to"))
-        rows.append(txt(M + 350, y + 62, 54, GREEN, f"{m['after']:,}", 700))
+        rows.append(txt(M + 350, y + 62, 54, GREEN if up else RED, f"{m['after']:,}", 700))
         y += 196
-    return frame(2,
-        wrap(M, 250, 64, TEXT, "The crowd actually turned up.", W - 2*M, 700)
-        + "".join(rows), "per day, this week against the 30 days before")
+    head = ("The crowd actually turned up." if d["crowd_grew"]
+            else "The crowd went the other way.")
+    return frame(2, wrap(M, 250, 64, TEXT, head, W - 2*M, 700) + "".join(rows),
+                 "per day, this week against the 30 days before")
 
 
 def slide3(d) -> str:
-    return frame(3,
-        wrap(M, 250, 64, TEXT, "And the junk thinned out.", W - 2*M, 700)
-        + txt(M, 470, 40, SUB, "spam as a share of posts")
-        + txt(M, 560, 86, SUB, f"{d['spam_before']*100:.0f}%", 700)
-        + txt(M + 230, 560, 60, SUB, "to")
-        + txt(M + 360, 560, 86, GREEN, f"{d['spam_after']*100:.0f}%", 700)
-        + wrap(M, 720, 48, TEXT, "A bought wave runs the other way. Paid posts crowd in "
-                                 "as the price goes, and the share climbs.", W - 2*M)
-        + txt(M, 980, 42, GREEN, "Real people dilute spam. Bots concentrate it.", 700))
+    rose = d["spam_rose"]
+    body = (wrap(M, 250, 64, TEXT,
+                 "And the junk took over." if rose else "And the junk thinned out.",
+                 W - 2*M, 700)
+            + txt(M, 470, 40, SUB, "spam as a share of posts")
+            + txt(M, 560, 86, SUB, f"{d['spam_before']*100:.0f}%", 700)
+            + txt(M + 230, 560, 60, SUB, "to")
+            + txt(M + 360, 560, 86, RED if rose else GREEN,
+                  f"{d['spam_after']*100:.0f}%", 700))
+    if rose:
+        body += (wrap(M, 720, 48, TEXT, "Fewer people, and a bigger share of what is left "
+                                        "is junk. That is what a bought wave looks like.",
+                      W - 2*M)
+                 + wrap(M, 940, 38, SUB, "This token runs a high share even when quiet, so "
+                                         "the lift against its own norm is the signal, not "
+                                         "the level.", W - 2*M))
+    else:
+        body += (wrap(M, 720, 48, TEXT, "A bought wave runs the other way. Paid posts crowd "
+                                        "in as the price goes, and the share climbs.", W - 2*M)
+                 + txt(M, 980, 42, GREEN, "Real people dilute spam. Bots concentrate it.", 700))
+    return frame(3, body)
 
 
 def slide4(d) -> str:
+    if not d["crowd_grew"]:
+        return frame(4,
+            wrap(M, 250, 64, TEXT, "So what is moving the price?", W - 2*M, 700)
+            + wrap(M, 430, 50, SUB, "Not a crowd. Fewer people are posting than a month "
+                                    "ago, they are posting less, and engagement has more "
+                                    "than halved.", W - 2*M)
+            + wrap(M, 700, 50, AMBER, "This does not identify who is behind anything.",
+                   W - 2*M, 700)
+            + wrap(M, 830, 44, SUB, "Amplification patterns are compatible with bots, with "
+                                    "paid promotion, and with a small community that is "
+                                    "unusually tight.", W - 2*M))
     pk = d["year_peak"] or {}
     mult = (d["price"] / pk["price"]) if pk.get("price") else 0
     return frame(4,
@@ -123,12 +150,16 @@ def slide4(d) -> str:
 
 
 def slide5(d) -> str:
+    mid = ("Not whether it is a good entry. My own backtest of coins whose conversation "
+           "spikes into the top ten found the median one trailing Bitcoin by 21% three "
+           "months later."
+           if d["crowd_grew"] else
+           "Not whether the price is wrong. A rally with a shrinking audience is the "
+           "rarest pattern on this screen, and it is a reason to look closer rather than "
+           "a verdict.")
     return frame(5,
         wrap(M, 250, 62, TEXT, "I measure whether a crowd is real.", W - 2*M, 700)
-        + wrap(M, 420, 48, SUB, "Not whether it is a good entry. My own backtest of coins "
-                                "whose conversation spikes into the top ten found the "
-                                "median one trailing Bitcoin by 21% three months later.",
-               W - 2*M)
+        + wrap(M, 420, 48, SUB, mid, W - 2*M)
         + txt(M, 790, 52, RED, "Those are different questions.", 700)
         + wrap(M, 900, 42, SUB, "Method and code are public. Nothing here is advice.",
                W - 2*M),

@@ -26,7 +26,7 @@ HERE = Path(__file__).resolve().parent
 SHARP = Path.home() / "lunarcrush-projects/projects/crowd-size/node_modules/sharp"
 BASE = "https://lunarcrush.com/api4"
 BG, TEXT, SUB, TRACK = "#0d1117", "#e6edf3", "#8b949e", "#21262d"
-GREEN, GREY, RED = "#3fb950", "#6e7681", "#f85149"
+GREEN, GREY, RED, AMBER = "#3fb950", "#6e7681", "#f85149", "#d29922"
 FONT = "system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
 MONO = "ui-monospace, Menlo, monospace"
 W, H = 1200, 760
@@ -88,8 +88,14 @@ def main() -> None:
 
     # Say "price" explicitly. On a chart whose every other number is social
     # volume, a bare "up 118%" reads as though the crowd grew by that much.
+    # A screen that finds both outcomes has to be able to draw both. The
+    # headline, the bar colours and the spam sentence all follow the direction
+    # the crowd actually moved, rather than assuming it grew.
+    crowd_before, crowd_after = data[0][1], data[0][2]
+    grew = crowd_after >= crowd_before
+    verdict = "the crowd came with it" if grew else "the crowd went the other way"
     b = [txt(60, 60, 36, TEXT,
-             f"{name}'s price is up {pct:.0f}% and the crowd came with it", 700),
+             f"{name}'s price is up {pct:.0f}% and {verdict}", 700),
          txt(60, 94, 20, SUB,
              f"${sym}, 7-day price change. Social measures are the last 7 days "
              f"against the 30 days before.")]
@@ -99,8 +105,9 @@ def main() -> None:
         y = TOP + i * ROW
         peak = max(before, after) or 1
         b.append(txt(X0 - 22, y + 36, 21, TEXT, label, 700, "end"))
+        moved_up = after >= before
         for j, (tag, val, col) in enumerate((("before", before, GREY),
-                                             ("now", after, GREEN))):
+                                             ("now", after, GREEN if moved_up else RED))):
             by = y + j * 42
             w = BARW * (val / peak)
             b.append(txt(X0 - 22, by + 20, 17, SUB, tag, 400, "end"))
@@ -111,11 +118,18 @@ def main() -> None:
 
     y = TOP + len(data) * ROW - 10
     b.append(f'<rect x="60" y="{y}" width="1080" height="1.5" fill="{TRACK}"/>')
-    b.append(txt(60, y + 44, 24, TEXT,
-                 f"Spam fell as a share of posts while that happened, "
-                 f"{s_before*100:.0f}% to {s_after*100:.0f}%.", 700))
+    spam_up = s_after >= s_before
+    b.append(txt(60, y + 44, 24, RED if spam_up else TEXT,
+                 f"Spam {'rose' if spam_up else 'fell'} as a share of posts while that "
+                 f"happened, {s_before*100:.0f}% to {s_after*100:.0f}%.", 700))
     b.append(txt(60, y + 78, 20, SUB,
+                 "Junk crowding in as the price goes is what a bought wave looks like."
+                 if spam_up else
                  "A bought wave runs the other way, with junk crowding in as the price goes."))
+    if spam_up:
+        b.append(txt(60, y + 110, 19, SUB,
+                     f"This token runs a high share even when quiet, so the lift against its "
+                     f"own norm is the signal, not the level."))
     b.append(txt(60, H - 20, 16, SUB, "Source: LunarCrush"))
     b.append(txt(1140, H - 20, 16, SUB,
                  "github.com/nickisanders/lunarcrush-projects", 400, "end"))
@@ -137,6 +151,8 @@ def main() -> None:
         "metrics": [{"label": l, "before": round(b), "after": round(a)} for l, b, a in data],
         "spam_before": round(s_before, 4), "spam_after": round(s_after, 4),
         "today_people": round(today),
+        "crowd_grew": bool(data[0][2] >= data[0][1]),
+        "spam_rose": bool(s_after >= s_before),
         "year_peak": {
             "people": round(fnum(peak.get("contributors_active"))),
             "day": datetime.fromtimestamp(peak["time"], timezone.utc).strftime("%Y-%m-%d")
