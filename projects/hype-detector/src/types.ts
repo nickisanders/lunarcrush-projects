@@ -39,6 +39,18 @@ export interface Evidence {
   spamBaseline: number;
   /** share of creator interactions from the top 3 accounts (0-1) */
   top3CreatorShare: number;
+  /** where top3CreatorShare sits among SAME-SIZE peers (0-1).
+   *
+   * Concentration falls with size for arithmetic reasons: a token with forty
+   * people talking will always have its loudest three owning more of the
+   * conversation than one with four thousand. Scoring the raw share therefore
+   * charges small tokens for being small. Measured over 123 tokens, the median
+   * band-3 token (under $280M) sits at 64.4% against 53.6% for band 1, which is
+   * 3.2 points of score before any spam exists.
+   *
+   * Supply this and the score uses it. Omit it and the score falls back to the
+   * raw share, which is the old behaviour and is wrong in the same way. */
+  concentrationPercentile?: number;
   /** share held by the single largest account (0-1) */
   top1CreatorShare?: number;
   /** handle of that largest account, for source classification */

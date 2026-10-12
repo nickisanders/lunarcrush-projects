@@ -13,6 +13,9 @@ import {
   spamRatio,
   top1CreatorShare,
   top3CreatorShare,
+  sizeBands,
+  bandOf,
+  concentrationPercentile,
   topCreatorName,
   verdictFor,
 } from "../src/classify.js";
@@ -234,4 +237,50 @@ test("candidate picker enforces eligibility floors", () => {
   ];
   const picked = pickCandidates(rows, 10).map((r) => r.symbol);
   assert.deepEqual(picked, ["OK"]);
+});
+
+test("the score ranks concentration against same-size peers when it can", () => {
+  // Same token, same spam, same sentiment. The only difference is whether the
+  // caller supplied a peer rank. A heavily concentrated small token that is
+  // TYPICAL for its size should not be scored as though it were unusual.
+  const base = {
+    zScore: 2,
+    spamRatio: 0.1,
+    spamRatioRaw: 0.1,
+    spamBaseline: 0.12,
+    top3CreatorShare: 0.8,
+    sentiment: 60,
+  };
+  const raw = manufacturedScore(base);
+  const ranked = manufacturedScore({ ...base, concentrationPercentile: 0.5 });
+  assert.ok(raw > ranked, `raw ${raw} should exceed median-ranked ${ranked}`);
+  // A token genuinely unusual for its size still scores high.
+  const outlier = manufacturedScore({ ...base, concentrationPercentile: 0.97 });
+  assert.ok(outlier > ranked);
+});
+
+test("falling back to the raw share keeps the old behaviour", () => {
+  const e = {
+    zScore: 2,
+    spamRatio: 0.1,
+    spamRatioRaw: 0.1,
+    spamBaseline: 0.12,
+    top3CreatorShare: 0.8,
+    sentiment: 60,
+  };
+  assert.equal(manufacturedScore(e), manufacturedScore({ ...e, concentrationPercentile: 0.8 }));
+});
+
+test("bands split a population into equal counts", () => {
+  const caps = Array.from({ length: 90 }, (_, i) => (i + 1) * 1e6);
+  const edges = sizeBands(caps);
+  assert.equal(edges.length, 2);
+  const counts = [0, 0, 0];
+  for (const c of caps) counts[bandOf(c, edges)]++;
+  for (const n of counts) assert.ok(Math.abs(n - 30) <= 1, `band sizes ${counts}`);
+});
+
+test("a percentile needs enough peers to mean anything", () => {
+  assert.equal(concentrationPercentile(0.5, [0.1, 0.2, 0.3]), undefined);
+  assert.equal(concentrationPercentile(0.5, Array(20).fill(0.1)), 1);
 });

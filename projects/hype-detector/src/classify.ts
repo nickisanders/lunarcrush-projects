@@ -168,19 +168,56 @@ export function spamLift(rawToday: number, baseline: number): number {
  * historical distributions:
  * - spam lift vs own baseline (0.40): the era-robust spam signal
  * - absolute spam share (0.20): chronic botting still counts
- * - creator concentration (0.30)
+ * - creator concentration (0.30), ranked against same-size peers when a
+ *   percentile is supplied, because the raw share is partly a measure of how
+ *   small the token is
  * - sentiment uniformity (0.10): re-centered at 90 because crypto spike
  *   sentiment is >=85 on a majority of spike days; only near-unanimity
  *   discriminates */
 export function manufacturedScore(e: Evidence): number {
   const uniformity = Math.max(0, (e.sentiment - 90) / 10);
+  // Prefer the size-relative rank. The raw share is kept as a fallback so a
+  // caller without a peer population still gets a number, but that number
+  // carries the size bias this percentile exists to remove.
+  const concentration =
+    e.concentrationPercentile ?? e.top3CreatorShare;
   return Math.round(
     100 *
       (0.4 * spamLift(e.spamRatioRaw, e.spamBaseline) +
         0.2 * e.spamRatio +
-        0.3 * e.top3CreatorShare +
+        0.3 * concentration +
         0.1 * uniformity)
   );
+}
+
+/** Equal-count size bands over a population, and where a value sits in one.
+ *
+ * Three bands is what the published size-bias work used; fewer peers per band
+ * makes the rank noisier, more bands leaves too few to rank against. */
+export function sizeBands(marketCaps: number[], bands = 3): number[] {
+  const sorted = [...marketCaps].filter((m) => m > 0).sort((a, b) => a - b);
+  if (sorted.length < bands) return [];
+  const edges: number[] = [];
+  for (let i = 1; i < bands; i++) {
+    edges.push(sorted[Math.floor((sorted.length * i) / bands)]);
+  }
+  return edges;
+}
+
+export function bandOf(marketCap: number, edges: number[]): number {
+  let b = 0;
+  while (b < edges.length && marketCap >= edges[b]) b++;
+  return b;
+}
+
+/** Share of same-band peers this token sits above, 0-1. */
+export function concentrationPercentile(
+  share: number,
+  peerShares: number[]
+): number | undefined {
+  const peers = peerShares.filter((p) => Number.isFinite(p));
+  if (peers.length < 10) return undefined; // too few to rank against
+  return peers.filter((p) => p < share).length / peers.length;
 }
 
 export function verdictFor(score: number): Verdict {
