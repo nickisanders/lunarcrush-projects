@@ -144,6 +144,25 @@ def main() -> None:
     b.append(txt(1140, H - 26, 16, SUB,
                  "github.com/nickisanders/lunarcrush-projects", 400, "end"))
 
+    # Saved so a carousel reads the same numbers rather than having them
+    # retyped, which is how slides drift from the chart they illustrate.
+    facts = {
+        "symbol": sym, "name": name,
+        "days": [d.strftime("%Y-%m-%d") for d in days],
+        "people": [round(v) for v in people],
+        "price": price,
+        "live_price": live,
+        "price_peak": {"value": price[peak_i], "day": days[peak_i].strftime("%Y-%m-%d")},
+        "crowd_peak": {"value": round(people[crowd_i]),
+                       "day": days[crowd_i].strftime("%Y-%m-%d")},
+        "from_peak_pct": round((live / price[peak_i] - 1) * 100, 1),
+        # The gap between the two peaks is the whole point of this chart.
+        "crowd_peaked_days_after_price": crowd_i - peak_i,
+    }
+    out0 = HERE / "out"
+    out0.mkdir(exist_ok=True)
+    (out0 / f"divergence-{sym.lower()}.json").write_text(json.dumps(facts, indent=2))
+
     svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
            f'viewBox="0 0 {W} {H}"><rect width="{W}" height="{H}" fill="{BG}"/>'
            + "".join(b) + "</svg>")
