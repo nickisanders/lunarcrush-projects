@@ -48,12 +48,14 @@ The same methodology is run as a paid service at [Proof of Crowd](https://proofo
 | 36 | [attention-floor](projects/attention-floor/) | A spike is easy to see. Did anyone stay? $FET spiked five times in three weeks and the floor between them rose 2.4x |
 | 37 | [size-bias](projects/size-bias/) | Two of the signals people use to detect manufactured attention are partly measuring market cap, in opposite directions |
 | 38 | [polymarket-rewards](projects/polymarket-rewards/) | Half of Polymarket's fill notional has the exchange as counterparty rather than another trader, so a counterparty graph sees about half the money |
+| 39 | [amplifier-census](projects/amplifier-census/) | One account appears in 51 of 112 token conversations, but a third of those posts name eight tokens at once, so the same signal comes from opposite behaviours |
+| 40 | [spam-baseline](projects/spam-baseline/) | Spam share runs 3.9 points higher at weekends because people post less and bots do not, and the Yandex strikes moved it not at all |
 
 ## The scoreboard
 
 `python3 tools/scoreboard.py` prints every headline result across the repo,
 sorted into what held up, what was tested and buried, and where the data
-misleads. 23 recorded findings across 38 projects: 10 hold, 7 are nulls, 6
+misleads. 25 recorded findings across 40 projects: 11 hold, 8 are nulls, 6
 are measurement traps. `tools/scoreboard_chart.py` renders it.
 
 ## What the backtest found

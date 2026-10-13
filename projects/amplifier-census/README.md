@@ -23,12 +23,32 @@ It is not one thing. Two unrelated behaviours produce the identical number:
 This counts the distinct tickers in every post from the accounts that reach the
 most tokens, which is what separates them.
 
-## Results
+## 2026-10-13
 
-Pending the first full run of the published script. The method was developed
-against a 130-token population and the figures from that pass are in
-`../../../proof-of-crowd-tools`; they are not reproduced here because a number
-in this README should come from the script beside it.
+200 coins screened, **112 topics verified**, 87 rejected.
+
+**One account appears in 51 of the 112 verified conversations.** The median
+account that appears in more than one appears in 2. There are
+1,021 accounts in two or more.
+
+That reads as an amplifier network until the posts are counted. Across 1,200
+posts from the 40 accounts reaching the most tokens:
+
+| tokens named in a post | posts | share |
+|---|---:|---:|
+| 1 | 526 | 44% |
+| 2 | 48 | 4% |
+| 3 to 7 | 208 | 17% |
+| **8 or more** | **418** | **35%** |
+
+Two populations, not one. **35% of these posts name eight tokens or more**, and a
+single post of that kind places the account inside dozens of conversations at
+once. Another 44% name exactly one, which is an account working through a
+catalogue one post at a time.
+
+Both register identically as "an account that also posts about other tokens".
+Only one of them is doing anything that resembles a campaign, and the number
+alone cannot say which.
 
 ## Why the topics are verified first
 

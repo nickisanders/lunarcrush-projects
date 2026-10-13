@@ -31,6 +31,8 @@ FINDINGS = [
     ("mood", "Sentiment falls as the crowd grows. The lowest-scoring coins in the data are the ones named ASS, USELESS and TROLL", "caution"),
     ("name-collision", "A coin whose ticker is a word inherits the word's traffic. $ONE borrowed 5.0 billion interactions", "caution"),
     ("bot-share", "The median major coin's conversation is about 40% flagged spam", "caution"),
+    ("spam-baseline", "Spam share runs 3.9 points higher at weekends because real people post less and automated posting does not. Ukrainian strikes on Yandex moved it not at all", "null"),
+    ("amplifier-census", "One account appears in 51 of 112 token conversations. A third of the posts behind that signal name eight tokens at once, so a list and a campaign are indistinguishable by the number alone", "caution"),
     ("polymarket-rewards", "Half of Polymarket's fill notional is minted against the exchange rather than matched with a trader, so any who-traded-with-whom analysis sees about half the money", "caution"),
     ("size-bias", "Creator concentration and cross-token overlap both track market cap, in opposite directions. A whole-population percentile charges a token for its size", "caution"),
     ("headcount", "The median top-1,000 coin has 24 people posting about it a day. 82% have fewer than 100", "works"),
