@@ -25,9 +25,21 @@ So one filter is applied identically to every chain. A post counts when it
 names the chain or its ticker AND carries a crypto term from a fixed
 vocabulary. Attention is then the interactions on the posts that survive.
 
+TON is the one chain here whose name is also a common English noun used with
+crypto words ("a ton of crypto"), so it is matched on `toncoin`, the cashtag,
+or "TON blockchain/network/chain" rather than the bare word.
+
 What this cannot say: it is one snapshot rather than a long window, it reads
 English-language social data, and a chain whose users talk elsewhere will look
 quiet here. BSC is the obvious case to be careful with.
+
+Chain count is limited by what can be measured, not by what exists. A chain is
+included when its verified topic carries enough on-topic posts for the
+interaction figure to mean something. Berachain (1 post), Celo (4), Mantle (8),
+Linea (20) and zkSync (44) were checked and left out on that basis, and Scroll
+has no usable topic at all. TON is the thinnest chain included, at 28 on-topic
+posts against a floor of 67 for every other chain, so a single viral post moves
+it further than it moves the rest.
 
 Usage: python3 chain_hype.py
 """
@@ -68,6 +80,10 @@ CHAINS = [
     ("Sei", "sei", "sei-network", r"\bsei\b|\$sei\b"),
     ("Hyperliquid L1", "hyperliquid-l1", "hyperliquid", r"hyperliquid|\$hype\b"),
     ("Near", "near", "$near", r"near protocol|\$near\b"),
+    ("Cardano", "cardano", "cardano", r"cardano|\$ada\b"),
+    ("Hedera", "hedera", "hedera", r"hedera|\$hbar\b"),
+    ("Cronos", "cronos", "cronos", r"cronos|\$cro\b"),
+    ("TON", "ton", "$ton", r"toncoin|\$ton\b|\bton (?:blockchain|network|chain)\b"),
 ]
 
 
