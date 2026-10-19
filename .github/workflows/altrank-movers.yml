@@ -7,15 +7,15 @@ on:
 
 jobs:
   run:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: projects/altrank-movers
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
           cache-dependency-path: projects/altrank-movers/package-lock.json
       - run: npm ci
@@ -37,7 +37,7 @@ jobs:
             npm run daily
           fi
       - name: Upload output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: altrank-movers-output
           path: projects/altrank-movers/out/
