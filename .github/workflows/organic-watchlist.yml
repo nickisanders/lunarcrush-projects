@@ -25,6 +25,10 @@ jobs:
           key: organic-watchlist-history-${{ github.run_id }}
           restore-keys: organic-watchlist-history-
       - run: npm ci
+      # Typecheck and tests gate the run. A ReferenceError from an
+      # unimported constant failed this job silently for 18 days.
+      - run: npm run typecheck
+      - run: npm test
       - name: Run watchlist
         env:
           LUNARCRUSH_API_KEY: ${{ secrets.LUNARCRUSH_API_KEY }}

@@ -19,6 +19,10 @@ jobs:
           cache: npm
           cache-dependency-path: projects/altrank-movers/package-lock.json
       - run: npm ci
+      # Typecheck and tests gate the run. A ReferenceError from an
+      # unimported constant failed this job silently for 18 days.
+      - run: npm run typecheck
+      - run: npm test
       - name: Run bot
         env:
           LUNARCRUSH_API_KEY: ${{ secrets.LUNARCRUSH_API_KEY }}

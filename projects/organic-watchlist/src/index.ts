@@ -6,6 +6,7 @@ import { loadEnv } from "./env.js";
 import { fetchCoinsList, fetchDailySeries, fetchTopic } from "./lunarcrush.js";
 import { renderPost } from "./render.js";
 import {
+  CHECK_CANDIDATES,
   eligibleCandidates,
   failureReason,
   interactionZScore,
