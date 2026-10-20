@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Which chains are used, and which are only talked about.
+"""Which chains are used. The attention half is retracted, see README.
+
+ATTENTION IS UNRELIABLE AND STILL COMPUTED BELOW. A post naming eight chains
+at once passes the filter for all eight and counts in full toward each, so
+90% of TON's measured interactions and 77% of Base's came from multi-chain
+hashtag dumps. The post sample is also redrawn on every call, which moved
+Ethereum between 13.2M and 19.4M interactions minutes apart. Every ratio
+involving attention was withdrawn on 2026-10-20. The usage columns are
+unaffected because they never touched social data.
 
 Two measures, deliberately chosen.
 

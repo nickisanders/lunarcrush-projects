@@ -1,160 +1,100 @@
 # chain-hype
 
-**Which chains are used, and which are only talked about.**
+**Retracted in part, 2026-10-20.** This project set out to compare how much a
+chain is talked about against how much it is used. The usage half is sound and
+is kept below. The attention half does not survive checking and every ratio
+built on it has been withdrawn.
 
-Measured 2026-10-18 across 18 chains. Usage is taken three ways, because a
-result that holds on only the metric you happened to choose is not a result.
-Attention is interactions on posts verifiably about the chain.
+## What went wrong
 
-| Chain | Attention | Fees 30d | DEX 30d | TVL |
-|---|---|---|---|---|
-| Ethereum | 27.2% | 28.0% | 20.2% | 63.8% |
-| Solana | 24.4% | 36.6% | 34.0% | 7.6% |
-| Cardano | 14.8% | 0.04% | 0.02% | 0.1% |
-| Hyperliquid L1 | 11.6% | 13.3% | 4.5% | 1.3% |
-| Base | 3.8% | 4.4% | 15.0% | 7.9% |
-| Near | 2.7% | 0.7% | 2.6% | 0.3% |
-| Tron | 2.4% | 0.7% | 0.9% | 7.2% |
-| Sui | 2.1% | 0.3% | 0.8% | 0.6% |
-| Cronos | 1.8% | 0.05% | 0.1% | 0.2% |
-| BSC | 1.8% | 6.9% | 13.4% | 7.4% |
-| Hedera | 1.5% | 0.02% | 0.1% | 0.0% |
-| Aptos | 1.3% | 0.1% | 0.1% | 0.1% |
-| Arbitrum | 1.2% | 1.6% | 2.6% | 1.8% |
-| Sei | 1.1% | 0.1% | 0.1% | 0.0% |
-| Optimism | 0.9% | 0.5% | 0.7% | 0.0% |
-| Avalanche | 0.8% | 0.9% | 2.0% | 0.8% |
-| TON | 0.3% | 2.7% | 0.1% | 0.1% |
-| Polygon | 0.2% | 3.0% | 2.9% | 0.9% |
+The attention measure counted interactions on posts that name a chain and
+carry a crypto term, one filter applied identically to every chain. That
+filter was built to keep out snow videos for `avalanche` and the film for
+`tron`, and it does. It does nothing about a post that names eight chains at
+once.
 
-Every column is a share of the 18 chains measured, so the comparison between
-columns is the point rather than any figure on its own.
+A TikTok captioned `8 Cryptos: Which Will Explode and Which Will Crash?
+#Bitcoin #Solana #XRP #Cardano #pepe` names the chain and says "crypto", so it
+counted in full toward Cardano, and toward Solana, and toward every other
+chain it tagged. Measuring the share of each chain's interactions that came
+from posts naming three or more chains:
 
-## What it found
+| TON | Base | Polygon | Avalanche | Aptos | Optimism | Cardano |
+|---|---|---|---|---|---|---|
+| 90.1% | 77.3% | 56.8% | 54.6% | 48.5% | 42.6% | 23.2% |
 
-Ratios are attention share divided by usage share, so above 1 means talked
-about more than used.
+Base and TON were mostly measuring hashtag dumps. Checking Cardano's loudest
+posts directly, the top five were Wojak meme videos about obesity, gambling
+addiction and bus drivers, which carried 38% of its interactions, and the
+loudest post in the raw topic was a TikTok dance video that says "Cardano"
+zero times.
 
-| Chain | vs fees | vs DEX | vs TVL |
+The sample is also unstable. Two calls minutes apart put Cardano at 7.18M and
+then 7.52M interactions, and Ethereum at 13.2M then 19.4M. The post endpoint
+returns a different sample each time, so no ratio built on it is reproducible.
+
+**So the headline finding is withdrawn.** Cardano was reported as over-talked
+by 348x on fees, 669x on DEX volume and 185x on TVL. Those numbers divided a
+contaminated numerator by a sound denominator. Nothing here now says which
+chains are over or under-hyped, because this cannot currently measure the
+hype.
+
+## What the usage data shows
+
+Unaffected, because it never touched social data. All from DeFiLlama, fees and
+DEX volume as 30-day totals, TVL as of the measurement date.
+
+The most useful thing in it is how much fee revenue each chain produces per
+dollar of capital parked on it. Chains with under $100M TVL are left out, as
+the ratio gets noisy when the denominator is small.
+
+| Chain | TVL | Fees 30d | Fees per $1,000 of TVL |
 |---|---|---|---|
-| Cardano | 348x | 669x | 185x |
-| Hedera | 70x | 26x | 34x |
-| Cronos | 40x | 35x | 10x |
-| Aptos | 12x | 14x | 22x |
-| Sei | 10x | 8.5x | 28x |
-| Sui | 6.1x | 2.7x | 3.4x |
-| Near | 3.6x | 1.0x | 9.5x |
-| Tron | 3.6x | 2.6x | 0.3x |
-| Optimism | 1.8x | 1.2x | n/a |
-| Ethereum | 1.0x | 1.3x | 0.4x |
-| Avalanche | 0.9x | 0.4x | 1.1x |
-| Hyperliquid L1 | 0.9x | 2.6x | 8.9x |
-| Base | 0.9x | 0.3x | 0.5x |
-| Arbitrum | 0.7x | 0.5x | 0.7x |
-| Solana | 0.7x | 0.7x | 3.2x |
-| BSC | 0.3x | 0.1x | 0.2x |
-| TON | 0.1x | 4.4x | 4.9x |
-| Polygon | 0.1x | 0.1x | 0.2x |
+| Hyperliquid L1 | $1.0B | $165.4M | $164.14 |
+| Solana | $5.9B | $445.1M | $75.76 |
+| Polygon | $0.7B | $36.6M | $53.71 |
+| Near | $0.2B | $8.8M | $40.96 |
+| Avalanche | $0.6B | $11.2M | $19.25 |
+| BSC | $5.9B | $83.2M | $14.04 |
+| Arbitrum | $1.4B | $19.6M | $13.92 |
+| Base | $6.2B | $54.1M | $8.79 |
+| Sui | $0.5B | $4.2M | $8.76 |
+| Ethereum | $49.5B | $345.6M | $6.98 |
+| Cronos | $0.1B | $0.6M | $4.11 |
+| Tron | $5.5B | $8.1M | $1.47 |
 
-**Cardano is the largest gap in the set by two orders of magnitude.** It is the
-third loudest chain measured, 7.2 million interactions on posts that name it
-and talk about crypto, behind only Ethereum and Solana and ahead of
-Hyperliquid. It collected $0.5 million in fees over the same 30 days, against
-Solana's $456 million. That is 348x on fees, 669x on DEX volume and 185x on
-TVL, and a chain being over-talked on every measure at once is rare. Everything
-else at the top of this table is a small chain with a loud trading community.
-Cardano is a top-three attention share attached to a rounding error of usage.
+Hyperliquid gets 111x out of a parked dollar what Tron does, and Solana 11x
+what Ethereum does.
 
-**Hedera and Cronos are the same shape, smaller.** Both run 10x to 70x over on
-all three measures. Neither is close to Cardano's absolute volume, so these are
-ordinary small-chain hype gaps rather than the outlier.
+**"Biggest chain" has three answers.** By TVL it is Ethereum with 63.7% of all
+capital measured. By fees it is Solana at 36.4%. By DEX volume Solana again at
+33.9%, with Base third at 14.9% while paying 4.4% of the fees, because Base
+made its blockspace cheap deliberately.
 
-**TON is the clearest case of the metric choosing the answer.** It pays 2.7% of
-all fees measured, more than Arbitrum and Avalanche combined, on 0.3% of the
-attention, so by fees it is the most under-talked chain here at 0.1x. By DEX
-volume and TVL it reads 4.4x and 4.9x the other way. Both are true: TON
-processes a lot of cheap transfers and runs very little DeFi, so a fee measure
-and a DeFi measure describe different chains. Anyone quoting a single number
-for TON is picking the one that suits them.
+None of the three is wrong. They measure different things and a chain built
+for one reads as weak on another, which is worth knowing before accepting
+anyone's league table. Hyperliquid at $164 per $1,000 is a trading venue and
+Tron at $1.47 is somewhere people park stablecoins, and both are reasonable
+things to be.
 
-**Avalanche is not over-hyped, it is small.** Matched or slightly under on all
-three, and 0.8% of all the attention measured. A chain can feel everywhere
-while being a rounding error, and that is a property of a feed rather than of a
-market. This was the question that started the work and the answer is no.
-
-**Solana depends on what you think a chain is for.** Under on fees and DEX
-volume, 3.2x on TVL: 24% of the attention against 7.6% of the capital.
-Ethereum is the mirror, holding 64% of TVL on 27% of the attention. Anyone
-claiming either chain is over or under-hyped is choosing a metric, and should
-say which.
-
-**The bottom of the table wants care rather than a headline.** BSC pays 6.9% of
-the fees on 1.8% of the attention and Polygon 3.0% on 0.2%. This reads
-English-language social data, and a chain whose users talk somewhere else looks
-quiet whatever it processes.
-
-## Every number here depends on the basket
-
-The 14-chain run published earlier the same day put Solana at 41.3% of
-attention and 1.1x on fees. Adding four chains moved it to 24.4% and 0.7x,
-because Cardano alone absorbed 15% of the attention share while adding
-essentially no usage to the denominator. Nothing about Solana changed.
-
-Shares are shares of whatever was measured, and the ratios inherit that. A
-chain's position relative to its neighbours is stable, its absolute multiple is
-not, and a figure from one run should not be quoted against a figure from
-another. The sample moves too: Ethereum returned 146 on-topic posts in the
-morning run and 110 in this one.
-
-## Which chains are in, and why the rest are out
-
-A chain is included when its verified topic carries enough on-topic posts for
-the interaction figure to mean something. Berachain returned 1 post, Celo 4,
-Mantle 8, Linea 20 and zkSync 44, which is too thin for one viral post not to
-decide the answer, and Scroll has no usable topic at all. All six were checked
-and left out on that basis.
-
-TON is the thinnest chain included, at 28 on-topic posts against a floor of 67
-for every other chain, so it moves more on a single post than the rest and its
-0.3% attention share should be read loosely. It is in because the fee side of
-its result is large and does not depend on the social sample being precise.
-
-## Why the attention measure is built this way
-
-Chain names collide with ordinary language worse than tickers do. `avalanche`
-returns snow videos, `base` is a common word, `tron` is a film, `near` returns
-an obituary, and `ton` appears in "a ton of" constantly, which is why TON is
-matched on `toncoin`, the cashtag or "TON blockchain/network/chain" rather than
-the bare word. Counting a topic's raw posts ranks chains by how ordinary their
-name is.
-
-A ticker test alone does not fix it. It reads 13% on `ethereum`, 5% on `solana`
-and 13% on `cardano`, because those communities write the chain's name rather
-than its cashtag, while a trading-heavy community writes `$SEI` constantly.
-That ranks chains by cashtag habit instead.
-
-So one filter is applied identically to all 18: a post counts when it names the
-chain or its ticker **and** carries a crypto term from a fixed vocabulary.
-Attention is the interactions on what survives. The topics themselves were
-verified first, which is why this uses `avax` rather than `avalanche` and
-`polygon-ecosystem-token` rather than `polygon`.
-
-## Why fees
+## Why fees, and what fees cannot say
 
 Fees are what someone actually handed over for blockspace. Transaction counts
-are cheap on purpose for many chains, active addresses are farmable, and TVL is
-capital parked rather than used. DEX volume and TVL are collected alongside so
-the choice can be argued with.
+are cheap on purpose for many chains, active addresses are farmable, and TVL
+is capital parked rather than used. DEX volume and TVL are collected alongside
+so the choice can be argued with.
 
-## What this cannot say
+A fee comparison flatters chains with expensive blockspace and penalizes those
+that made it cheap on purpose, which is a design decision rather than a
+failure. One snapshot, not a long window. Nothing here says a chain is good or
+bad.
 
-One snapshot, not a long window. The three metrics disagree for five of the
-eighteen chains, and where they disagree there is no answer here, only a choice
-of definition. TVL is the weakest of the three, since parked capital is not
-usage and it structurally favours the chain holding most DeFi collateral.
-English-language social data only. A fee-share comparison flatters chains with
-expensive blockspace and penalises those that made it cheap deliberately, which
-is a design choice rather than a failure. Nothing here says a chain is good or
-bad, only whether the talk and the paying are in proportion.
+## What would make the attention half work
 
-Run: `LUNARCRUSH_API_KEY=... python3 chain_hype.py`
+Not attempted yet, and the project claims nothing until it is. A post naming
+several chains would need splitting between them rather than counted whole for
+each, the sample would need to be fixed rather than redrawn per call, and the
+result would need to reproduce across runs before any ratio gets published.
+
+Run: `python3 chain_hype.py` for the full table, which still computes the
+attention columns. Treat those columns as unreliable.
