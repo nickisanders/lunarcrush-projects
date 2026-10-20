@@ -22,6 +22,7 @@ from carousel import (  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 SRC = Path.home() / "proof-of-crowd-tools/out/aztec-zama.json"
+BASELINE = Path.home() / "proof-of-crowd-tools/out/retention-baseline.json"
 OUT = HERE / "out" / "instagram"
 SHARP = Path.home() / "lunarcrush-projects/projects/crowd-size/node_modules/sharp"
 TOTAL, STEM = 5, "airdrop"
@@ -117,20 +118,37 @@ def slide4(d) -> str:
     return frame(4, f.svg())
 
 
+def spread(tokens: list[str]) -> tuple[str, str]:
+    """Concentration and retention ranges, read from the baseline.
+
+    These were typed in by hand once and went stale the same day: three of the
+    scans behind them were still running when the slide was written, and $APE
+    finished with 18.6x the addresses the slide had been built on. Reading the
+    file means the slide is wrong only if the data is.
+    """
+    b = json.loads(BASELINE.read_text())["tokens"]
+    rows = [b[t] for t in tokens if t in b]
+    c = [r["concentration"] * 100 for r in rows]
+    r = [r["raw"] * 100 for r in rows]
+    return f"{min(c):.0f}% and {max(c):.0f}%", f"{min(r):.0f}% to {max(r):.0f}%"
+
+
 def slide5(d) -> str:
     w = d["aztec"]["worst_month"]
     month = datetime.strptime(w["month"], "%Y-%m").strftime("%B %Y")
+    conc, ret = spread(["strk", "w", "ape"])
     f = Flow(300)
     f.say(50, TEXT, "Aztec has its own hole", 700, gap=40)
     f.say(36, SUB, f"{w['arrived']:,} addresses arrived in {month}, "
                    f"{w['share']*100:.0f}% of everyone who has ever held it, and "
-                   f"{w['retention']*100:.1f}% remain.", gap=64)
-    f.say(44, TEXT, "What predicts retention is how concentrated the arrival was.",
-          700, gap=38)
-    f.say(36, SUB, "61% of Zama's holders showed up in one month and 43% of Aztec's. "
-                   "For $STRK, $W and $APE it is 12% to 22%, and all three keep "
-                   "about 40%.", gap=44)
-    f.say(32, SUB, "Five tokens is a pattern, not a law. Nothing here is advice.", gap=0)
+                   f"{w['retention']*100:.1f}% remain.", gap=58)
+    f.say(44, TEXT, "The more concentrated the arrival, the fewer stay.",
+          700, gap=34)
+    f.say(36, SUB, f"61% of Zama's holders showed up in a single month and 43% of "
+                   f"Aztec's. $STRK, $W and $APE sit between {conc}, and they keep "
+                   f"{ret}.", gap=40)
+    f.say(31, SUB, "Seven tokens, and the concentrated ones are also the young ones, "
+                   "so some of that gap is age. Nothing here is advice.", gap=0)
     return frame(5, f.svg(), "github.com/nickisanders/lunarcrush-projects")
 
 

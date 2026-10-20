@@ -22,7 +22,7 @@ OUT = HERE / "out" / "instagram"
 SHARP = Path.home() / "lunarcrush-projects/projects/crowd-size/node_modules/sharp"
 TOTAL, STEM = 5, "retention"
 BLUE = "#388bfd"
-ORDER = ["strk", "w", "ape", "zama"]
+ORDER = ["strk", "fet", "w", "ape", "ens", "aztec", "zama"]
 
 
 def frame(n: int, body: str, footer: str = "") -> str:
@@ -33,28 +33,35 @@ def frame(n: int, body: str, footer: str = "") -> str:
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
             f'viewBox="0 0 {W} {H}" font-family="{FONT}">'
             f'<rect width="{W}" height="{H}" fill="{BG}"/>'
-            f'{txt(M, 102, 29, SUB, f"holder retention, measured 18 october · {n}/{TOTAL}")}'
+            f'{txt(M, 102, 29, SUB, f"holder retention, measured 19 october · {n}/{TOTAL}")}'
             f'{body}{f}{dots}</svg>')
 
 
-def bars(f: Flow, d: dict, key: str, highlight: bool) -> None:
-    BW, BH = W - 2 * M - 180, 72
+def bars(f: Flow, d: dict, key: str, highlight: bool, full: float = 0.5) -> None:
+    """`full` is the value that fills the track, and a missing key stops the
+    run. Skipping an absent value rendered a slide with no bars at all, which
+    looks deliberate and published silently once already."""
+    BW, BH = W - 2 * M - 180, 56
     for name in ORDER:
-        v = d[name].get(key)
-        if v is None:
-            continue
+        if key not in d[name]:
+            raise SystemExit(f"{name} has no '{key}' in retention-baseline.json")
+        v = d[name][key]
         col = RED if (highlight and name == "zama") else (BLUE if highlight else SUB)
-        f.raw(txt(M, f.y + 50, 38, TEXT, "$" + name.upper(), 700))
-        f.raw(f'<rect x="{M+180}" y="{f.y+14}" width="{BW}" height="{BH}" rx="8" fill="{TRACK}"/>')
-        f.raw(f'<rect x="{M+180}" y="{f.y+14}" width="{BW*v/0.5:.0f}" height="{BH}" rx="8" fill="{col}"/>')
-        f.raw(txt(M + 180 + BW * v / 0.5 - 20, f.y + 62, 40, BG, f"{v*100:.0f}%", 700, "end"))
-        f.y += BH + 24
+        w = min(BW * v / full, BW)
+        f.raw(txt(M, f.y + 40, 32, TEXT, "$" + name.upper(), 700))
+        f.raw(f'<rect x="{M+180}" y="{f.y+10}" width="{BW}" height="{BH}" rx="8" fill="{TRACK}"/>')
+        f.raw(f'<rect x="{M+180}" y="{f.y+10}" width="{w:.0f}" height="{BH}" rx="8" fill="{col}"/>')
+        inside = w > 110
+        f.raw(txt(M + 180 + w - (18 if inside else -14), f.y + 50, 34,
+                  BG if inside else TEXT, f"{v*100:.0f}%", 700,
+                  "end" if inside else "start"))
+        f.y += BH + 18
 
 
 def slide1(d) -> str:
     f = Flow(300)
-    f.say(60, TEXT, "Three tokens keep about 40% of everyone who ever held them.", 700, gap=30)
-    f.say(60, RED, "One keeps 17%.", 700, gap=66)
+    f.say(58, TEXT, "The more of a token's holders arrive in one month,", 700, gap=26)
+    f.say(58, RED, "the fewer of them stay.", 700, gap=60)
     f.say(38, SUB, "Every transfer since each contract was deployed, joined to "
                    "who still holds today.", gap=0)
     return frame(1, f.svg())
@@ -62,19 +69,19 @@ def slide1(d) -> str:
 
 def slide2(d) -> str:
     f = Flow(380)
-    f.say(50, TEXT, "Raw retention", 700, gap=22)
-    f.say(34, SUB, "Not comparable as it stands. An older contract has had longer "
-                   "to lose people.", gap=50)
+    f.say(50, TEXT, "Retention", 700, gap=22)
+    f.say(34, SUB, "Everyone who ever received the token, against who still "
+                   "holds it.", gap=44)
     bars(f, d, "raw", highlight=False)
     return frame(2, f.svg())
 
 
 def slide3(d) -> str:
     f = Flow(340)
-    f.say(50, TEXT, "Matched on exposure", 700, gap=22)
-    f.say(34, SUB, "Only those who arrived in each token's last twelve months, so "
-                   "every group has had the same time to leave.", gap=50)
-    bars(f, d, "cohort", highlight=True)
+    f.say(50, TEXT, "Concentration of arrival", 700, gap=22)
+    f.say(34, SUB, "Share of all holders who first received the token in its "
+                   "single biggest month.", gap=44)
+    bars(f, d, "concentration", highlight=True, full=0.7)
     return frame(3, f.svg())
 
 
@@ -95,10 +102,12 @@ def slide4(d) -> str:
 
 def slide5(d) -> str:
     f = Flow(330)
-    f.say(54, TEXT, "One token agreeing is not proof of anything.", 700, gap=60)
-    f.say(42, SUB, "It is the first time a social score has been checked against "
-                   "what the chain did afterwards, and they agree.", gap=56)
-    f.say(34, SUB, "Four tokens is not a baseline yet. $FET and $PEPE are still counting.", gap=0)
+    f.say(54, TEXT, "Seven tokens, r = -0.84.", 700, gap=50)
+    f.say(42, SUB, "The tokens whose holders arrived all at once are the ones "
+                   "with the fewest left.", gap=50)
+    f.say(34, SUB, "The concentrated ones here are also the young ones, so part "
+                   "of that gap is age rather than acquisition. $PEPE is still "
+                   "counting.", gap=0)
     return frame(5, f.svg(), "github.com/nickisanders/lunarcrush-projects")
 
 

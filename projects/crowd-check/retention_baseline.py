@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
-"""Holder retention across five tokens, with contract age controlled for.
+"""Holder retention across seven tokens, against how concentrated arrival was.
 
 Reads out/retention-baseline.json from proof-of-crowd-tools, measured
 2026-10-18 by scanning every transfer from each contract's deployment and
 joining the day each address arrived to who still holds.
 
-Two panels because the second is the one that means something. A raw retention
-figure is not comparable across tokens: an older contract has had longer to
-lose people, so $FET at 2,196 days and $ZAMA at 273 are not being asked the
-same question. Matching cohorts on exposure asks it properly, and the gap that
-survives that is the finding.
+The second panel used to show retention among each token's last twelve months
+of arrivals, on the theory that it matched them on exposure. It did not. That
+window covered 100% of $ZAMA's arrivals and 5.7% of $APE's, so for a young
+token it described the whole token and for an old one it described a recent
+sliver that had not had time to decay. Every old token read 39-42% for that
+reason alone.
+
+What replaces it is the thing actually worth plotting: the share of all holders
+who arrived in a single month. Age is still mixed into it, because the
+concentrated tokens here are also the young ones, and the footer says so.
 
 Usage: python3 retention_baseline.py
 """
@@ -47,45 +52,55 @@ def render(name, w, h, body, scale=2):
 
 
 d = json.loads(SRC.read_text())["tokens"]
-ORDER = ["strk", "w", "ape", "zama"]
+ORDER = ["strk", "fet", "w", "ape", "ens", "aztec", "zama"]
 
-W, H = 1200, 1090
+W = 1200
 L, R = 60, 1140
 
-b = [txt(L, 58, 36, INK, "Three tokens keep about 40% of everyone who", 700),
-     txt(L, 96, 36, INK, "ever held them. One keeps 17%.", 700),
+b = [txt(L, 58, 36, INK, "The more of a token's holders arrive in one", 700),
+     txt(L, 96, 36, INK, "month, the fewer of them stay.", 700),
      txt(L, 132, 20, SUB,
          "Every transfer since each contract was deployed, joined to who still "
          "holds today.")]
 
 
-def panel(y, title, note, key, colour_rule):
+def panel(y, title, note, key, colour_rule, full=0.5):
+    """`full` is the value that fills the track. Retention tops out under 40%
+    so a half-width scale reads well, but concentration reaches 61% and the
+    same scale ran $ZAMA's bar off the canvas."""
     b.append(txt(L, y, 24, INK, title, 700))
     b.append(txt(L, y + 30, 19, SUB, note))
     yy = y + 62
     BW, BH = R - L - 150, 48
     for name in ORDER:
-        v = d[name].get(key)
-        if v is None:
-            continue
+        if key not in d[name]:
+            raise SystemExit(f"{name} has no '{key}' in retention-baseline.json. "
+                             f"A skipped bar renders as a clean chart with a "
+                             f"missing token, so this stops instead.")
+        v = d[name][key]
         col = colour_rule(name)
         b.append(txt(L, yy + 40, 25, INK, "$" + name.upper(), 700, "start", MONO))
         b.append(f'<rect x="{L+150}" y="{yy+8}" width="{BW}" height="{BH}" fill="#f2efe8"/>')
-        b.append(f'<rect x="{L+150}" y="{yy+8}" width="{BW*v/0.5:.0f}" height="{BH}" fill="{col}"/>')
-        b.append(txt(L + 150 + BW * v / 0.5 - 18, yy + 40, 28, "#ffffff",
-                     f"{v*100:.1f}%", 700, "end", MONO))
+        w = min(BW * v / full, BW)
+        b.append(f'<rect x="{L+150}" y="{yy+8}" width="{w:.0f}" height="{BH}" fill="{col}"/>')
+        # $FET at 5.4% has a bar too short to hold its own label, which clipped
+        # the leading digit. Below that width the figure sits outside, in ink.
+        inside = w > 130
+        b.append(txt(L + 150 + w - 18 if inside else L + 150 + w + 14, yy + 40, 28,
+                     "#ffffff" if inside else INK,
+                     f"{v*100:.1f}%", 700, "end" if inside else "start", MONO))
         yy += BH + 14
     return yy
 
 
-y = panel(190, "Raw retention", "Not comparable: an older contract has had longer to lose people.",
-          "raw", lambda n: NEUTRAL)
+y = panel(190, "Retention", "Share of everyone who ever received the token and still holds it.",
+          "raw", lambda n: HOT if n == "zama" else NEUTRAL)
 b.append(f'<line x1="{L}" y1="{y+14}" x2="{R}" y2="{y+14}" stroke="{RULE}" stroke-width="2"/>')
 y = panel(y + 50,
-          "Matched on exposure",
-          "Only those who arrived in each token's last twelve months, so every "
-          "group has had the same time to leave.",
-          "cohort", lambda n: HOT if n == "zama" else BRAND)
+          "Concentration of arrival",
+          "Share of all holders who first received the token in its single "
+          "biggest month.",
+          "concentration", lambda n: HOT if n == "zama" else BRAND, full=0.7)
 
 z = d["zama"]["biggest_cohort"]
 y += 26
@@ -97,9 +112,15 @@ b.append(txt(L + 26, y + 2, 22, INK,
 b.append(txt(L + 26, y + 30, 20, SUB,
              "It is the one token here scored manufactured on its social data alone, at 98 of 100."))
 
-y = H - 52
-b.append(f'<line x1="{L}" y1="{y-36}" x2="{R}" y2="{y-36}" stroke="{RULE}" stroke-width="2"/>')
-b.append(txt(L, y, 19, SUB, "Four tokens is not a baseline yet. $FET and $PEPE are still counting."))
-b.append(txt(R, y, 19, SUB, "measured 2026-10-18  ·  @nickisanders", 400, "end"))
+# Height follows the content. It was pinned at 1090 for four tokens, so
+# adding three ran the second panel and the footer off the canvas.
+y += 92
+b.append(f'<line x1="{L}" y1="{y}" x2="{R}" y2="{y}" stroke="{RULE}" stroke-width="2"/>')
+b.append(txt(L, y + 32, 19, SUB,
+             "Seven tokens, r = -0.84. The concentrated ones are also the young "
+             "ones, so part of this gap is age rather than acquisition."))
+b.append(txt(L, y + 58, 19, SUB, "$PEPE is still counting."))
+b.append(txt(R, y + 58, 19, SUB, "measured 2026-10-19  ·  @nickisanders", 400, "end"))
+H = y + 88
 
 render("retention_baseline", W, H, "".join(b))
