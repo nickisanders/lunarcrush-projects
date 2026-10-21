@@ -1,5 +1,24 @@
 #!/usr/bin/env python3
-"""How much fee revenue each chain earns per dollar of capital parked on it.
+"""RETIRED 2026-10-21. Superseded by capital_two_factor.py.
+
+Kept because it produced a published chart, not because it should be rerun.
+
+Fees per dollar of TVL collapses two different things into one number, and
+two readers found the same weakness from opposite directions within a day.
+The first pointed out it rewards automated flow. The second pointed out it
+rewards leverage and fast blocks, since a dollar of margin backing 100x perps
+cannot be compared to a dollar of USDC sitting on Ethereum.
+
+Both are right and they are the same objection. Splitting the ratio into
+turnover and take rate shows Hyperliquid's 111x over Tron is 26x of turnover
+and 4x of fee rate, so most of what this charted was capital velocity rather
+than anything about efficiency. Worse, the turnover it can see is DEX volume
+only, because DeFiLlama's derivatives data is paywalled, so the leverage the
+second reader described sits entirely outside the measurement.
+
+Original docstring follows.
+
+How much fee revenue each chain earns per dollar of capital parked on it.
 
 Fees and TVL are both ordinary size measures and both get quoted as if they
 settle which chain is biggest. Dividing one by the other asks a different
