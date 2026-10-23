@@ -56,11 +56,15 @@ def load():
             continue
         b = d.get("buckets") or {}
         k = [x for x in b if "under" in x]
-        rows.append({"sym": d["symbol"], "holders": h, "big": d.get("with_100_usd") or 0,
+        rows.append({"sym": d["symbol"], "holders": h, "wallets": d.get("wallets") or 0,
+                     "big": d.get("with_100_usd") or 0,
                      "dust": b[k[0]] if k else 0})
     for r in rows:
-        r["big_s"] = r["big"] / r["holders"]
-        r["dust_s"] = r["dust"] / r["holders"]
+        # Over wallets, never over the headline count. The buckets skip
+        # contracts and exchange addresses, so the headline denominator
+        # mixes two populations and understates every share.
+        r["big_s"] = r["big"] / r["wallets"]
+        r["dust_s"] = r["dust"] / r["wallets"]
     rows.sort(key=lambda r: -r["big_s"])
     return rows
 
@@ -90,15 +94,15 @@ def slide1(rows) -> str:
 
 def slide2(rows) -> str:
     f = Flow(290)
-    f.say(50, TEXT, "Holders with $100 or more", 700, gap=20)
-    f.say(32, SUB, "Eight tokens, every holder, not a sample.", gap=46)
+    f.say(50, TEXT, "Wallets with $100 or more", 700, gap=20)
+    f.say(32, SUB, "Eight tokens, contracts and exchanges removed.", gap=46)
     bars(f, rows, lambda r: r["big_s"], lambda v: f"{v*100:.1f}%", ("APE", "BLUR"))
     return frame(2, f.svg())
 
 
 def slide3(rows) -> str:
     f = Flow(290)
-    f.say(50, TEXT, "Holders with under $1", 700, gap=20)
+    f.say(50, TEXT, "Wallets with under $1", 700, gap=20)
     f.say(32, SUB, "The same wallets, the other end of the scale.", gap=46)
     bars(f, rows, lambda r: r["dust_s"], lambda v: f"{v*100:.1f}%", ("APE", "BLUR"))
     return frame(3, f.svg())
@@ -108,7 +112,7 @@ def slide4(rows) -> str:
     b = next(r for r in rows if r["sym"] == "BLUR")
     f = Flow(320)
     f.say(52, TEXT, "Put that another way", 700, gap=54)
-    f.raw(txt(M, f.y + 20, 96, TEXT, f"{b['holders']:,}", 700))
+    f.raw(txt(M, f.y + 20, 96, TEXT, f"{b['wallets']:,}", 700))
     f.raw(txt(M, f.y + 72, 34, SUB, "wallets hold $BLUR"))
     f.y += 160
     f.raw(txt(M, f.y + 20, 96, RED, f"{b['big']:,}", 700))
