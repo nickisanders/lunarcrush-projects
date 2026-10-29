@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
-"""One token's holders cannot sell, and the contract is not what stops them.
+"""Two tokens' holders mostly cannot sell, and no contract is stopping them.
 
 Every bar is the share of a token's holders that hold no ETH and have never
 sent a transaction. Such an address cannot pay gas, so it cannot sell, vote or
-leave, whatever its balance says. Across 29 tokens the median is about 5% of
-holders, which is roughly what forgotten wallets look like. $PIEVERSE reads
-96.4%, and the gap to the next token is more than fifty points, so this is not
-the tail of a distribution.
+leave, whatever its balance says. The median token sits near 5%, which is
+roughly what forgotten wallets look like. Two tokens are not near it, and the
+bars in red are the ones where most of the holders cannot act at all.
 
-The obvious objection is that the token must be locked, and it is not. Its
-contract does carry a transfer gate, and that gate opened in November 2025. A
-simulated transfer from 40 of these holders cleared 40 times, none of those
-addresses was whitelisted, and 193 of 194 measured transactions moved in a
-single leg, so nothing is taking a fee either. The token would let these
-holders sell. They cannot afford the gas to try.
+The first version of this chart had one red bar and described $PIEVERSE as an
+outlier sitting fifty points clear. $H was measured the next morning and came
+back at 79.2%, which cut that gap to seventeen and makes the point differently:
+this is a kind of token rather than a freak.
+
+The obvious objection is that these tokens must be locked, and they are not.
+A transfer simulated from 40 holders of each cleared 40 times out of 40, from
+addresses that were not whitelisted. $PIEVERSE does carry a transfer gate and
+it has stood open since November 2025. $H carries none at all. Neither takes
+a fee. Both would let these holders sell, and the holders cannot afford the
+gas to try.
 
 Two things the chart has to carry honestly. Immobility is sampled at 250
 addresses per token, so each bar has a confidence interval and the pale
@@ -45,6 +49,9 @@ TRACK, BRAND, HOT = "#f2efe8", "#1b3a6b", "#a33228"
 # its bar's color lightened rather than a neutral gray.
 BAND, BAND_HOT = "#c5d0e0", "#e6c5bf"
 MIN_HOLDERS = 100
+# Above this, most of a token's holders cannot act, which is the line worth
+# drawing: it is a statement about the holder count rather than about a rank.
+MAJORITY = 0.5
 
 
 def esc(s):
@@ -88,6 +95,8 @@ rows.sort(key=lambda r: -r["share"])
 med = statistics.median(r["share"] for r in rows)
 top, second = rows[0], rows[1]
 gap = top["share"] - second["share"]
+most = [r for r in rows if r["share"] > MAJORITY]
+rest_top = next((r for r in rows if r["share"] <= MAJORITY), rows[-1])
 
 W = 1240
 L, R = 60, 1180
@@ -97,19 +106,20 @@ BARW = R - L - LABEL - RIGHT
 BH, GAP = 26, 6
 X0 = L + LABEL
 
-b = [txt(L, 58, 37, INK, "One token's holders cannot sell.", 700),
-     txt(L, 98, 37, INK, "The contract is not what stops them.", 700),
+b = [txt(L, 58, 37, INK, "Two tokens' holders mostly cannot sell.", 700),
+     txt(L, 98, 37, INK, "Neither contract is what stops them.", 700),
      txt(L, 138, 20, SUB,
          "Share of holders that hold no ETH and have never sent a transaction, "
          "so they cannot pay gas to move anything."),
      txt(L, 164, 20, SUB,
-         f"{len(rows)} tokens, every one above {MIN_HOLDERS} holders. "
-         f"Sampled 250 addresses each, pale band is the interval.")]
+         f"{len(rows)} tokens, every one above {MIN_HOLDERS} holders. Sampled "
+         f"250 addresses each, pale band is the interval. Red is a majority "
+         f"unable to act.")]
 
 y = 214
 bars_top = y
 for r in rows:
-    hot = r is top
+    hot = r["share"] > MAJORITY
     w_est = BARW * r["share"]
     w_lo, w_hi = BARW * r["lo"], BARW * r["hi"]
     b.append(txt(L, y + BH - 7, 17, INK, "$" + r["sym"], 700, "start", MONO))
@@ -146,15 +156,17 @@ b.append(txt(mx + 9, bars_bot + 26, 18, INK,
 y = bars_bot + 52
 b.append(f'<rect x="{L}" y="{y}" width="{R-L}" height="112" fill="#fbf7ef"/>')
 b.append(f'<rect x="{L}" y="{y}" width="5" height="112" fill="{HOT}"/>')
+pair = " and ".join(f"${r['sym']} at {r['share']*100:.1f}%" for r in most)
 b.append(txt(L + 26, y + 36, 23, INK,
-             f"${top['sym']} sits {gap*100:.0f} points clear of the next token, "
-             f"against a {med*100:.1f}% median.", 700))
+             f"{pair}, against a {med*100:.1f}% median and a field that stops "
+             f"at {rest_top['share']*100:.0f}%.", 700))
 b.append(txt(L + 26, y + 68, 20, SUB,
-             f"Transfers are allowed: 40 of 40 sampled ${top['sym']} holders could "
-             f"move their whole balance, none of them whitelisted."))
+             f"Neither is locked: 40 of 40 simulated transfers cleared on each, "
+             f"from holders that were not whitelisted."))
 b.append(txt(L + 26, y + 94, 20, SUB,
-             "No fee on transfer either, with 193 of 194 measured transactions "
-             "moving in a single leg."))
+             f"${most[0]['sym']} carries a transfer gate that has stood open "
+             f"since November 2025. ${most[1]['sym']} carries none. Neither "
+             f"takes a fee."))
 y += 152
 
 b.append(f'<line x1="{L}" y1="{y}" x2="{R}" y2="{y}" stroke="{RULE}" stroke-width="2"/>')
@@ -165,9 +177,9 @@ b.append(txt(L, y + 58, 19, SUB,
              f"Tokens under {MIN_HOLDERS} holders are dropped rather than shown "
              f"with an interval spanning the axis."))
 b.append(txt(L, y + 84, 19, SUB,
-             f"Of ${top['sym']}'s {top['holders']:,} holders, about "
-             f"{top['mobile']:,} could act. The mechanism is measurable; intent "
-             f"is not."))
+             "About " + " and ".join(f"{r['mobile']:,} of ${r['sym']}'s "
+                                     f"{r['holders']:,}" for r in most)
+             + " could act. The mechanism is measurable; intent is not."))
 b.append(txt(R, y + 110, 19, SUB,
              f"measured {doc['measured']}  ·  @nickisanders", 400, "end"))
 H = y + 138
