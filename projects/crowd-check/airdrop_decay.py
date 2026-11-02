@@ -63,7 +63,8 @@ for sym, d in doc["tokens"].items():
     if b.get("arrived", 0) < MIN_COHORT:
         continue
     rows.append({"sym": sym.upper(), "key": sym, "age": b["age_months"],
-                 "ret": b["retention"], "n": b["arrived"]})
+                 "ret": b["retention"], "n": b["arrived"],
+                 "tage": d["age_months"], "conc": d["concentration"]})
 if len(rows) < 10:
     raise SystemExit(f"  only {len(rows)} cohorts above {MIN_COHORT}")
 
@@ -83,6 +84,37 @@ r0 = corr(xs, ys)
 # one token at least once, so the range without any single one is reported
 # beside the figure rather than after someone asks.
 jack = [corr(xs[:i] + xs[i + 1:], ys[:i] + ys[i + 1:]) for i in range(len(rows))]
+# The rivals were a hardcoded threshold in the footer until the baseline grew
+# by two cohorts and the threshold stopped being true. They are measured here
+# now, so the line cannot drift away from the data again.
+r_size = corr([r["n"] for r in rows], ys)
+r_tage = corr([r["tage"] for r in rows], ys)
+r_conc = corr([r["conc"] for r in rows], ys)
+third = len(rows) // 3
+
+
+def median(vals):
+    v = sorted(vals)
+    mid = len(v) // 2
+    return v[mid] if len(v) % 2 else (v[mid - 1] + v[mid]) / 2
+
+
+def thirds(key):
+    """Median retention of the bottom and top third, ranked by one field.
+
+    The raw correlation for cohort size is read off a range from 570 to
+    229,483 wallets, where a handful of very large drops carry most of the
+    leverage. Ranked thirds are the same comparison without that, and they
+    put size and age close enough together that neither gets called the
+    answer.
+    """
+    rs = sorted(rows, key=lambda r: r[key])
+    return (median([r["ret"] for r in rs[:third]]),
+            median([r["ret"] for r in rs[-third:]]))
+
+
+size_lo, size_hi = thirds("n")
+age_lo, age_hi = thirds("age")
 
 W, H_PLOT = 1240, 620
 L, R = 60, 1180
@@ -131,17 +163,51 @@ for r in sorted(rows, key=lambda r: -r["n"]):
     b.append(f'<circle cx="{x:.1f}" cy="{yy:.1f}" r="{rad:.1f}" '
              f'fill="{HOT if hot else BRAND}" fill-opacity="{0.8 if hot else 0.42}" '
              f'stroke="{HOT if hot else BRAND}" stroke-width="1.5"/>')
+# Labels used to flip above or below and check only each other, which put one
+# on top of a neighboring dot and pushed another through the axis. Each one now
+# tries four positions and takes the first that clears every dot, every label
+# already placed, and the edges of the plot.
+CHAR_W, CAP_H = 10.3, 13          # Menlo bold at 17px
+
+
+def dot_radius(n):
+    return 6 + 16 * (n / rmax) ** 0.5
+
+
+dots = [(px(r["age"]), py(r["ret"]), dot_radius(r["n"])) for r in rows]
+
+
+def clear(box):
+    x0, y0, x1, y1 = box
+    if x0 < PLOT_L or x1 > PLOT_R or y0 < PLOT_T - 22 or y1 > PLOT_B - 2:
+        return False
+    for cx, cy, rad in dots:                      # nearest point to the circle
+        nx, ny = min(max(cx, x0), x1), min(max(cy, y0), y1)
+        if (nx - cx) ** 2 + (ny - cy) ** 2 < (rad + 3) ** 2:
+            return False
+    return all(x1 + 6 < ox0 or x0 - 6 > ox1 or y1 + 4 < oy0 or y0 - 4 > oy1
+               for ox0, oy0, ox1, oy1 in placed)
+
+
 placed = []
 for r in rows:
     if r["key"] not in LABEL:
         continue
     x, yy = px(r["age"]), py(r["ret"])
-    rad = 6 + 16 * (r["n"] / rmax) ** 0.5
-    ly = yy - rad - 9
-    if any(abs(x - ox) < 76 and abs(ly - oy) < 22 for ox, oy in placed):
-        ly = yy + rad + 22              # flip below the dot instead
-    placed.append((x, ly))
-    b.append(txt(x, ly, 17, INK, "$" + r["sym"], 700, "middle", MONO))
+    rad, half = dot_radius(r["n"]), CHAR_W * (len(r["sym"]) + 1) / 2
+    spots = [(x, yy - rad - 9),                   # above
+             (x, yy + rad + 22),                  # below
+             (x + rad + 10 + half, yy + CAP_H / 2),
+             (x - rad - 10 - half, yy + CAP_H / 2)]
+    for lx, ly in spots:
+        box = (lx - half, ly - CAP_H, lx + half, ly + 4)
+        if clear(box):
+            break
+    else:
+        lx, ly = spots[0]
+        box = (lx - half, ly - CAP_H, lx + half, ly + 4)
+    placed.append(box)
+    b.append(txt(lx, ly, 17, INK, "$" + r["sym"], 700, "middle", MONO))
 
 y = PLOT_B + 92
 b.append(f'<rect x="{L}" y="{y}" width="{R-L}" height="142" fill="#fbf7ef"/>')
@@ -167,11 +233,15 @@ b.append(txt(L, y + 32, 19, SUB,
              "Cohorts are read from Transfer logs, not from a dashboard: the "
              "month a token saw the most first-time recipients."))
 b.append(txt(L, y + 58, 19, SUB,
-             "Cohort size, concentration of arrival, token age and the share "
-             "of holders who cannot pay gas were all tested. None reached 0.34."))
-b.append(txt(R, y + 84, 19, SUB,
+             f"Also tested against retention: cohort size {r_size:+.2f}, token "
+             f"age {r_tage:+.2f}, concentration of arrival {r_conc:+.2f}."))
+b.append(txt(L, y + 84, 19, SUB,
+             f"Size separates the set a little more than age: by size the "
+             f"thirds read {size_lo*100:.0f}% and {size_hi*100:.0f}%, by age "
+             f"{age_lo*100:.0f}% and {age_hi*100:.0f}%."))
+b.append(txt(R, y + 110, 19, SUB,
              f"measured {doc['measured']}  ·  @nickisanders", 400, "end"))
-H = y + 112
+H = y + 138
 
 render("airdrop_decay", W, H, "".join(b))
 print(f"  {len(rows)} cohorts, r={r0:+.3f}, jackknife [{min(jack):+.3f},{max(jack):+.3f}]")
