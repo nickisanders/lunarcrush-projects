@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
-"""What 28 projects on one API actually established.
+"""What this repo actually established, across every project in it.
 
-Reads the headline result out of each project's own output JSON where one
-exists, so the scoreboard cannot drift from what the code last produced.
-Anything without a machine-readable result is listed with its finding from
-the repo README and marked as such.
+The headlines below are transcribed by hand from each project's own README
+and output, not read out of its JSON. An earlier version of this docstring
+claimed otherwise, which made the one file in the repo whose job is honest
+bookkeeping the one file misreporting its own method. A finding here can
+therefore go stale when a project is rerun, and the project's own output is
+the authority, not this list.
+
+The project count and the three verdict counts are computed, so those at
+least cannot drift.
 
 Usage: python3 tools/scoreboard.py
 """
