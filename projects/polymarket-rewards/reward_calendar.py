@@ -3,14 +3,15 @@
 
 The daily snapshot of Polymarket's live board carried about 15,000/day of
 advertised maker rewards through mid-October, climbed to 51,898/day by
-3 November and was at 20,818/day two days later. Read as a time series that
-is a platform cutting its liquidity budget by sixty percent in a week.
+3 November and was back at 15,318/day three days later. Read as a time
+series that is a platform cutting its liquidity budget by seventy percent
+in a week.
 
-It is the US midterms resolving. Of the 327 markets that left the board
-between those two snapshots, 317 were election markets and they carried
-40,952 of the 40,958/day that went with them, and 307 had already passed
+It is the US midterms resolving. Of the 349 markets that left the board
+between those two snapshots, 338 were election markets and they carried
+42,802 of the 42,808/day that went with them, and 328 had already passed
 their end date. The markets present in both snapshots went the other way,
-from 10,940 to 14,153/day.
+from 9,090 to 14,151/day, a 56% rise.
 
 That is the whole point of the chart. An aggregate over a population that
 turns over does not measure the thing its units suggest. Every number on the
@@ -40,7 +41,10 @@ FONT = "Charter, Georgia, serif"
 MONO = "Menlo, ui-monospace, monospace"
 GROUND, INK, SUB, RULE = "#ffffff", "#15171c", "#6e6a60", "#ded8cd"
 TRACK, BRAND, HOT = "#f2efe8", "#1b3a6b", "#a33228"
-PEAK, AFTER = "2026-11-03", "2026-11-05"
+PEAK, AFTER = "2026-11-03", "2026-11-06"
+# A small count reads as prose in a serif headline and as data in the
+# callout, so the headline spells it and everything else does not.
+WORD = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six"}
 
 
 def esc(s):
@@ -127,8 +131,13 @@ PT, PB = 260, 700
 STEP = 15000
 top = -(-max(s["budget"] for s in snaps.values()) * 1.08 // STEP) * STEP
 
-b_ = [txt(L, 58, 37, INK, "Polymarket's advertised reward spend fell 60% in", 700),
-      txt(L, 98, 37, INK, "two days, because the US midterms resolved.", 700),
+drop = (1 - snaps[AFTER]["budget"] / snaps[PEAK]["budget"]) * 100
+days_apart = (dt.date.fromisoformat(AFTER) - dt.date.fromisoformat(PEAK)).days
+b_ = [txt(L, 58, 37, INK,
+          f"Polymarket's advertised reward spend fell {drop:.0f}% in", 700),
+      txt(L, 98, 37, INK,
+          f"{WORD.get(days_apart, days_apart)} days, because the US midterms "
+          f"resolved.", 700),
       txt(L, 140, 20, SUB,
           "Each point is one daily snapshot of the live board, summing every "
           "market's advertised maker-reward rate. The line is real and it is"),
@@ -202,8 +211,9 @@ y = PB + 86
 b_.append(f'<rect x="{L}" y="{y}" width="{R-L}" height="176" fill="#fbf7ef"/>')
 b_.append(f'<rect x="{L}" y="{y}" width="5" height="176" fill="{HOT}"/>')
 b_.append(txt(L + 26, y + 40, 23, INK,
-              f"The {len(both):,} markets on the board both days went up, from "
-              f"{stay_a:,.0f} to {stay_b:,.0f} a day.", 700))
+              f"The {len(both):,} markets on the board both days went up "
+              f"{(stay_b/stay_a-1)*100:.0f}%, from {stay_a:,.0f} to "
+              f"{stay_b:,.0f} a day.", 700))
 b_.append(txt(L + 26, y + 72, 23, INK,
               f"All of the fall is {len(gone):,} markets leaving, and "
               f"{len(el):,} of those are elections.", 700))

@@ -136,6 +136,13 @@ launchctl unload ~/Library/LaunchAgents/com.proofofcrowd.polymarket-snapshot.pli
 Each snapshot is about 1.7MB and lands in `out/history/`, which is gitignored.
 A year is kept and older ones are pruned. The log is `out/snapshot.log`.
 
+A run that comes back with no markets writes nothing and exits non-zero, so a
+failed collection leaves a gap rather than a zero and `markets-latest.json`
+keeps the last good board. The 2026-11-04 run predates that guard: it is in
+the history as a 101-byte file reading 0 markets, and anything walking
+`out/history/` should skip an empty snapshot rather than plot it. A run that
+comes back short rather than empty is still written and is not detected.
+
 First capture: 2026-10-08, 2,100 live markets, 752 paying rewards (35.8%),
 $17,001 a day advertised across them. The comparison becomes runnable once there
 are enough days to pair a snapshot against the fills in the window that follows

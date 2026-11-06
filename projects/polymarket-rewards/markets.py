@@ -175,6 +175,17 @@ def live_snapshot() -> tuple[dict, dict]:
 
 
 def write(markets: dict, by_token: dict, tag: str) -> None:
+    # An empty result is a failed collection, never a board with nothing on
+    # it. Writing one does two kinds of damage. It leaves a dated history file
+    # that reads as a genuine zero, which is the steepest move any series of
+    # these will ever contain. And it replaces markets-latest.json with an
+    # empty map, which fills.py and analyse.py both default to, so the next
+    # attribution run matches nothing and reports it as a finding about
+    # Polymarket. The run on 2026-11-04 did both of these and still exited 0.
+    if not markets:
+        raise SystemExit(
+            "  no markets returned: treating this as a failed collection. "
+            "Nothing written, and the previous snapshot stands.")
     OUT.mkdir(exist_ok=True)
     stamp = dt.datetime.now(dt.timezone.utc)
     snap = {"captured": stamp.isoformat(), "source": tag,
