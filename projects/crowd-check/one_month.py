@@ -6,7 +6,8 @@ of everyone who ever held the token, and that month was at least 5,000
 wallets. Whatever else happened to them, their holder history is one giveaway
 and a long decay, which makes them as close to the same event as this data
 gets. The share of that month's wallets still holding runs from 1.5% to
-81.5%, a factor of fifty-four.
+81.5%, a factor of fifty-six. That ratio is taken from the stored values
+and not from the two rounded percentages above it, which divide to 54.
 
 Nothing measured here explains the spread. Cohort size does not, age does not,
 how concentrated arrival was does not, and neither does what the survivors
