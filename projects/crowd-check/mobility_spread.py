@@ -3,14 +3,19 @@
 
 Every bar is the share of a token's holders that hold no ETH and have never
 sent a transaction. Such an address cannot pay gas, so it cannot sell, vote or
-leave, whatever its balance says. The median token sits near 5%, which is
+leave, whatever its balance says. The median token sits near 6%, which is
 roughly what forgotten wallets look like. Two tokens are not near it, and the
 bars in red are the ones where most of the holders cannot act at all.
 
-The first version of this chart had one red bar and described $PIEVERSE as an
-outlier sitting fifty points clear. $H was measured the next morning and came
-back at 79.2%, which cut that gap to seventeen and makes the point differently:
-this is a kind of token rather than a freak.
+The chart has been drawn three times and the finding has changed shape twice,
+which is the reason every count in it is now computed rather than written in.
+The first version had one red bar and called $PIEVERSE an outlier sitting
+fifty points clear. $H came back at 79.2% the next morning and cut that gap to
+seventeen. The field has since grown past seventy tokens and what sat behind
+the two has filled in: ten tokens now read at or above a fifth of their
+holders unable to act, and the largest of them, $XCN, carries that share
+across 65,584 holders. The headline is still two, and the thing underneath it
+is a tail rather than empty space.
 
 The obvious objection is that these tokens must be locked, and they are not.
 A transfer simulated from 40 holders of each cleared 40 times out of 40, from
@@ -49,6 +54,15 @@ TRACK, BRAND, HOT = "#f2efe8", "#1b3a6b", "#a33228"
 # its bar's color lightened rather than a neutral gray.
 BAND, BAND_HOT = "#c5d0e0", "#e6c5bf"
 MIN_HOLDERS = 100
+# A ticker is whatever a contract says its symbol is, and two contracts can
+# say the same thing. These are dropped by address because the label, not the
+# measurement, is what would mislead: a reader seeing $APT on a crypto chart
+# reads Aptos, which has no ERC-20 at all. Keyed by address so that adding a
+# genuine token with a reused ticker does not silently remove it too.
+AMBIGUOUS = {
+    "0x8cdf7af57e4c8b930e1b23c477c22f076530585e":
+        "symbol APT, 189 lifetime recipients, not Aptos",
+}
 # Above this, most of a token's holders cannot act, which is the line worth
 # drawing: it is a statement about the holder count rather than about a rank.
 MAJORITY = 0.5
@@ -77,12 +91,15 @@ def render(name, w, h, body, scale=2):
 
 
 doc = json.loads(SRC.read_text())
-rows = []
+rows, dropped = [], []
 for name, d in doc["tokens"].items():
     m = d.get("mobility") or {}
     if m.get("immobile_share") is None:
         continue
     if m["of_holders"] < MIN_HOLDERS:
+        continue
+    if d["address"].lower() in AMBIGUOUS:
+        dropped.append(name.upper())
         continue
     lo, hi = m.get("immobile_ci") or [m["immobile_share"]] * 2
     rows.append({"sym": name.upper(), "share": m["immobile_share"],
@@ -103,7 +120,7 @@ L, R = 60, 1180
 LABEL = 112
 RIGHT = 168                     # the holders column
 BARW = R - L - LABEL - RIGHT
-BH, GAP = 26, 6
+BH, GAP = 20, 3
 X0 = L + LABEL
 
 b = [txt(L, 58, 37, INK, "Two tokens' holders mostly cannot sell.", 700),
@@ -115,6 +132,12 @@ b = [txt(L, 58, 37, INK, "Two tokens' holders mostly cannot sell.", 700),
          f"{len(rows)} tokens, every one above {MIN_HOLDERS} holders. Sampled "
          f"250 addresses each, pale band is the interval. Red is a majority "
          f"unable to act.")]
+# The two red bars were once the whole finding and the rest of the field read
+# as flat. It is not flat any more, and a count of the tail stops the chart
+# being read as two freaks and seventy normal tokens.
+TAIL = 0.20
+tail = [r for r in rows if r["share"] >= TAIL]
+big_tail = max((r for r in tail if r not in most), key=lambda r: r["holders"])
 
 y = 214
 bars_top = y
@@ -154,8 +177,8 @@ b.append(txt(mx + 9, bars_bot + 26, 18, INK,
              f"median {med*100:.1f}%", 700))
 
 y = bars_bot + 52
-b.append(f'<rect x="{L}" y="{y}" width="{R-L}" height="112" fill="#fbf7ef"/>')
-b.append(f'<rect x="{L}" y="{y}" width="5" height="112" fill="{HOT}"/>')
+b.append(f'<rect x="{L}" y="{y}" width="{R-L}" height="142" fill="#fbf7ef"/>')
+b.append(f'<rect x="{L}" y="{y}" width="5" height="142" fill="{HOT}"/>')
 pair = " and ".join(f"${r['sym']} at {r['share']*100:.1f}%" for r in most)
 b.append(txt(L + 26, y + 36, 23, INK,
              f"{pair}, against a {med*100:.1f}% median and a field that stops "
@@ -167,7 +190,12 @@ b.append(txt(L + 26, y + 94, 20, SUB,
              f"${most[0]['sym']} carries a transfer gate that has stood open "
              f"since November 2025. ${most[1]['sym']} carries none. Neither "
              f"takes a fee."))
-y += 152
+b.append(txt(L + 26, y + 124, 20, SUB,
+             f"Behind them {len(tail)} tokens sit at or above {TAIL*100:.0f}%, "
+             f"including ${big_tail['sym']} at {big_tail['share']*100:.1f}% "
+             f"across {big_tail['holders']:,} holders. The tail is the part "
+             f"that grew."))
+y += 182
 
 b.append(f'<line x1="{L}" y1="{y}" x2="{R}" y2="{y}" stroke="{RULE}" stroke-width="2"/>')
 b.append(txt(L, y + 32, 19, SUB,
@@ -175,7 +203,10 @@ b.append(txt(L, y + 32, 19, SUB,
              "carries an interval."))
 b.append(txt(L, y + 58, 19, SUB,
              f"Tokens under {MIN_HOLDERS} holders are dropped rather than shown "
-             f"with an interval spanning the axis."))
+             f"with an interval spanning the axis."
+             + (f" {' and '.join('$' + d for d in dropped)} is dropped for "
+                f"carrying a ticker a reader would read as another token."
+                if dropped else "")))
 b.append(txt(L, y + 84, 19, SUB,
              "About " + " and ".join(f"{r['mobile']:,} of ${r['sym']}'s "
                                      f"{r['holders']:,}" for r in most)
